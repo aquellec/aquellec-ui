@@ -19,7 +19,9 @@
     "dev": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build": "tsup",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:storybook": "vitest run --project storybook",
+    "playwright:install": "playwright install chromium"
   },
   "keywords": [
     "react",
