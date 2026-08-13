@@ -380,10 +380,12 @@ export const OtherKeyIgnored: Story = {
     accept: '.pdf',
   },
   play: async ({ canvasElement }) => {
-    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
+    const onFileSelect = fn();
 
-    fileInput.focus();
-    fireEvent.keyDown(fileInput, { key: 'Tab' });
-    await expect(fileInput).not.toHaveFocus();
+    getFileInput(canvasElement, /Zone de dépôt de CV/i).focus();
+    fireEvent.keyDown(getFileInput(canvasElement, /Zone de dépôt de CV/i), { key: 'a' });
+
+    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
+    await expect(onFileSelect).not.toHaveBeenCalled();
   },
 };

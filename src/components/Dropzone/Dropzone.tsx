@@ -4,11 +4,7 @@ import { cn } from '../../lib/cn';
 import { errorTextClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
 
-export interface DropzoneProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  /** Called when a single file is selected in non-multiple mode. */
-  onFileSelect?: (file: File) => void;
-  /** Called when multiple files are selected in multiple mode. */
-  onFilesSelect?: (files: File[]) => void;
+interface DropzoneBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Called when the current selection is cleared by the user. */
   onClear?: () => void;
   /** Accepted file extensions or MIME types passed to the native input. */
@@ -19,32 +15,48 @@ export interface DropzoneProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   isDisabled?: boolean;
   /** Shows a loading state while upload or analysis is in progress. */
   isLoading?: boolean;
-  /** Enables bulk upload for recruiter workflows. */
-  multiple?: boolean;
-  /** Controlled preview file for Storybook or parent-managed state. */
-  file?: File | null;
-  /** Controlled preview files when `multiple` is true. */
-  files?: File[] | null;
 }
 
-export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
-  (
-    {
-      onFileSelect,
-      onFilesSelect,
-      onClear,
-      accept = '.pdf',
-      maxSizeMB = 5,
-      isDisabled = false,
-      isLoading = false,
-      multiple = false,
-      file,
-      files,
-      className,
-      ...props
-    },
-    ref
-  ) => {
+/** Single-file dropzone props (`multiple` omitted or `false`). */
+export type SingleDropzoneProps = DropzoneBaseProps & {
+  multiple?: false;
+  /** Called when a single file is selected. */
+  onFileSelect?: (file: File) => void;
+  /** Controlled preview file for Storybook or parent-managed state. */
+  file?: File | null;
+  onFilesSelect?: never;
+  files?: never;
+};
+
+/** Multi-file dropzone props (`multiple: true`). */
+export type MultipleDropzoneProps = DropzoneBaseProps & {
+  multiple: true;
+  /** Called when multiple files are selected. */
+  onFilesSelect?: (files: File[]) => void;
+  /** Controlled preview files for Storybook or parent-managed state. */
+  files?: File[] | null;
+  onFileSelect?: never;
+  file?: never;
+};
+
+export type DropzoneProps = SingleDropzoneProps | MultipleDropzoneProps;
+
+export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, ref) => {
+  const {
+    onClear,
+    accept = '.pdf',
+    maxSizeMB = 5,
+    isDisabled = false,
+    isLoading = false,
+    className,
+    ...rest
+  } = props;
+
+  const multiple = props.multiple === true;
+  const onFileSelect = !multiple ? props.onFileSelect : undefined;
+  const onFilesSelect = multiple ? props.onFilesSelect : undefined;
+  const file = !multiple ? props.file : undefined;
+  const files = multiple ? props.files : undefined;
     const [isDragActive, setIsDragActive] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -189,7 +201,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     );
 
     return (
-      <div ref={ref} className={cn('w-full', className)} {...props}>
+      <div ref={ref} className={cn('w-full', className)} {...rest}>
         <input
           ref={inputRef}
           id={inputId}
@@ -304,7 +316,6 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         )}
       </div>
     );
-  }
-);
+});
 
 Dropzone.displayName = 'Dropzone';

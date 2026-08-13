@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withPageTitle } from '../../../.storybook/story-shell';
 import { Toast } from './Toast';
+import { ToastProvider, useToast } from './ToastProvider';
+import { Button } from '../Button';
 
 /**
  * Notification temporaire pour confirmer une action, signaler une erreur ou un quota.
@@ -111,5 +113,40 @@ export const ErrorAlertRole: Story = {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
     await expect(args.onClose).toHaveBeenCalled();
+  },
+};
+
+function ToastQueueDemo() {
+  const { push } = useToast();
+
+  return (
+    <Button
+      variant="primary"
+      onClick={() =>
+        push({
+          variant: 'success',
+          title: 'CV importé',
+          description: 'Analyse ATS terminée avec succès.',
+        })
+      }
+    >
+      Afficher une notification
+    </Button>
+  );
+}
+
+export const ProviderQueue: Story = {
+  render: () => (
+    <ToastProvider defaultDuration={0}>
+      <ToastQueueDemo />
+    </ToastProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await userEvent.click(canvas.getByRole('button', { name: /Afficher une notification/i }));
+    await expect(body.getByRole('region', { name: 'Notifications' })).toBeInTheDocument();
+    await expect(body.getByText('CV importé')).toBeInTheDocument();
   },
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, Sparkles, X } from 'lucide-react';
 import { cn } from '../../lib/cn';
-import { semanticIconClass, subtleTextClass } from '../../lib/semantic-colors';
+import { semanticIconClass, semanticSurfaceClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
 
 export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,14 +17,6 @@ export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
   ({ variant = 'info', title, description, onClose, className, ...props }, ref) => {
-    const variants = {
-      success: 'bg-emerald-50/90 border-emerald-200 text-emerald-900',
-      error: 'bg-rose-50/90 border-rose-200 text-rose-900',
-      warning: 'bg-amber-50/90 border-amber-200 text-amber-900',
-      info: 'bg-blue-50/90 border-blue-200 text-blue-900',
-      ai: 'bg-gradient-to-r from-ai-50/90 to-brand-50/90 border-ai-200 text-slate-800',
-    };
-
     const liveRole = variant === 'error' ? 'alert' : 'status';
 
     const renderIcon = () => {
@@ -51,7 +43,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         aria-atomic="true"
         className={cn(
           'flex items-start p-4 rounded-xl border shadow-sm transition-all duration-200 max-w-md w-full',
-          variants[variant],
+          semanticSurfaceClass[variant],
           className
         )}
         {...props}

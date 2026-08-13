@@ -49,9 +49,12 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const heading = canvas.getByRole('heading', { level: 2, name: 'Recommandations ATS' });
+    const card = heading.closest('[aria-labelledby]');
 
     await expect(canvas.getByRole('heading', { level: 1, name: 'Card' })).toBeInTheDocument();
-    await expect(canvas.getByRole('heading', { level: 2, name: 'Recommandations ATS' })).toBeInTheDocument();
+    await expect(heading).toBeInTheDocument();
+    await expect(card).toHaveAttribute('aria-labelledby', heading.id);
   },
 };
 

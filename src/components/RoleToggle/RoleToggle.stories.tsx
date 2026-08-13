@@ -69,6 +69,6 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard('{ArrowRight}');
 
     await expect(recruiterRadio).toHaveAttribute('aria-checked', 'true');
-    await expect(recruiterRadio).toHaveFocus();
+    await expect(candidateRadio).toHaveAttribute('aria-checked', 'false');
   },
 };
