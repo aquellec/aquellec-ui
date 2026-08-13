@@ -13,12 +13,13 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, className, id: idProp, type = 'text', ...props }, ref) => {
+  ({ label, error, helperText, className, id: idProp, type = 'text', required, ...props }, ref) => {
     const generatedId = useId();
     const id = idProp ?? generatedId;
     const helperId = `${id}-helper`;
     const errorId = `${id}-error`;
-    const describedBy = error ? errorId : helperText ? helperId : undefined;
+    const describedBy =
+      [error ? errorId : null, helperText ? helperId : null].filter(Boolean).join(' ') || undefined;
 
     return (
       <div className="flex w-full min-w-0 flex-col text-left">
@@ -31,7 +32,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={id}
           type={type}
+          required={required}
           aria-invalid={Boolean(error)}
+          aria-required={required}
           aria-describedby={describedBy}
           className={cn(
             'w-full min-w-0 rounded-xl border bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150',
@@ -44,13 +47,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {(error || helperText) && (
-          <div className="mt-1">
-            {error ? (
-              <span id={errorId} className={cn('text-[11px]', errorTextClass)} role="alert">
+          <div className="mt-1 space-y-1">
+            {error && (
+              <span id={errorId} className={cn('block text-[11px]', errorTextClass)} role="alert">
                 {error}
               </span>
-            ) : (
-              <span id={helperId} className={cn('text-[11px]', mutedTextClass)}>
+            )}
+            {helperText && (
+              <span id={helperId} className={cn('block text-[11px]', mutedTextClass)}>
                 {helperText}
               </span>
             )}

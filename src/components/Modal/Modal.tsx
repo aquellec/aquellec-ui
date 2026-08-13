@@ -2,18 +2,10 @@ import React, { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { useFocusTrap } from '../../lib/focus-trap';
 import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
 import { subtleTextClass } from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-function getFocusableElements(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-    (element) => !element.hasAttribute('disabled')
-  );
-}
 
 export interface ModalProps {
   /** Controls whether the dialog is rendered. */
@@ -26,6 +18,8 @@ export interface ModalProps {
   ariaLabel?: string;
   /** ID of a visible title inside the dialog (compound `Modal.Header` usage). */
   labelledBy?: string;
+  /** ID of an element describing the dialog. */
+  describedBy?: string;
   /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
   titleAs?: SectionHeadingElement;
   /** Main dialog content. */
@@ -120,11 +114,29 @@ export const ModalFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes
 ModalFooter.displayName = 'ModalFooter';
 
 export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
-  ({ isOpen, onClose, title, ariaLabel, labelledBy, titleAs, children, footer, maxWidth = 'md', className }, ref) => {
+  (
+    {
+      isOpen,
+      onClose,
+      title,
+      ariaLabel,
+      labelledBy,
+      describedBy,
+      titleAs,
+      children,
+      footer,
+      maxWidth = 'md',
+      className,
+    },
+    ref
+  ) => {
     const titleId = useId();
-    const dialogLabelId = title ? titleId : labelledBy;
+    const dialogLabelId = labelledBy ?? (title ? titleId : undefined);
     const dialogRef = useRef<HTMLDivElement>(null);
-    const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+    const portalRef = useRef<HTMLDivElement>(null);
+    const onCloseRef = useRef(onClose);
+
+    onCloseRef.current = onClose;
 
     const setDialogRef = (node: HTMLDivElement | null) => {
       dialogRef.current = node;
@@ -135,50 +147,26 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       }
     };
 
+    useFocusTrap(dialogRef, isOpen, () => onCloseRef.current());
+
     useEffect(() => {
       if (!isOpen) return;
 
-      previouslyFocusedRef.current = document.activeElement as HTMLElement;
+      const portal = portalRef.current;
+      const inertSiblings = Array.from(document.body.children).filter((child) => child !== portal);
 
-      const dialog = dialogRef.current;
-      if (dialog) {
-        const closeButton = dialog.querySelector<HTMLElement>('[aria-label="Fermer la fenêtre"]');
-        const focusableElements = getFocusableElements(dialog);
-        (closeButton ?? focusableElements[0] ?? dialog).focus();
-      }
-
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          onClose();
-          return;
-        }
-
-        if (event.key !== 'Tab' || !dialogRef.current) return;
-
-        const focusableElements = getFocusableElements(dialogRef.current);
-        if (focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement.focus();
-        }
-      };
-
+      inertSiblings.forEach((element) => {
+        element.setAttribute('inert', '');
+      });
       document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
 
       return () => {
-        document.body.style.overflow = 'unset';
-        window.removeEventListener('keydown', handleKeyDown);
-        previouslyFocusedRef.current?.focus();
+        inertSiblings.forEach((element) => {
+          element.removeAttribute('inert');
+        });
+        document.body.style.overflow = '';
       };
-    }, [isOpen, onClose]);
+    }, [isOpen]);
 
     if (!isOpen || typeof document === 'undefined') return null;
 
@@ -190,7 +178,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     };
 
     return createPortal(
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div ref={portalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
           className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
           onClick={onClose}
@@ -203,6 +191,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           aria-modal="true"
           aria-labelledby={dialogLabelId}
           aria-label={dialogLabelId ? undefined : ariaLabel}
+          aria-describedby={describedBy}
           className={cn(
             'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
             maxWidths[maxWidth],

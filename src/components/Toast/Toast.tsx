@@ -48,6 +48,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         ref={ref}
         role={liveRole}
         aria-live={variant === 'error' ? 'assertive' : 'polite'}
+        aria-atomic="true"
         className={cn(
           'flex items-start p-4 rounded-xl border shadow-sm transition-all duration-200 max-w-md w-full',
           variants[variant],

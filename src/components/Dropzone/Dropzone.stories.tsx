@@ -6,6 +6,17 @@ import { Dropzone } from './Dropzone';
 const pdfFile = (name = 'cv-test.pdf', sizeBytes = 1024) =>
   new File([new ArrayBuffer(sizeBytes)], name, { type: 'application/pdf' });
 
+function getFileInput(canvasElement: HTMLElement, name: RegExp) {
+  return within(canvasElement).getByLabelText(name);
+}
+
+function getDropzoneLabel(canvasElement: HTMLElement, name: RegExp) {
+  const input = getFileInput(canvasElement, name) as HTMLInputElement;
+  return input.labels?.[0] ?? (() => {
+    throw new Error('Dropzone label not found');
+  })();
+}
+
 function uploadFiles(canvasElement: HTMLElement, files: File[]) {
   const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
   const dataTransfer = new DataTransfer();
@@ -34,7 +45,7 @@ function dropOnDropzone(dropzone: HTMLElement, files: File[]) {
 
 /**
  * Zone de dépôt drag-and-drop pour CVs PDF. Supporte le mode simple et multiple,
- * avec validation de taille, états loading/disabled et navigation clavier (Entrée/Espace).
+ * avec validation de taille, états loading/disabled et activation via label natif.
  */
 const meta: Meta<typeof Dropzone> = {
   title: 'Components/Dropzone',
@@ -90,12 +101,9 @@ export const FileSelectionInteraction: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
 
-    await expect(dropzone).toHaveAttribute('aria-disabled', 'false');
-
-    const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
-
+    await expect(fileInput).toBeEnabled();
     await userEvent.upload(fileInput, pdfFile());
 
     await expect(canvas.getByText('cv-test.pdf')).toBeInTheDocument();
@@ -144,7 +152,7 @@ export const DragAndDropInteraction: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
 
     fireEvent.dragOver(dropzone);
     await expect(dropzone).toHaveClass('border-brand-500');
@@ -164,13 +172,10 @@ export const KeyboardInteraction: Story = {
     accept: '.pdf',
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
 
-    dropzone.focus();
-    fireEvent.keyDown(dropzone, { key: 'Enter' });
-    fireEvent.keyDown(dropzone, { key: ' ' });
-    await expect(dropzone).toHaveFocus();
+    fileInput.focus();
+    await expect(fileInput).toHaveFocus();
   },
 };
 
@@ -218,7 +223,7 @@ export const ControlledFileInteraction: Story = {
 
     await userEvent.click(canvas.getByRole('button', { name: /Supprimer le fichier/i }));
     await expect(canvas.queryByText('cv-controlled.pdf')).not.toBeInTheDocument();
-    await expect(canvas.getByRole('button', { name: /Zone de dépôt de CV/i })).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
   },
 };
 
@@ -244,7 +249,7 @@ export const ControlledMultipleFilesInteraction: Story = {
     await expect(canvas.getByText(/1 CV sélectionné$/i)).toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole('button', { name: /Supprimer les fichiers/i }));
-    await expect(canvas.getByRole('button', { name: /Zone de dépôt de CVs/i })).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, /Zone de dépôt de CVs/i)).toBeInTheDocument();
   },
 };
 
@@ -257,15 +262,14 @@ export const DisabledInteraction: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
+    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
 
-    await expect(dropzone).toHaveAttribute('aria-disabled', 'true');
-    await expect(dropzone).toHaveAttribute('tabindex', '-1');
+    await expect(fileInput).toBeDisabled();
 
     fireEvent.dragOver(dropzone);
     await expect(dropzone).not.toHaveClass('border-brand-500');
 
-    fireEvent.keyDown(dropzone, { key: 'Enter' });
     dropOnDropzone(dropzone, [pdfFile('cv-disabled.pdf')]);
 
     await expect(canvas.queryByText('cv-disabled.pdf')).not.toBeInTheDocument();
@@ -281,11 +285,11 @@ export const LoadingDropzoneInteraction: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
 
     await expect(dropzone).toHaveAttribute('aria-busy', 'true');
     await expect(canvas.getByRole('status')).toHaveTextContent(/Analyse en cours/i);
-    await expect(dropzone).toHaveAttribute('aria-disabled', 'true');
+    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeDisabled();
   },
 };
 
@@ -346,12 +350,11 @@ export const EmptyDropInteraction: Story = {
     onFileSelect: fn(),
   },
   play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
 
     dropOnDropzone(dropzone, []);
 
-    await expect(canvas.getByRole('button', { name: /Zone de dépôt de CV/i })).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
     await expect(args.onFileSelect).not.toHaveBeenCalled();
   },
 };
@@ -377,11 +380,10 @@ export const OtherKeyIgnored: Story = {
     accept: '.pdf',
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
 
-    dropzone.focus();
-    fireEvent.keyDown(dropzone, { key: 'Tab' });
-    await expect(dropzone).toHaveFocus();
+    fileInput.focus();
+    fireEvent.keyDown(fileInput, { key: 'Tab' });
+    await expect(fileInput).not.toHaveFocus();
   },
 };
