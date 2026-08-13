@@ -4,3 +4,4 @@ export * from './components/ScoreGauge';
 export * from './components/Badge';
 export * from './components/Card';
 export * from './components/UsageBar';
+export * from './components/DataTable';
