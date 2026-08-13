@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ScoreGauge } from './ScoreGauge';
 
+/**
+ * Jauge circulaire de score ATS ou de matching IA. La couleur évolue selon le seuil
+ * (≥75 vert, ≥50 ambre, sinon rose) ; activez `isAiTheme` pour les métriques génératives.
+ */
 const meta: Meta<typeof ScoreGauge> = {
   title: 'Components/ScoreGauge',
   component: ScoreGauge,

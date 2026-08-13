@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from './Button';
 
+/**
+ * Bouton d'action principal du design system. Utilisez `primary` pour les CTAs
+ * standards, `ai` pour les workflows génératifs et `outline`/`ghost` pour les actions secondaires.
+ */
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,

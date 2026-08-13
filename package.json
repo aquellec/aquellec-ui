@@ -1,7 +1,7 @@
 {
   "name": "@aquellec/ui",
   "version": "0.1.0",
-  "description": "Modern and accessible React Design System by Amandine Quellec",
+  "description": "Composants UI React pour applications SaaS de recrutement (analyse de CV, matching ATS).",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

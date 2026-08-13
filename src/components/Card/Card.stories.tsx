@@ -4,6 +4,10 @@ import { Button } from '../Button';
 import { Badge } from '../Badge';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
+/**
+ * Conteneur structuré pour regrouper contenu, actions et métadonnées.
+ * Compose `Card.Header`, `Card.Body` et `Card.Footer` pour des blocs dashboard cohérents.
+ */
 const meta: Meta<typeof Card> = {
   title: 'Components/Card',
   component: Card,

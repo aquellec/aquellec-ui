@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Textarea } from './Textarea';
 
+/**
+ * Zone de saisie multi-lignes pour fiches de poste ou descriptions longues.
+ * Affiche un compteur de caractères lorsque `maxLength` est défini.
+ */
 const meta: Meta<typeof Textarea> = {
   title: 'Components/Textarea',
   component: Textarea,

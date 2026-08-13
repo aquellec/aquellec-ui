@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { Dropzone } from './Dropzone';
 
+/**
+ * Zone de dépôt drag-and-drop pour CVs PDF. Supporte le mode simple et multiple,
+ * avec validation de taille, états loading/disabled et navigation clavier (Entrée/Espace).
+ */
 const meta: Meta<typeof Dropzone> = {
   title: 'Components/Dropzone',
   component: Dropzone,
@@ -43,5 +48,29 @@ export const MultipleUpload: Story = {
     multiple: true,
     maxSizeMB: 5,
     accept: '.pdf',
+  },
+};
+
+export const FileSelectionInteraction: Story = {
+  args: {
+    maxSizeMB: 5,
+    accept: '.pdf',
+    onFileSelect: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+
+    await expect(dropzone).toHaveAttribute('aria-disabled', 'false');
+
+    const pdfFile = new File(['%PDF-1.4 mock content'], 'cv-test.pdf', {
+      type: 'application/pdf',
+    });
+    const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
+
+    await userEvent.upload(fileInput, pdfFile);
+
+    await expect(canvas.getByText('cv-test.pdf')).toBeInTheDocument();
+    await expect(args.onFileSelect).toHaveBeenCalled();
   },
 };

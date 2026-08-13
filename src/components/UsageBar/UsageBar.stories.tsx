@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UsageBar } from './UsageBar';
 
+/**
+ * Barre de progression pour quotas SaaS (analyses CV, crédits API).
+ * Change automatiquement de couleur à l'approche de la limite mensuelle.
+ */
 const meta: Meta<typeof UsageBar> = {
   title: 'Components/UsageBar',
   component: UsageBar,
