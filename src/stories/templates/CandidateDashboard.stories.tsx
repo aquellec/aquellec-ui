@@ -311,3 +311,19 @@ function CandidateDashboardPage() {
 export const Default: Story = {
   render: () => <CandidateDashboardPage />,
 };
+
+/** Vue mobile — grille 1 colonne, champs entreprise/poste empilés. */
+export const OnMobile: Story = {
+  render: () => <CandidateDashboardPage />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+};
+
+/** Vue tablette — transition vers la grille 2 colonnes (lg). */
+export const OnTablet: Story = {
+  render: () => <CandidateDashboardPage />,
+  globals: {
+    viewport: { value: 'tablet', isRotated: false },
+  },
+};

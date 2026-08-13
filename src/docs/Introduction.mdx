@@ -42,3 +42,15 @@ pnpm build
 - **Composables** — Sous-composants (`Card.Header`, `Modal.Footer`, etc.) pour garder de la flexibilité.
 - **Accessibilité** — Navigation clavier, attributs ARIA et états `:focus-visible`.
 - **Styles** — `tailwind-merge` + `clsx` pour surcharger facilement les classes sans conflits CSS.
+
+## Tester la responsivité (Viewports)
+
+Storybook intègre les viewports nativement (Storybook 10 — pas d'addon séparé).
+
+1. Lance `pnpm dev` et ouvre une story (ex. **Templates / Candidate Dashboard**).
+2. Clique l'icône **Viewports** dans la barre d'outils (ou raccourcis : `Alt+V` suivant, `Alt+Shift+V` précédent).
+3. Choisis un preset : **Mobile** (375 px), **Tablet** (768 px), **Desktop** (1280 px), **Wide** (1536 px).
+
+Les templates exposent aussi des stories **`OnMobile`** et **`OnTablet`** qui verrouillent le viewport via `globals` — pratique pour valider un layout sans toucher à la toolbar.
+
+Détails des breakpoints : voir **Docs / Tokens**.
