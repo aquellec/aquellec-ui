@@ -5,3 +5,4 @@ export * from './components/Badge';
 export * from './components/Card';
 export * from './components/UsageBar';
 export * from './components/DataTable';
+export * from './components/PricingCard';
