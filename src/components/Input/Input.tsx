@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import { cn } from '../../lib/cn';
+import { errorTextClass, mutedTextClass, placeholderClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingDanger } from '../../lib/focus-ring';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -36,7 +37,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           aria-required={required}
           aria-describedby={describedBy}
           className={cn(
-            'w-full min-w-0 rounded-xl border bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150 placeholder:text-slate-400',
+            'w-full min-w-0 rounded-xl border bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150',
+            placeholderClass,
             error
               ? cn('border-rose-300', focusRingDanger)
               : cn('border-slate-300 hover:border-slate-400', focusRing),
@@ -47,12 +49,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {(error || helperText) && (
           <div className="mt-1 space-y-1">
             {error && (
-              <span id={errorId} className="block text-[11px] text-rose-500" role="alert">
+              <span id={errorId} className={cn('block text-[11px]', errorTextClass)} role="alert">
                 {error}
               </span>
             )}
             {helperText && (
-              <span id={helperId} className="block text-[11px] text-slate-400">
+              <span id={helperId} className={cn('block text-[11px]', mutedTextClass)}>
                 {helperText}
               </span>
             )}

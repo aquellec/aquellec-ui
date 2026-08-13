@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, Sparkles, X } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { semanticIconClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
 
 export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -30,15 +31,15 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
       const iconClass = 'w-5 h-5 flex-shrink-0 mt-0.5 mr-3';
       switch (variant) {
         case 'success':
-          return <CheckCircle2 className={cn(iconClass, 'text-emerald-600')} aria-hidden="true" />;
+          return <CheckCircle2 className={cn(iconClass, semanticIconClass.success)} aria-hidden="true" />;
         case 'error':
-          return <AlertCircle className={cn(iconClass, 'text-rose-600')} aria-hidden="true" />;
+          return <AlertCircle className={cn(iconClass, semanticIconClass.danger)} aria-hidden="true" />;
         case 'warning':
-          return <AlertTriangle className={cn(iconClass, 'text-amber-600')} aria-hidden="true" />;
+          return <AlertTriangle className={cn(iconClass, semanticIconClass.warning)} aria-hidden="true" />;
         case 'ai':
-          return <Sparkles className={cn(iconClass, 'text-ai-600')} aria-hidden="true" />;
+          return <Sparkles className={cn(iconClass, semanticIconClass.ai)} aria-hidden="true" />;
         default:
-          return <Info className={cn(iconClass, 'text-blue-600')} aria-hidden="true" />;
+          return <Info className={cn(iconClass, semanticIconClass.info)} aria-hidden="true" />;
       }
     };
 
@@ -64,7 +65,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           <button
             type="button"
             onClick={onClose}
-            className={cn('p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-black/5 transition-colors', focusRingGhost)}
+            className={cn('p-1 rounded-md hover:bg-black/5 transition-colors', subtleTextClass, focusRingGhost)}
             aria-label="Fermer la notification"
           >
             <X className="w-4 h-4" aria-hidden="true" />

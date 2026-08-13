@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { useFocusTrap } from '../../lib/focus-trap';
+import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
+import { subtleTextClass } from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
-
-type ModalTitleElement = 'h2' | 'h3';
 
 export interface ModalProps {
   /** Controls whether the dialog is rendered. */
@@ -14,14 +14,14 @@ export interface ModalProps {
   onClose: () => void;
   /** Optional header title; also used for `aria-labelledby`. */
   title?: React.ReactNode;
-  /** Accessible name when no visible title is provided. */
+  /** Accessible name when no visible `title` is rendered. */
   ariaLabel?: string;
-  /** ID of an external element labelling the dialog. */
+  /** ID of a visible title inside the dialog (compound `Modal.Header` usage). */
   labelledBy?: string;
   /** ID of an element describing the dialog. */
   describedBy?: string;
-  /** Semantic heading level for the optional title. */
-  titleAs?: ModalTitleElement;
+  /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
+  titleAs?: SectionHeadingElement;
   /** Main dialog content. */
   children: React.ReactNode;
   /** Optional footer slot, typically action buttons. */
@@ -35,17 +35,17 @@ export interface ModalProps {
 export interface ModalHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Header title content. */
   title?: React.ReactNode;
+  /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
+  titleAs?: SectionHeadingElement;
   /** When provided, renders an accessible close button. */
   onClose?: () => void;
   /** ID used to associate the title with `aria-labelledby`. */
   titleId?: string;
-  /** Semantic heading level for the title. */
-  titleAs?: ModalTitleElement;
 }
 
 export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
-  ({ title, onClose, titleId, titleAs = 'h3', children, className, ...props }, ref) => {
-    const TitleElement = titleAs;
+  ({ title, titleAs, onClose, titleId, children, className, ...props }, ref) => {
+    const TitleElement = resolveSectionHeading(title, titleAs);
 
     return (
       <div
@@ -66,7 +66,8 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
             type="button"
             onClick={onClose}
             className={cn(
-              'p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
+              'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
+              subtleTextClass,
               focusRingGhost
             )}
             aria-label="Fermer la fenêtre"
@@ -121,7 +122,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       ariaLabel,
       labelledBy,
       describedBy,
-      titleAs = 'h2',
+      titleAs,
       children,
       footer,
       maxWidth = 'md',
@@ -130,6 +131,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     ref
   ) => {
     const titleId = useId();
+    const dialogLabelId = labelledBy ?? (title ? titleId : undefined);
     const dialogRef = useRef<HTMLDivElement>(null);
     const portalRef = useRef<HTMLDivElement>(null);
     const onCloseRef = useRef(onClose);
@@ -175,8 +177,6 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       xl: 'max-w-2xl',
     };
 
-    const ariaLabelledBy = labelledBy ?? (title ? titleId : undefined);
-
     return createPortal(
       <div ref={portalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
@@ -189,8 +189,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           ref={setDialogRef}
           role="dialog"
           aria-modal="true"
-          aria-labelledby={ariaLabelledBy}
-          aria-label={!ariaLabelledBy ? ariaLabel : undefined}
+          aria-labelledby={dialogLabelId}
+          aria-label={dialogLabelId ? undefined : ariaLabel}
           aria-describedby={describedBy}
           className={cn(
             'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
@@ -199,7 +199,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           )}
         >
           {title && (
-            <ModalHeader title={title} titleId={titleId} titleAs={titleAs} onClose={onClose} />
+            <ModalHeader title={title} titleAs={titleAs} titleId={titleId} onClose={onClose} />
           )}
           <ModalBody>{children}</ModalBody>
           {footer && <ModalFooter>{footer}</ModalFooter>}

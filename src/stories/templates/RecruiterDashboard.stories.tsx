@@ -7,6 +7,8 @@ import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { ScoreGauge } from '../../components/ScoreGauge';
+import { getScoreTextClass } from '../../lib/score-tier';
+import { cn } from '../../lib/cn';
 import { FileText, ExternalLink } from 'lucide-react';
 
 interface AnalysisHistory {
@@ -76,13 +78,13 @@ function RecruiterDashboardPage() {
           </Card>
           <Card>
             <Card.Body className="py-6">
-              <p className="text-2xl font-bold text-emerald-600">18</p>
+              <p className="text-2xl font-bold text-emerald-700">18</p>
               <p className="text-sm text-slate-600">Profils compatibles</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-6">
-              <p className="text-2xl font-bold text-amber-600">6</p>
+              <p className="text-2xl font-bold text-amber-700">6</p>
               <p className="text-sm text-slate-600">À revoir manuellement</p>
             </Card.Body>
           </Card>
@@ -121,15 +123,7 @@ function RecruiterDashboardPage() {
                 {
                   header: 'Score ATS',
                   cell: (item) => (
-                    <span
-                      className={
-                        item.score >= 75
-                          ? 'font-bold text-emerald-600'
-                          : item.score >= 50
-                          ? 'font-bold text-amber-600'
-                          : 'font-bold text-rose-600'
-                      }
-                    >
+                    <span className={cn('font-bold', getScoreTextClass(item.score))}>
                       {item.score}%
                     </span>
                   ),

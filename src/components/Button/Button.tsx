@@ -43,7 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ),
       ghost: cn('bg-transparent hover:bg-slate-100 text-slate-700', focusRingGhost),
       ai: cn(
-        'bg-gradient-to-r from-ai-500 to-brand-500 text-white hover:opacity-95 shadow-sm',
+        'bg-gradient-to-r from-ai-600 to-brand-600 text-white hover:opacity-95 shadow-sm',
         focusRing
       ),
     };

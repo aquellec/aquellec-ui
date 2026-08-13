@@ -47,5 +47,28 @@ export const SwitchRoleInteraction: Story = {
 
     await expect(recruiterRadio).toHaveAttribute('aria-checked', 'true');
     await expect(candidateRadio).toHaveAttribute('aria-checked', 'false');
+
+    await userEvent.click(candidateRadio);
+
+    await expect(candidateRadio).toHaveAttribute('aria-checked', 'true');
+    await expect(recruiterRadio).toHaveAttribute('aria-checked', 'false');
+  },
+};
+
+export const KeyboardNavigation: Story = {
+  render: () => {
+    const [activeRole, setActiveRole] = useState<Role>('candidate');
+    return <RoleToggle activeRole={activeRole} onChange={setActiveRole} />;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const candidateRadio = canvas.getByRole('radio', { name: /Espace Candidat/i });
+    const recruiterRadio = canvas.getByRole('radio', { name: /Espace Recruteur/i });
+
+    candidateRadio.focus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    await expect(recruiterRadio).toHaveAttribute('aria-checked', 'true');
+    await expect(recruiterRadio).toHaveFocus();
   },
 };

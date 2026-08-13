@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { UploadCloud, FileText, X, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { errorTextClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
 
 export interface DropzoneProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -244,7 +245,8 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
                 onClick={clearSelection}
                 disabled={isDisabled}
                 className={cn(
-                  'rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600',
+                  'rounded-md p-1 transition-colors hover:bg-slate-100',
+                  subtleTextClass,
                   focusRingGhost
                 )}
                 aria-label={removeLabel}
@@ -295,7 +297,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         )}
 
         {error && (
-          <div id={errorId} role="alert" className="mt-2 flex items-center space-x-1.5 text-xs text-red-600">
+          <div id={errorId} role="alert" className={cn('mt-2 flex items-center space-x-1.5 text-xs', errorTextClass)}>
             <AlertCircle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span>{error}</span>
           </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, Sparkles } from 'lucide-react';
 import { Button } from '../Button';
 import { cn } from '../../lib/cn';
+import { mutedTextClass } from '../../lib/semantic-colors';
 
 export interface PricingFeature {
   /** Feature label displayed in the pricing list. */
@@ -88,13 +89,13 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
               <div
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',
-                  feature.included ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-300'
+                  feature.included ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
                 )}
                 aria-hidden="true"
               >
                 <Check className="w-3 h-3" />
               </div>
-              <span className={feature.included ? 'text-slate-700' : 'text-slate-400 line-through'}>
+              <span className={feature.included ? 'text-slate-700' : cn(mutedTextClass, 'line-through')}>
                 {feature.text}
               </span>
             </li>

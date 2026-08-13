@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { UsageBar } from './UsageBar';
 
 /**
@@ -44,5 +45,30 @@ export const EnterpriseUnlimited: Story = {
     label: 'Crédits API Python',
     unit: 'requêtes',
     showUpgradeButton: false,
+  },
+};
+
+export const WarningLevel: Story = {
+  args: {
+    current: 8,
+    max: 10,
+    label: 'Analyses du mois',
+    unit: 'CVs',
+  },
+};
+
+export const UpgradeInteraction: Story = {
+  args: {
+    current: 3,
+    max: 10,
+    label: 'Analyses du mois',
+    unit: 'CVs',
+    onUpgradeClick: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', { name: /Passer à la version Pro/i }));
+    await expect(args.onUpgradeClick).toHaveBeenCalled();
   },
 };

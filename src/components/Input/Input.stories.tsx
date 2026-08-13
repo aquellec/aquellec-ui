@@ -64,7 +64,7 @@ export const WithIcon: Story = {
         className="pl-9"
       />
       <Briefcase
-        className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-400"
+        className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500"
         aria-hidden="true"
       />
     </div>
@@ -82,7 +82,7 @@ export const PasswordWithIcon: Story = {
         className="pl-9"
       />
       <Lock
-        className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-400"
+        className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500"
         aria-hidden="true"
       />
     </div>
