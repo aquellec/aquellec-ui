@@ -31,5 +31,8 @@ export const Disabled: Story = {
 export const Loading: Story = {
   args: {
     isLoading: true,
+    file: new File([new ArrayBuffer(512 * 1024)], 'cv-amandine-quellec.pdf', {
+      type: 'application/pdf',
+    }),
   },
 };
