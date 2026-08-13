@@ -1,4 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { expect, fn, userEvent, within } from 'storybook/test';
+import { withPageTitle } from '../../../.storybook/story-shell';
 import { Toast } from './Toast';
 
 /**
@@ -9,6 +12,7 @@ const meta: Meta<typeof Toast> = {
   title: 'Components/Toast',
   component: Toast,
   tags: ['autodocs'],
+  decorators: [withPageTitle('Toast')],
   argTypes: {
     variant: {
       control: 'select',
@@ -51,5 +55,61 @@ export const ErrorState: Story = {
     variant: 'error',
     title: 'Erreur lors du parsing',
     description: 'Le format du fichier fourni n\u2019est pas un PDF valide ou est corrompu.',
+  },
+};
+
+export const Info: Story = {
+  args: {
+    variant: 'info',
+    title: 'Nouvelle fonctionnalité',
+    description: 'Export PDF disponible sur le plan Pro.',
+  },
+};
+
+export const TitleOnly: Story = {
+  args: {
+    variant: 'success',
+    title: 'Analyse lancée',
+  },
+};
+
+export const CloseInteraction: Story = {
+  render: () => {
+    const [visible, setVisible] = useState(true);
+
+    if (!visible) {
+      return <p>Notification fermée.</p>;
+    }
+
+    return (
+      <Toast
+        variant="warning"
+        title="Quota bientôt atteint"
+        description="Il ne reste qu'un crédit."
+        onClose={() => setVisible(false)}
+      />
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole('status')).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
+    await expect(canvas.getByText('Notification fermée.')).toBeInTheDocument();
+  },
+};
+
+export const ErrorAlertRole: Story = {
+  args: {
+    variant: 'error',
+    title: 'Échec de l\u2019analyse',
+    onClose: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
+    await expect(args.onClose).toHaveBeenCalled();
   },
 };

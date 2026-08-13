@@ -2,6 +2,8 @@ import React, { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
+import { subtleTextClass } from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
 
 const FOCUSABLE_SELECTOR =
@@ -20,6 +22,12 @@ export interface ModalProps {
   onClose: () => void;
   /** Optional header title; also used for `aria-labelledby`. */
   title?: React.ReactNode;
+  /** Accessible name when no visible `title` is rendered. */
+  ariaLabel?: string;
+  /** ID of a visible title inside the dialog (compound `Modal.Header` usage). */
+  labelledBy?: string;
+  /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
+  titleAs?: SectionHeadingElement;
   /** Main dialog content. */
   children: React.ReactNode;
   /** Optional footer slot, typically action buttons. */
@@ -33,6 +41,8 @@ export interface ModalProps {
 export interface ModalHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Header title content. */
   title?: React.ReactNode;
+  /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
+  titleAs?: SectionHeadingElement;
   /** When provided, renders an accessible close button. */
   onClose?: () => void;
   /** ID used to associate the title with `aria-labelledby`. */
@@ -40,7 +50,9 @@ export interface ModalHeaderProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 }
 
 export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
-  ({ title, onClose, titleId, children, className, ...props }, ref) => {
+  ({ title, titleAs, onClose, titleId, children, className, ...props }, ref) => {
+    const TitleElement = resolveSectionHeading(title, titleAs);
+
     return (
       <div
         ref={ref}
@@ -49,9 +61,9 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <h3 id={titleId} className="text-base font-bold text-slate-800">
+            <TitleElement id={titleId} className="text-base font-bold text-slate-800">
               {title}
-            </h3>
+            </TitleElement>
           )}
           {children}
         </div>
@@ -60,7 +72,8 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
             type="button"
             onClick={onClose}
             className={cn(
-              'p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
+              'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
+              subtleTextClass,
               focusRingGhost
             )}
             aria-label="Fermer la fenêtre"
@@ -107,8 +120,9 @@ export const ModalFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes
 ModalFooter.displayName = 'ModalFooter';
 
 export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
-  ({ isOpen, onClose, title, children, footer, maxWidth = 'md', className }, ref) => {
+  ({ isOpen, onClose, title, ariaLabel, labelledBy, titleAs, children, footer, maxWidth = 'md', className }, ref) => {
     const titleId = useId();
+    const dialogLabelId = title ? titleId : labelledBy;
     const dialogRef = useRef<HTMLDivElement>(null);
     const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
@@ -187,14 +201,17 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           ref={setDialogRef}
           role="dialog"
           aria-modal="true"
-          aria-labelledby={title ? titleId : undefined}
+          aria-labelledby={dialogLabelId}
+          aria-label={dialogLabelId ? undefined : ariaLabel}
           className={cn(
             'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
             maxWidths[maxWidth],
             className
           )}
         >
-          {title && <ModalHeader title={title} titleId={titleId} onClose={onClose} />}
+          {title && (
+            <ModalHeader title={title} titleAs={titleAs} titleId={titleId} onClose={onClose} />
+          )}
           <ModalBody>{children}</ModalBody>
           {footer && <ModalFooter>{footer}</ModalFooter>}
         </div>

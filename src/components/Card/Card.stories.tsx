@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
+import { withPageTitle } from '../../../.storybook/story-shell';
 import { Card } from './Card';
 import { Button } from '../Button';
 import { Badge } from '../Badge';
@@ -12,6 +14,7 @@ const meta: Meta<typeof Card> = {
   title: 'Components/Card',
   component: Card,
   tags: ['autodocs'],
+  decorators: [withPageTitle('Card')],
   argTypes: {
     variant: {
       control: 'select',
@@ -44,6 +47,12 @@ export const Default: Story = {
       </Card.Footer>
     </Card>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole('heading', { level: 1, name: 'Card' })).toBeInTheDocument();
+    await expect(canvas.getByRole('heading', { level: 2, name: 'Recommandations ATS' })).toBeInTheDocument();
+  },
 };
 
 export const AICard: Story = {
@@ -69,6 +78,53 @@ export const AICard: Story = {
           Réanalyser
         </Button>
       </Card.Footer>
+    </Card>
+  ),
+};
+
+export const OutlineCard: Story = {
+  render: () => (
+    <Card variant="outline" className="max-w-md">
+      <Card.Header title="Plan gratuit" subtitle="Fonctionnalités essentielles" />
+      <Card.Body>
+        <p className="text-sm text-slate-600">3 analyses CV par mois.</p>
+      </Card.Body>
+    </Card>
+  ),
+};
+
+export const GhostCard: Story = {
+  render: () => (
+    <Card variant="ghost" className="max-w-md">
+      <Card.Header title="Astuce du jour" />
+      <Card.Body>
+        <p className="text-sm text-slate-600">Personnalisez votre CV pour chaque offre.</p>
+      </Card.Body>
+    </Card>
+  ),
+};
+
+export const SemanticTitle: Story = {
+  render: () => (
+    <Card className="max-w-md">
+      <Card.Header title="Section principale" titleAs="h2" subtitle="Titre sémantique h2" />
+      <Card.Body>
+        <p className="text-sm text-slate-600">Contenu de la section.</p>
+      </Card.Body>
+    </Card>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole('heading', { level: 2, name: 'Section principale' })).toBeInTheDocument();
+  },
+};
+
+export const HeaderOnly: Story = {
+  render: () => (
+    <Card className="max-w-md">
+      <Card.Header title="Sans sous-titre ni action" />
+      <Card.Body>Contenu minimal.</Card.Body>
     </Card>
   ),
 };

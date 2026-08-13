@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
+import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Surface style preset for the card container. */
@@ -7,18 +8,12 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-type CardTitleElement = 'h2' | 'h3' | 'div';
-
-function resolveTitleElement(title: React.ReactNode, titleAs?: CardTitleElement): CardTitleElement {
-  if (titleAs) return titleAs;
-  if (typeof title === 'string' || typeof title === 'number') return 'h3';
-  return 'div';
-}
+type CardTitleElement = SectionHeadingElement;
 
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Primary card heading. */
   title?: React.ReactNode;
-  /** Semantic element used to render `title`. Defaults to `h3` for plain text, `div` for complex nodes. */
+  /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
   titleAs?: CardTitleElement;
   /** Secondary descriptive text below the title. */
   subtitle?: React.ReactNode;
@@ -28,7 +23,7 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ title, titleAs, subtitle, action, children, className, ...props }, ref) => {
-    const TitleElement = resolveTitleElement(title, titleAs);
+    const TitleElement = resolveSectionHeading(title, titleAs);
 
     return (
       <div

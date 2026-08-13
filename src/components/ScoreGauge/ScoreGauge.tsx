@@ -44,7 +44,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       if (isAiTheme) {
         return {
           stroke: 'stroke-ai-500',
-          text: 'text-ai-600',
+          text: 'text-ai-700',
           bg: 'bg-ai-50 text-ai-700 border-ai-200',
           statusText: 'Analyse IA',
         };
@@ -53,7 +53,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       if (normalizedScore >= 75) {
         return {
           stroke: 'stroke-emerald-500',
-          text: 'text-emerald-600',
+          text: 'text-emerald-700',
           bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
           statusText: 'Excellent Match',
         };
@@ -61,14 +61,14 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       if (normalizedScore >= 50) {
         return {
           stroke: 'stroke-amber-500',
-          text: 'text-amber-600',
+          text: 'text-amber-700',
           bg: 'bg-amber-50 text-amber-700 border-amber-200',
           statusText: 'Compatibilité Moyenne',
         };
       }
       return {
         stroke: 'stroke-rose-500',
-        text: 'text-rose-600',
+        text: 'text-rose-700',
         bg: 'bg-rose-50 text-rose-700 border-rose-200',
         statusText: 'Optimisation Nécessaire',
       };

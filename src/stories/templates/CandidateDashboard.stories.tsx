@@ -10,6 +10,8 @@ import { UsageBar } from '../../components/UsageBar';
 import { Textarea } from '../../components/Textarea';
 import { Input } from '../../components/Input';
 import { DataTable } from '../../components/DataTable';
+import { getScoreTextClass } from '../../lib/score-tier';
+import { cn } from '../../lib/cn';
 import { Sparkles, ArrowRight, Briefcase } from 'lucide-react';
 
 interface CandidateAnalysis {
@@ -191,7 +193,7 @@ function CandidateDashboardPage() {
             <Card className="text-center">
               <Card.Body className="flex flex-col items-center gap-2 py-8">
                 <ScoreGauge score={88} size="lg" label="Score ATS" />
-                <p className="text-sm font-medium text-emerald-600">Profil compatible</p>
+                <p className="text-sm font-medium text-emerald-700">Profil compatible</p>
               </Card.Body>
             </Card>
 
@@ -225,15 +227,7 @@ function CandidateDashboardPage() {
                 {
                   header: 'Score ATS',
                   cell: (item) => (
-                    <span
-                      className={
-                        item.score >= 75
-                          ? 'font-bold text-emerald-600'
-                          : item.score >= 50
-                            ? 'font-bold text-amber-600'
-                            : 'font-bold text-rose-600'
-                      }
-                    >
+                    <span className={cn('font-bold', getScoreTextClass(item.score))}>
                       {item.score}%
                     </span>
                   ),

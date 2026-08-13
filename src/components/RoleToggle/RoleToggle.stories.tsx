@@ -47,5 +47,29 @@ export const SwitchRoleInteraction: Story = {
 
     await expect(recruiterButton).toHaveAttribute('aria-pressed', 'true');
     await expect(candidateButton).toHaveAttribute('aria-pressed', 'false');
+
+    await userEvent.click(candidateButton);
+
+    await expect(candidateButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(recruiterButton).toHaveAttribute('aria-pressed', 'false');
+  },
+};
+
+export const KeyboardNavigation: Story = {
+  render: () => {
+    const [activeRole, setActiveRole] = useState<Role>('candidate');
+    return <RoleToggle activeRole={activeRole} onChange={setActiveRole} />;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const candidateButton = canvas.getByRole('button', { name: /Espace Candidat/i });
+    const recruiterButton = canvas.getByRole('button', { name: /Espace Recruteur/i });
+
+    candidateButton.focus();
+    await userEvent.tab();
+    await expect(recruiterButton).toHaveFocus();
+
+    await userEvent.keyboard('{Enter}');
+    await expect(recruiterButton).toHaveAttribute('aria-pressed', 'true');
   },
 };

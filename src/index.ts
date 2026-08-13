@@ -14,3 +14,12 @@ export * from './components/Input';
 
 export { cn } from './lib/cn';
 export { focusRing, focusRingDanger, focusRingGhost } from './lib/focus-ring';
+export { getScoreTextClass } from './lib/score-tier';
+export { resolveSectionHeading, type SectionHeadingElement } from './lib/heading';
+export {
+  errorTextClass,
+  mutedTextClass,
+  placeholderClass,
+  semanticIconClass,
+  subtleTextClass,
+} from './lib/semantic-colors';

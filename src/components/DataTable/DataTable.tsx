@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { mutedTextClass } from '../../lib/semantic-colors';
 import { focusRing } from '../../lib/focus-ring';
 
 export interface Column<T> {
@@ -79,9 +80,9 @@ function DataTableInner<T>(
               ))
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="py-12 text-center text-slate-400">
+                <td colSpan={columns.length} className={cn('py-12 text-center', mutedTextClass)}>
                   <div className="flex flex-col items-center justify-center space-y-2">
-                    <Inbox className="w-8 h-8 text-slate-300" aria-hidden="true" />
+                    <Inbox className={cn('w-8 h-8', mutedTextClass)} aria-hidden="true" />
                     <p className="text-sm font-medium">{emptyMessage}</p>
                   </div>
                 </td>

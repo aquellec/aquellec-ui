@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
+import { withPageTitle } from '../../../.storybook/story-shell';
 import { PricingCard } from './PricingCard';
 
 /**
@@ -9,6 +11,7 @@ const meta: Meta<typeof PricingCard> = {
   title: 'Components/PricingCard',
   component: PricingCard,
   tags: ['autodocs'],
+  decorators: [withPageTitle('Tarifs', 'h2')],
 };
 
 export default meta;
@@ -48,5 +51,44 @@ export const RecruiterTeam: Story = {
       { text: 'Espace de travail collaboratif (5 seats)', included: true },
       { text: 'API Python dédiée & Support prioritaire', included: true },
     ],
+  },
+};
+
+export const FreePlan: Story = {
+  args: {
+    title: 'Candidat Free',
+    description: 'Pour découvrir l\u2019analyse ATS.',
+    price: 'Gratuit',
+    buttonText: 'Commencer',
+    features: [{ text: '3 analyses par mois', included: true }],
+  },
+};
+
+export const CustomQuote: Story = {
+  args: {
+    title: 'Entreprise',
+    description: 'Volume élevé et SLA dédié.',
+    price: 'Sur devis',
+    period: '/ an',
+    buttonVariant: 'outline',
+    features: [{ text: 'API illimitée', included: true }],
+  },
+};
+
+export const SelectPlanInteraction: Story = {
+  args: {
+    title: 'Candidat Pro',
+    description: 'Plan recommandé.',
+    price: '9.99€',
+    isPopular: true,
+    buttonText: 'Choisir ce plan',
+    onSelect: fn(),
+    features: [{ text: 'Analyses illimitées', included: true }],
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Choisir ce plan' }));
+    await expect(args.onSelect).toHaveBeenCalled();
   },
 };
