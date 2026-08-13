@@ -5,7 +5,7 @@ import { RoleToggle, type Role } from './RoleToggle';
 
 /**
  * Segmented control pour basculer entre l'espace Candidat et Recruteur.
- * Utilise `aria-pressed` sur chaque option pour indiquer l'état actif aux lecteurs d'écran.
+ * Implémenté en `radiogroup` avec navigation clavier aux flèches.
  */
 const meta: Meta<typeof RoleToggle> = {
   title: 'Components/RoleToggle',
@@ -37,15 +37,15 @@ export const SwitchRoleInteraction: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const candidateButton = canvas.getByRole('button', { name: /Espace Candidat/i });
-    const recruiterButton = canvas.getByRole('button', { name: /Espace Recruteur/i });
+    const candidateRadio = canvas.getByRole('radio', { name: /Espace Candidat/i });
+    const recruiterRadio = canvas.getByRole('radio', { name: /Espace Recruteur/i });
 
-    await expect(candidateButton).toHaveAttribute('aria-pressed', 'true');
-    await expect(recruiterButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(candidateRadio).toHaveAttribute('aria-checked', 'true');
+    await expect(recruiterRadio).toHaveAttribute('aria-checked', 'false');
 
-    await userEvent.click(recruiterButton);
+    await userEvent.click(recruiterRadio);
 
-    await expect(recruiterButton).toHaveAttribute('aria-pressed', 'true');
-    await expect(candidateButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(recruiterRadio).toHaveAttribute('aria-checked', 'true');
+    await expect(candidateRadio).toHaveAttribute('aria-checked', 'false');
   },
 };

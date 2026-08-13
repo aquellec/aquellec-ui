@@ -49,6 +49,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const inputId = useId();
     const errorId = useId();
 
     const isFileControlled = file !== undefined;
@@ -119,18 +120,6 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       onFileSelect?.(firstFile);
     };
 
-    const openFilePicker = () => {
-      if (isInteractive) inputRef.current?.click();
-    };
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (!isInteractive) return;
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openFilePicker();
-      }
-    };
-
     const handleDragOver = (e: React.DragEvent) => {
       e.preventDefault();
       if (!isInteractive) return;
@@ -152,6 +141,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isInteractive) return;
       if (e.target.files?.length) {
         validateAndHandleFiles(Array.from(e.target.files));
       }
@@ -201,14 +191,16 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       <div ref={ref} className={cn('w-full', className)} {...props}>
         <input
           ref={inputRef}
+          id={inputId}
           type="file"
           accept={accept}
           multiple={multiple}
-          disabled={isDisabled || isLoading}
+          disabled={!isInteractive}
           onChange={handleInputChange}
+          aria-label={dropzoneLabel}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? errorId : undefined}
           className="sr-only"
-          tabIndex={-1}
-          aria-hidden="true"
         />
 
         {hasSelection ? (
@@ -262,15 +254,9 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
             )}
           </div>
         ) : (
-          <div
-            role="button"
-            tabIndex={isInteractive ? 0 : -1}
-            aria-disabled={isDisabled || isLoading}
+          <label
+            htmlFor={inputId}
             aria-busy={isLoading || undefined}
-            aria-label={dropzoneLabel}
-            aria-describedby={error ? errorId : undefined}
-            onClick={openFilePicker}
-            onKeyDown={handleKeyDown}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -305,7 +291,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
                 </p>
               </div>
             )}
-          </div>
+          </label>
         )}
 
         {error && (

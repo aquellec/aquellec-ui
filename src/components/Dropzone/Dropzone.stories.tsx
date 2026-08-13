@@ -59,15 +59,13 @@ export const FileSelectionInteraction: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    const dropzone = canvas.getByRole('button', { name: /Zone de dépôt de CV/i });
+    const fileInput = canvas.getByLabelText(/Zone de dépôt de CV/i);
 
-    await expect(dropzone).toHaveAttribute('aria-disabled', 'false');
+    await expect(fileInput).toBeEnabled();
 
     const pdfFile = new File(['%PDF-1.4 mock content'], 'cv-test.pdf', {
       type: 'application/pdf',
     });
-    const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
-
     await userEvent.upload(fileInput, pdfFile);
 
     await expect(canvas.getByText('cv-test.pdf')).toBeInTheDocument();

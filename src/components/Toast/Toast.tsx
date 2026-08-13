@@ -47,6 +47,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         ref={ref}
         role={liveRole}
         aria-live={variant === 'error' ? 'assertive' : 'polite'}
+        aria-atomic="true"
         className={cn(
           'flex items-start p-4 rounded-xl border shadow-sm transition-all duration-200 max-w-md w-full',
           variants[variant],
@@ -56,7 +57,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
       >
         {renderIcon()}
         <div className="flex-1 mr-2 text-left">
-          <h4 className="text-xs font-bold leading-tight">{title}</h4>
+          <p className="text-xs font-bold leading-tight">{title}</p>
           {description && <p className="text-xs opacity-90 mt-1 leading-normal">{description}</p>}
         </div>
         {onClose && (
