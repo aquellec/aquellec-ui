@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import { cn } from '../../lib/cn';
+import { errorTextClass, mutedTextClass, placeholderClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingDanger } from '../../lib/focus-ring';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -68,7 +69,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={cn(
-            'w-full p-3 text-xs bg-white text-slate-800 rounded-xl border transition-all duration-150 placeholder:text-slate-400',
+            'w-full p-3 text-xs bg-white text-slate-800 rounded-xl border transition-all duration-150',
+            placeholderClass,
             error
               ? cn('border-rose-300', focusRingDanger)
               : cn('border-slate-300 hover:border-slate-400', focusRing),
@@ -78,18 +80,18 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
         <div className="flex items-center justify-between mt-1 gap-2">
           {error ? (
-            <span id={errorId} className="text-[11px] text-rose-500" role="alert">
+            <span id={errorId} className={cn('text-[11px]', errorTextClass)} role="alert">
               {error}
             </span>
           ) : helperText ? (
-            <span id={helperId} className="text-[11px] text-slate-400">
+            <span id={helperId} className={cn('text-[11px]', mutedTextClass)}>
               {helperText}
             </span>
           ) : (
             <span />
           )}
           {maxLength && (
-            <span className="text-[11px] text-slate-400 flex-shrink-0" aria-live="polite">
+            <span className={cn('text-[11px] flex-shrink-0', mutedTextClass)} aria-live="polite">
               {length} / {maxLength}
             </span>
           )}

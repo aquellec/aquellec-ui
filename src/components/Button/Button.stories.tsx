@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { Button } from './Button';
 
 /**
@@ -49,5 +50,42 @@ export const Disabled: Story = {
   args: {
     children: 'Action indisponible',
     disabled: true,
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    children: 'Voir l\u2019historique',
+    variant: 'secondary',
+  },
+};
+
+export const Outline: Story = {
+  args: {
+    children: 'Exporter',
+    variant: 'outline',
+    size: 'lg',
+  },
+};
+
+export const Ghost: Story = {
+  args: {
+    children: 'Annuler',
+    variant: 'ghost',
+    size: 'sm',
+  },
+};
+
+export const ClickInteraction: Story = {
+  args: {
+    children: 'Lancer l\u2019analyse',
+    variant: 'primary',
+    onClick: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', { name: /Lancer l.analyse/i }));
+    await expect(args.onClick).toHaveBeenCalled();
   },
 };

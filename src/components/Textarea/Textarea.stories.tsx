@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { Textarea } from './Textarea';
 
 /**
@@ -43,5 +44,36 @@ export const Disabled: Story = {
     defaultValue: 'Champ non modifiable.',
     disabled: true,
     rows: 4,
+  },
+};
+
+export const CharacterCountInteraction: Story = {
+  args: {
+    id: 'job-description-count',
+    label: 'Fiche de poste',
+    placeholder: 'Décrivez le poste...',
+    maxLength: 20,
+    rows: 3,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textarea = canvas.getByRole('textbox', { name: /Fiche de poste/i });
+
+    await userEvent.type(textarea, 'Développeur React senior');
+    await expect(canvas.getByText(/20\s*\/\s*20/)).toBeInTheDocument();
+  },
+};
+
+export const HelperTextOnly: Story = {
+  args: {
+    id: 'job-description-helper',
+    label: 'Fiche de poste',
+    helperText: 'Minimum 50 caractères recommandés.',
+    rows: 3,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByText('Minimum 50 caractères recommandés.')).toBeInTheDocument();
   },
 };

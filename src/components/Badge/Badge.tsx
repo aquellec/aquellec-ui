@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, X, AlertTriangle, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { semanticIconClass } from '../../lib/semantic-colors';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Color scheme reflecting ATS semantic meaning. */
@@ -42,13 +43,13 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const renderIcon = () => {
       switch (icon) {
         case 'check':
-          return <Check className={cn(iconSizes, 'text-emerald-600')} aria-hidden="true" />;
+          return <Check className={cn(iconSizes, semanticIconClass.success)} aria-hidden="true" />;
         case 'cross':
-          return <X className={cn(iconSizes, 'text-rose-600')} aria-hidden="true" />;
+          return <X className={cn(iconSizes, semanticIconClass.danger)} aria-hidden="true" />;
         case 'warning':
-          return <AlertTriangle className={cn(iconSizes, 'text-amber-600')} aria-hidden="true" />;
+          return <AlertTriangle className={cn(iconSizes, semanticIconClass.warning)} aria-hidden="true" />;
         case 'ai':
-          return <Sparkles className={cn(iconSizes, 'text-ai-600')} aria-hidden="true" />;
+          return <Sparkles className={cn(iconSizes, semanticIconClass.ai)} aria-hidden="true" />;
         default:
           return null;
       }

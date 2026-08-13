@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Briefcase } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing } from '../../lib/focus-ring';
 
 export type Role = 'candidate' | 'recruiter';
@@ -34,7 +35,7 @@ export const RoleToggle = React.forwardRef<HTMLDivElement, RoleToggleProps>(
             focusRing,
             activeRole === 'candidate'
               ? 'bg-white text-slate-800 shadow-sm'
-              : 'text-slate-500 hover:text-slate-700'
+              : cn(subtleTextClass, 'hover:text-slate-700')
           )}
         >
           <User className="w-3.5 h-3.5 text-brand-600" aria-hidden="true" />
@@ -50,7 +51,7 @@ export const RoleToggle = React.forwardRef<HTMLDivElement, RoleToggleProps>(
             focusRing,
             activeRole === 'recruiter'
               ? 'bg-white text-slate-800 shadow-sm'
-              : 'text-slate-500 hover:text-slate-700'
+              : cn(subtleTextClass, 'hover:text-slate-700')
           )}
         >
           <Briefcase className="w-3.5 h-3.5 text-ai-600" aria-hidden="true" />

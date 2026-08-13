@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { DataTable } from './DataTable';
+import { getScoreTextClass } from '../../lib/score-tier';
+import { cn } from '../../lib/cn';
 import { Badge } from '../Badge';
 import { Button } from '../Button';
 import { FileText, ExternalLink } from 'lucide-react';
@@ -51,15 +55,7 @@ export const Default: Story = {
         {
           header: 'Score ATS',
           cell: (item) => (
-            <span
-              className={
-                item.score >= 75
-                  ? 'font-bold text-emerald-600'
-                  : item.score >= 50
-                  ? 'font-bold text-amber-600'
-                  : 'font-bold text-rose-600'
-              }
-            >
+            <span className={cn('font-bold', getScoreTextClass(item.score))}>
               {item.score}%
             </span>
           ),
@@ -130,4 +126,94 @@ export const EmptyState: Story = {
       ]}
     />
   ),
+};
+
+export const PaginationInteraction: Story = {
+  render: () => {
+    const [page, setPage] = useState(2);
+    const onPageChange = fn((nextPage: number) => setPage(nextPage));
+
+    return (
+      <DataTable
+        data={mockData}
+        keyExtractor={(item) => item.id}
+        columns={[
+          { header: 'Candidat', accessorKey: 'candidateName' },
+          { header: 'Poste', accessorKey: 'jobTitle' },
+          { header: 'Score', accessorKey: 'score' },
+          { header: 'Date', accessorKey: 'date' },
+        ]}
+        pagination={{
+          currentPage: page,
+          totalPages: 3,
+          onPageChange,
+        }}
+      />
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByText(/Page/i)).toHaveTextContent('2');
+    await expect(canvas.getByRole('button', { name: 'Page précédente' })).toBeEnabled();
+    await expect(canvas.getByRole('button', { name: 'Page suivante' })).toBeEnabled();
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Page précédente' }));
+    await expect(canvas.getByText(/Page/i)).toHaveTextContent('1');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Page suivante' }));
+    await expect(canvas.getByText(/Page/i)).toHaveTextContent('2');
+  },
+};
+
+export const PaginationBoundaries: Story = {
+  render: () => (
+    <DataTable
+      data={mockData}
+      keyExtractor={(item) => item.id}
+      columns={[
+        { header: 'Candidat', accessorKey: 'candidateName' },
+        { header: 'Poste', accessorKey: 'jobTitle' },
+      ]}
+      pagination={{
+        currentPage: 1,
+        totalPages: 1,
+        onPageChange: fn(),
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const prevButton = canvas.getByRole('button', { name: 'Page précédente' });
+    const nextButton = canvas.getByRole('button', { name: 'Page suivante' });
+
+    await expect(prevButton).toBeDisabled();
+    await expect(nextButton).toBeDisabled();
+    await expect(canvas.getByText(/Page/i)).toHaveTextContent('1');
+
+    await userEvent.click(prevButton);
+    await userEvent.click(nextButton);
+    await expect(canvas.getByText(/Page/i)).toHaveTextContent('1');
+  },
+};
+
+export const AccessorKeyColumns: Story = {
+  render: () => (
+    <DataTable
+      data={mockData}
+      keyExtractor={(item) => item.id}
+      columns={[
+        { header: 'Candidat', accessorKey: 'candidateName' },
+        { header: 'Poste', accessorKey: 'jobTitle' },
+        { header: 'Sans valeur' },
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByText('Amandine Q.')).toBeInTheDocument();
+    await expect(canvas.getByText('Front-End Engineer')).toBeInTheDocument();
+    await expect(canvas.queryByRole('navigation', { name: /Pagination/i })).not.toBeInTheDocument();
+  },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { Badge } from './Badge';
 
 /**
@@ -65,5 +66,36 @@ export const Neutral: Story = {
     children: 'CDI — Temps plein',
     variant: 'neutral',
     icon: 'none',
+  },
+};
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="success" icon="check" size="sm">
+        OK
+      </Badge>
+      <Badge variant="danger" icon="cross">
+        KO
+      </Badge>
+      <Badge variant="warning" icon="warning">
+        Attention
+      </Badge>
+      <Badge variant="neutral" icon="none">
+        Neutre
+      </Badge>
+      <Badge variant="ai" icon="ai">
+        IA
+      </Badge>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByText('OK')).toBeInTheDocument();
+    await expect(canvas.getByText('KO')).toBeInTheDocument();
+    await expect(canvas.getByText('Attention')).toBeInTheDocument();
+    await expect(canvas.getByText('Neutre')).toBeInTheDocument();
+    await expect(canvas.getByText('IA')).toBeInTheDocument();
   },
 };
