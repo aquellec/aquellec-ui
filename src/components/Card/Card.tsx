@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { createContext, useContext, useEffect, useId, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
+
+const CardTitleContext = createContext<{
+  setTitleId: (id: string | undefined) => void;
+} | null>(null);
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Surface style preset for the card container. */
   variant?: 'default' | 'outline' | 'ai' | 'ghost';
+  /** ID referencing the card title for `aria-labelledby`. Overrides auto-detected header title id. */
+  labelledBy?: string;
   children: React.ReactNode;
 }
 
@@ -13,6 +19,8 @@ type CardTitleElement = SectionHeadingElement;
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Primary card heading. */
   title?: React.ReactNode;
+  /** ID applied to the title element and registered on the parent `Card` for `aria-labelledby`. */
+  titleId?: string;
   /** Semantic element used to render `title`. Defaults to `h2` for plain text, `div` for complex nodes. */
   titleAs?: CardTitleElement;
   /** Secondary descriptive text below the title. */
@@ -22,8 +30,17 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 }
 
 export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ title, titleAs, subtitle, action, children, className, ...props }, ref) => {
+  ({ title, titleId, titleAs, subtitle, action, children, className, ...props }, ref) => {
+    const generatedTitleId = useId();
+    const resolvedTitleId = titleId ?? generatedTitleId;
     const TitleElement = resolveSectionHeading(title, titleAs);
+    const cardTitleContext = useContext(CardTitleContext);
+
+    useEffect(() => {
+      if (!title || !cardTitleContext) return;
+      cardTitleContext.setTitleId(resolvedTitleId);
+      return () => cardTitleContext.setTitleId(undefined);
+    }, [title, resolvedTitleId, cardTitleContext]);
 
     return (
       <div
@@ -33,7 +50,9 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <TitleElement className="text-base font-semibold text-slate-800">{title}</TitleElement>
+            <TitleElement id={resolvedTitleId} className="text-base font-semibold text-slate-800">
+              {title}
+            </TitleElement>
           )}
           {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
           {children}
@@ -78,22 +97,28 @@ export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
 CardFooter.displayName = 'CardFooter';
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', children, className, ...props }, ref) => {
+  ({ variant = 'default', labelledBy, children, className, ...props }, ref) => {
+    const [headerTitleId, setHeaderTitleId] = useState<string>();
+    const ariaLabelledBy = labelledBy ?? headerTitleId;
+
     const variants = {
-      default: 'bg-white border border-slate-200/80 shadow-sm hover:shadow-md',
+      default: 'bg-white border border-slate-200/80 shadow-card hover:shadow-md',
       outline: 'bg-transparent border border-slate-300',
-      ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-sm',
+      ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-card',
       ghost: 'bg-slate-50/80 border border-transparent',
     };
 
     return (
-      <div
-        ref={ref}
-        className={cn('rounded-2xl p-5 transition-all duration-200', variants[variant], className)}
-        {...props}
-      >
-        {children}
-      </div>
+      <CardTitleContext.Provider value={{ setTitleId: setHeaderTitleId }}>
+        <div
+          ref={ref}
+          aria-labelledby={ariaLabelledBy}
+          className={cn('rounded-2xl p-5 transition-all duration-200', variants[variant], className)}
+          {...props}
+        >
+          {children}
+        </div>
+      </CardTitleContext.Provider>
     );
   }
 ) as React.ForwardRefExoticComponent<CardProps & React.RefAttributes<HTMLDivElement>> & {

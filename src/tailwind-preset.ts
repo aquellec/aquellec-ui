@@ -1,28 +1,16 @@
 import type { Config } from 'tailwindcss';
+import { aquellecColors, aquellecThemeExtensions } from './lib/design-tokens';
 
-/** Brand and AI color tokens used across @aquellec/ui components. */
-const aquellecColors = {
-  brand: {
-    50: '#f0f7ff',
-    100: '#e0effe',
-    500: '#0066ff',
-    600: '#0052cc',
-    700: '#003d99',
-  },
-  ai: {
-    50: '#f5f3ff',
-    500: '#8b5cf6',
-    600: '#7c3aed',
-    700: '#6d28d9',
-  },
-} as const;
-
-const aquellecPreset: Partial<Config> = {
+const aquellecPreset = {
   theme: {
     extend: {
       colors: aquellecColors,
+      borderRadius: aquellecThemeExtensions.borderRadius,
+      boxShadow: aquellecThemeExtensions.boxShadow,
     },
   },
-};
+} satisfies Partial<Config>;
 
 export default aquellecPreset;
+export { aquellecColors, aquellecThemeExtensions };
+export type { AquellecColors } from './lib/design-tokens';
