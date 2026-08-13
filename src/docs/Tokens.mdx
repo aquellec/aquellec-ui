@@ -139,3 +139,22 @@ Breakpoints configurés dans `.storybook/preview.ts` :
 | `tablet` | Tablet | 768 × 1024 |
 | `desktop` | Desktop | 1280 × 800 |
 | `wide` | Wide | 1536 × 900 |
+
+### Forcer un viewport sur une story
+
+```tsx
+export const OnMobile: Story = {
+  render: () => <MyPage />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+};
+```
+
+Quand un viewport est défini via `globals`, il est appliqué automatiquement et ne peut plus être changé depuis la toolbar — utile pour figer un cas de test.
+
+### Raccourcis clavier
+
+- Viewport suivant : `Alt + V`
+- Viewport précédent : `Alt + Shift + V`
+- Réinitialiser : `Alt + Ctrl + V`

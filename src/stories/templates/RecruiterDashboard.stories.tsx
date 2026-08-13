@@ -177,3 +177,17 @@ function RecruiterDashboardPage() {
 export const Default: Story = {
   render: () => <RecruiterDashboardPage />,
 };
+
+export const OnMobile: Story = {
+  render: () => <RecruiterDashboardPage />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+};
+
+export const OnTablet: Story = {
+  render: () => <RecruiterDashboardPage />,
+  globals: {
+    viewport: { value: 'tablet', isRotated: false },
+  },
+};
