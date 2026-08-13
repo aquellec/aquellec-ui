@@ -25,8 +25,7 @@ const mockData: AnalysisHistory[] = [
 ];
 
 /**
- * Page template recruteur : import massif de CVs, KPI de matching et tableau
- * d'historique des analyses. Valide la composition B2B à haute densité d'information.
+ * Page template recruteur : import de CVs, KPIs et historique des analyses.
  */
 const meta: Meta = {
   title: 'Templates/Recruiter Dashboard',
@@ -36,7 +35,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Showcase de l’espace recruteur : upload multiple, KPIs agrégés et DataTable de candidatures analysées.',
+          'Composition dashboard recruteur : upload multiple, KPIs et DataTable des candidatures analysées.',
       },
     },
   },
@@ -64,11 +63,15 @@ function RecruiterDashboardPage() {
         <div className="grid gap-6 md:grid-cols-3">
           <Card>
             <Card.Body className="flex items-center gap-4 py-6">
-              <ScoreGauge score={72} size="sm" label="Match moyen" isAiTheme />
-              <div>
-                <p className="text-2xl font-bold text-slate-900">72%</p>
-                <p className="text-xs text-slate-500">Sur 24 candidatures</p>
-              </div>
+              <ScoreGauge
+                score={72}
+                size="sm"
+                label="Match moyen"
+                isAiTheme
+                showStatus={false}
+                className="border-0 shadow-none p-0 bg-transparent"
+              />
+              <p className="text-xs text-slate-500">Sur 24 candidatures</p>
             </Card.Body>
           </Card>
           <Card>

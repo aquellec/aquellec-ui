@@ -10,9 +10,7 @@ import { UsageBar } from '../../components/UsageBar';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 /**
- * Page template candidat : upload de CV, score ATS et recommandations IA
- * dans un layout dashboard responsive. Compose les primitives du design system
- * pour valider la cohérence visuelle en contexte réel.
+ * Page template candidat : upload de CV, score ATS et recommandations.
  */
 const meta: Meta = {
   title: 'Templates/Candidate Dashboard',
@@ -22,7 +20,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Showcase de l’espace candidat : bascule de rôle, dépôt de CV, jauge de score et carte de recommandations ATS.',
+          'Composition dashboard candidat : RoleToggle, Dropzone, ScoreGauge et carte de recommandations.',
       },
     },
   },

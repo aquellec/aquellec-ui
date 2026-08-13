@@ -93,8 +93,8 @@ function DataTableInner<T>(
                     <td key={`${keyExtractor(item)}-${col.header}`} className={cn('py-3.5 px-4 text-slate-700', col.className)}>
                       {col.cell
                         ? col.cell(item)
-                        : col.accessorKey
-                          ? (item[col.accessorKey] as unknown as React.ReactNode)
+                        : col.accessorKey != null
+                          ? String(item[col.accessorKey])
                           : null}
                     </td>
                   ))}

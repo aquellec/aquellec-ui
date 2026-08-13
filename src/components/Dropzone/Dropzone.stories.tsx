@@ -74,3 +74,19 @@ export const FileSelectionInteraction: Story = {
     await expect(args.onFileSelect).toHaveBeenCalled();
   },
 };
+
+export const InvalidFileType: Story = {
+  args: {
+    maxSizeMB: 5,
+    accept: '.pdf',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const invalidFile = new File(['not a pdf'], 'cv.txt', { type: 'text/plain' });
+    const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
+
+    await userEvent.upload(fileInput, invalidFile);
+
+    await expect(canvas.getByRole('alert')).toHaveTextContent(/n'est pas un PDF valide/i);
+  },
+};

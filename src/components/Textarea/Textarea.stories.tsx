@@ -35,3 +35,13 @@ export const WithError: Story = {
     rows: 4,
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    id: 'job-description-disabled',
+    label: 'Fiche de poste',
+    defaultValue: 'Champ non modifiable.',
+    disabled: true,
+    rows: 4,
+  },
+};
