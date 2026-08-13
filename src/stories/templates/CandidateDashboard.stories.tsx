@@ -8,10 +8,9 @@ import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { UsageBar } from '../../components/UsageBar';
 import { Textarea } from '../../components/Textarea';
+import { Input } from '../../components/Input';
 import { DataTable } from '../../components/DataTable';
 import { Sparkles, ArrowRight, Briefcase } from 'lucide-react';
-import { cn } from '../../lib/cn';
-import { focusRing } from '../../lib/focus-ring';
 
 interface CandidateAnalysis {
   id: string;
@@ -113,43 +112,18 @@ function CandidateDashboardPage() {
 
                   <div className="flex flex-col">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <div className="w-full min-w-0 text-left">
-                        <label
-                          htmlFor="company-name"
-                          className="mb-1.5 block text-xs font-semibold text-slate-700 sm:whitespace-nowrap"
-                        >
-                          Nom de l&apos;entreprise
-                        </label>
-                        <input
-                          id="company-name"
-                          type="text"
-                          defaultValue="Vercel"
-                          placeholder="Ex : Vercel, Doctolib"
-                          className={cn(
-                            'w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150 placeholder:text-slate-400 hover:border-slate-400',
-                            focusRing
-                          )}
-                        />
-                      </div>
-
-                      <div className="w-full min-w-0 text-left">
-                        <label
-                          htmlFor="job-title"
-                          className="mb-1.5 block text-xs font-semibold text-slate-700 sm:whitespace-nowrap"
-                        >
-                          Titre du poste
-                        </label>
-                        <input
-                          id="job-title"
-                          type="text"
-                          defaultValue="Front-End Engineer"
-                          placeholder="Ex : Développeur Front-End Senior"
-                          className={cn(
-                            'w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150 placeholder:text-slate-400 hover:border-slate-400',
-                            focusRing
-                          )}
-                        />
-                      </div>
+                      <Input
+                        id="company-name"
+                        label="Nom de l'entreprise"
+                        defaultValue="Vercel"
+                        placeholder="Ex : Vercel, Doctolib"
+                      />
+                      <Input
+                        id="job-title"
+                        label="Titre du poste"
+                        defaultValue="Front-End Engineer"
+                        placeholder="Ex : Développeur Front-End Senior"
+                      />
                     </div>
 
                     <div className="mt-4">

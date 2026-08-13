@@ -1,7 +1,17 @@
-import React, { useEffect, useId } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { focusRingGhost } from '../../lib/focus-ring';
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) => !element.hasAttribute('disabled')
+  );
+}
 
 export interface ModalProps {
   /** Controls whether the dialog is rendered. */
@@ -96,62 +106,109 @@ export const ModalFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes
 
 ModalFooter.displayName = 'ModalFooter';
 
-export const Modal: React.FC<ModalProps> & {
+export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
+  ({ isOpen, onClose, title, children, footer, maxWidth = 'md', className }, ref) => {
+    const titleId = useId();
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+
+    const setDialogRef = (node: HTMLDivElement | null) => {
+      dialogRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    };
+
+    useEffect(() => {
+      if (!isOpen) return;
+
+      previouslyFocusedRef.current = document.activeElement as HTMLElement;
+
+      const dialog = dialogRef.current;
+      if (dialog) {
+        const closeButton = dialog.querySelector<HTMLElement>('[aria-label="Fermer la fenêtre"]');
+        const focusableElements = getFocusableElements(dialog);
+        (closeButton ?? focusableElements[0] ?? dialog).focus();
+      }
+
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          onClose();
+          return;
+        }
+
+        if (event.key !== 'Tab' || !dialogRef.current) return;
+
+        const focusableElements = getFocusableElements(dialogRef.current);
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
+        }
+      };
+
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = 'unset';
+        window.removeEventListener('keydown', handleKeyDown);
+        previouslyFocusedRef.current?.focus();
+      };
+    }, [isOpen, onClose]);
+
+    if (!isOpen || typeof document === 'undefined') return null;
+
+    const maxWidths = {
+      sm: 'max-w-sm',
+      md: 'max-w-md',
+      lg: 'max-w-lg',
+      xl: 'max-w-2xl',
+    };
+
+    return createPortal(
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+
+        <div
+          ref={setDialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          className={cn(
+            'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
+            maxWidths[maxWidth],
+            className
+          )}
+        >
+          {title && <ModalHeader title={title} titleId={titleId} onClose={onClose} />}
+          <ModalBody>{children}</ModalBody>
+          {footer && <ModalFooter>{footer}</ModalFooter>}
+        </div>
+      </div>,
+      document.body
+    );
+  }
+) as React.ForwardRefExoticComponent<ModalProps & React.RefAttributes<HTMLDivElement>> & {
   Header: typeof ModalHeader;
   Body: typeof ModalBody;
   Footer: typeof ModalFooter;
-} = ({ isOpen, onClose, title, children, footer, maxWidth = 'md', className }) => {
-  const titleId = useId();
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  const maxWidths = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-2xl',
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        className={cn(
-          'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
-          maxWidths[maxWidth],
-          className
-        )}
-      >
-        {title && <ModalHeader title={title} titleId={titleId} onClose={onClose} />}
-        <ModalBody>{children}</ModalBody>
-        {footer && <ModalFooter>{footer}</ModalFooter>}
-      </div>
-    </div>
-  );
 };
 
+Modal.displayName = 'Modal';
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
 Modal.Footer = ModalFooter;

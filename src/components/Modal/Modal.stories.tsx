@@ -67,12 +67,13 @@ export const InteractiveExample: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await userEvent.click(canvas.getByRole('button', { name: /Voir le rapport d'analyse/i }));
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
-    await expect(canvas.getByText('Détails du Matching ATS')).toBeInTheDocument();
+    await expect(body.getByRole('dialog')).toBeInTheDocument();
+    await expect(body.getByText('Détails du Matching ATS')).toBeInTheDocument();
 
-    await userEvent.click(canvas.getByRole('button', { name: 'Fermer' }));
-    await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+    await userEvent.click(body.getByRole('button', { name: 'Fermer' }));
+    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
   },
 };

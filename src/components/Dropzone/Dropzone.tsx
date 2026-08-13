@@ -1,4 +1,4 @@
-import React, { useState, useRef, useId } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { UploadCloud, FileText, X, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
@@ -8,6 +8,8 @@ export interface DropzoneProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   onFileSelect?: (file: File) => void;
   /** Called when multiple files are selected in multiple mode. */
   onFilesSelect?: (files: File[]) => void;
+  /** Called when the current selection is cleared by the user. */
+  onClear?: () => void;
   /** Accepted file extensions or MIME types passed to the native input. */
   accept?: string;
   /** Maximum allowed file size in megabytes per file. */
@@ -29,6 +31,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     {
       onFileSelect,
       onFilesSelect,
+      onClear,
       accept = '.pdf',
       maxSizeMB = 5,
       isDisabled = false,
@@ -48,8 +51,29 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const errorId = useId();
 
-    const displayedFile = multiple ? null : file ?? selectedFile;
-    const displayedFiles = multiple ? files ?? selectedFiles : [];
+    const isFileControlled = file !== undefined;
+    const isFilesControlled = files !== undefined;
+
+    const displayedFile = multiple ? null : isFileControlled ? file : selectedFile;
+    const displayedFiles = multiple ? (isFilesControlled ? (files ?? []) : selectedFiles) : [];
+
+    useEffect(() => {
+      if (isFileControlled && file === null) {
+        setSelectedFile(null);
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+    }, [file, isFileControlled]);
+
+    useEffect(() => {
+      if (isFilesControlled && (files === null || files.length === 0)) {
+        setSelectedFiles([]);
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+    }, [files, isFilesControlled]);
 
     const isInteractive = !isDisabled && !isLoading;
 
@@ -81,13 +105,17 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       if (validFiles.length === 0) return;
 
       if (multiple) {
-        setSelectedFiles(validFiles);
+        if (!isFilesControlled) {
+          setSelectedFiles(validFiles);
+        }
         onFilesSelect?.(validFiles);
         return;
       }
 
       const firstFile = validFiles[0];
-      setSelectedFile(firstFile);
+      if (!isFileControlled) {
+        setSelectedFile(firstFile);
+      }
       onFileSelect?.(firstFile);
     };
 
@@ -129,14 +157,18 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       }
     };
 
-    const removeFiles = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setSelectedFile(null);
-      setSelectedFiles([]);
+    const clearSelection = () => {
+      if (!isFileControlled) {
+        setSelectedFile(null);
+      }
+      if (!isFilesControlled) {
+        setSelectedFiles([]);
+      }
       setError(null);
       if (inputRef.current) {
         inputRef.current.value = '';
       }
+      onClear?.();
     };
 
     const formatFileSize = (bytes: number) => {
@@ -151,123 +183,134 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       ? 'Zone de dépôt de CVs. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.'
       : 'Zone de dépôt de CV. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.';
 
+    const removeLabel = multiple ? 'Supprimer les fichiers' : 'Supprimer le fichier';
+
+    const dropzoneSurfaceClassName = cn(
+      'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ease-in-out',
+      focusRing,
+      isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
+      isDragActive
+        ? 'border-brand-500 bg-brand-50/50 scale-[0.99]'
+        : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50',
+      error && 'border-red-400 bg-red-50/30',
+      isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait',
+      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200'
+    );
+
     return (
       <div ref={ref} className={cn('w-full', className)} {...props}>
-        <div
-          role="button"
-          tabIndex={isInteractive ? 0 : -1}
-          aria-disabled={isDisabled || isLoading}
-          aria-busy={isLoading || undefined}
-          aria-label={dropzoneLabel}
-          aria-describedby={error ? errorId : undefined}
-          onClick={openFilePicker}
-          onKeyDown={handleKeyDown}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={cn(
-            'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ease-in-out',
-            focusRing,
-            isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
-            isDragActive
-              ? 'border-brand-500 bg-brand-50/50 scale-[0.99]'
-              : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50',
-            error && 'border-red-400 bg-red-50/30',
-            isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait',
-            isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200'
-          )}
-        >
-          <input
-            ref={inputRef}
-            type="file"
-            accept={accept}
-            multiple={multiple}
-            disabled={isDisabled || isLoading}
-            onChange={handleInputChange}
-            className="sr-only"
-            tabIndex={-1}
-          />
+        <input
+          ref={inputRef}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          disabled={isDisabled || isLoading}
+          onChange={handleInputChange}
+          className="sr-only"
+          tabIndex={-1}
+          aria-hidden="true"
+        />
 
-          {hasSelection ? (
-            <div className="flex items-center justify-between w-full p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
-              <div className="flex items-center space-x-3 truncate">
-                <div className="p-2 rounded-lg bg-brand-50 text-brand-600">
-                  <FileText className="w-6 h-6" aria-hidden="true" />
-                </div>
-                <div className="truncate text-left">
-                  {multiple ? (
-                    <>
-                      <p className="text-sm font-medium text-slate-800 truncate">
-                        {displayedFiles.length} CV{displayedFiles.length > 1 ? 's' : ''} sélectionné
-                        {displayedFiles.length > 1 ? 's' : ''}
-                      </p>
-                      <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
-                        {isLoading ? 'Envoi en cours...' : `Volume total : ${formatFileSize(totalSize)}`}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-sm font-medium text-slate-800 truncate">{displayedFile!.name}</p>
-                      <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
-                        {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile!.size)}
-                      </p>
-                    </>
-                  )}
-                </div>
+        {hasSelection ? (
+          <div
+            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+            aria-describedby={error ? errorId : undefined}
+          >
+            <div className="flex min-w-0 items-center space-x-3 truncate">
+              <div className="rounded-lg bg-brand-50 p-2 text-brand-600">
+                <FileText className="h-6 w-6" aria-hidden="true" />
               </div>
-              {isLoading ? (
-                <Loader2
-                  className="w-5 h-5 animate-spin text-brand-600 flex-shrink-0"
-                  aria-label="Envoi en cours"
-                />
-              ) : (
-                <button
-                  type="button"
-                  onClick={removeFiles}
-                  className={cn(
-                    'p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors',
-                    focusRingGhost
-                  )}
-                  aria-label="Supprimer le fichier"
-                >
-                  <X className="w-5 h-5" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-          ) : isLoading ? (
-            <div className="flex flex-col items-center text-center" role="status" aria-live="polite">
-              <div className="p-3 mb-3 rounded-full bg-brand-100 text-brand-600">
-                <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" />
-              </div>
-              <p className="text-sm font-medium text-slate-700 mb-1">Analyse en cours...</p>
-              <p className="text-xs text-slate-500">
-                Veuillez patienter pendant l&apos;envoi {multiple ? 'de vos CVs' : 'de votre CV'}
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center text-center">
-              <div
-                className={cn(
-                  'p-3 mb-3 rounded-full transition-colors',
-                  isDragActive ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-500'
+              <div className="truncate text-left">
+                {multiple ? (
+                  <>
+                    <p className="truncate text-sm font-medium text-slate-800">
+                      {displayedFiles.length} CV{displayedFiles.length > 1 ? 's' : ''} sélectionné
+                      {displayedFiles.length > 1 ? 's' : ''}
+                    </p>
+                    <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                      {isLoading ? 'Envoi en cours...' : `Volume total : ${formatFileSize(totalSize)}`}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="truncate text-sm font-medium text-slate-800">{displayedFile!.name}</p>
+                    <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                      {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile!.size)}
+                    </p>
+                  </>
                 )}
-              >
-                <UploadCloud className="w-6 h-6" aria-hidden="true" />
               </div>
-              <p className="text-sm font-medium text-slate-700 mb-1">
-                <span className="text-brand-600 underline underline-offset-2">Cliquez pour parcourir</span>{' '}
-                {multiple ? 'ou glissez vos CVs ici' : 'ou glissez votre CV ici'}
-              </p>
-              <p className="text-xs text-slate-500">
-                Format PDF uniquement (max. {maxSizeMB} Mo{multiple ? ' par fichier' : ''})
-              </p>
             </div>
-          )}
-        </div>
+            {isLoading ? (
+              <Loader2
+                className="h-5 w-5 flex-shrink-0 animate-spin text-brand-600"
+                aria-label="Envoi en cours"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={clearSelection}
+                disabled={isDisabled}
+                className={cn(
+                  'rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600',
+                  focusRingGhost
+                )}
+                aria-label={removeLabel}
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        ) : (
+          <div
+            role="button"
+            tabIndex={isInteractive ? 0 : -1}
+            aria-disabled={isDisabled || isLoading}
+            aria-busy={isLoading || undefined}
+            aria-label={dropzoneLabel}
+            aria-describedby={error ? errorId : undefined}
+            onClick={openFilePicker}
+            onKeyDown={handleKeyDown}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={dropzoneSurfaceClassName}
+          >
+            {isLoading ? (
+              <div className="flex flex-col items-center text-center" role="status" aria-live="polite">
+                <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600">
+                  <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
+                </div>
+                <p className="mb-1 text-sm font-medium text-slate-700">Analyse en cours...</p>
+                <p className="text-xs text-slate-500">
+                  Veuillez patienter pendant l&apos;envoi {multiple ? 'de vos CVs' : 'de votre CV'}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center text-center">
+                <div
+                  className={cn(
+                    'mb-3 rounded-full p-3 transition-colors',
+                    isDragActive ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-500'
+                  )}
+                >
+                  <UploadCloud className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <p className="mb-1 text-sm font-medium text-slate-700">
+                  <span className="text-brand-600 underline underline-offset-2">Cliquez pour parcourir</span>{' '}
+                  {multiple ? 'ou glissez vos CVs ici' : 'ou glissez votre CV ici'}
+                </p>
+                <p className="text-xs text-slate-500">
+                  Format PDF uniquement (max. {maxSizeMB} Mo{multiple ? ' par fichier' : ''})
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {error && (
-          <div id={errorId} role="alert" className="flex items-center space-x-1.5 mt-2 text-xs text-red-600">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+          <div id={errorId} role="alert" className="mt-2 flex items-center space-x-1.5 text-xs text-red-600">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span>{error}</span>
           </div>
         )}
