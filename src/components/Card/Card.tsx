@@ -7,9 +7,19 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
+type CardTitleElement = 'h2' | 'h3' | 'div';
+
+function resolveTitleElement(title: React.ReactNode, titleAs?: CardTitleElement): CardTitleElement {
+  if (titleAs) return titleAs;
+  if (typeof title === 'string' || typeof title === 'number') return 'h3';
+  return 'div';
+}
+
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Primary card heading. */
   title?: React.ReactNode;
+  /** Semantic element used to render `title`. Defaults to `h3` for plain text, `div` for complex nodes. */
+  titleAs?: CardTitleElement;
   /** Secondary descriptive text below the title. */
   subtitle?: React.ReactNode;
   /** Optional action element aligned to the right (e.g. badge, menu). */
@@ -17,15 +27,19 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 }
 
 export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ title, subtitle, action, children, className, ...props }, ref) => {
+  ({ title, titleAs, subtitle, action, children, className, ...props }, ref) => {
+    const TitleElement = resolveTitleElement(title, titleAs);
+
     return (
       <div
         ref={ref}
         className={cn('flex items-center justify-between pb-4 border-b border-slate-100', className)}
         {...props}
       >
-        <div>
-          {title && <h3 className="text-base font-semibold text-slate-800">{title}</h3>}
+        <div className="flex-1 min-w-0">
+          {title && (
+            <TitleElement className="text-base font-semibold text-slate-800">{title}</TitleElement>
+          )}
           {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
           {children}
         </div>
