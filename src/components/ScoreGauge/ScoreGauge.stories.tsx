@@ -57,3 +57,15 @@ export const AITheme: Story = {
     isAiTheme: true,
   },
 };
+
+/** Cas compact dashboard recruteur — score 72 % + libellé court en taille sm. */
+export const CompactDashboard: Story = {
+  args: {
+    score: 72,
+    size: 'sm',
+    label: 'Match moyen',
+    isAiTheme: true,
+    showStatus: false,
+    className: 'border-0 shadow-none p-0 bg-transparent',
+  },
+};

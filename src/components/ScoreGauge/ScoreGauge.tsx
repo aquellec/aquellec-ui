@@ -30,7 +30,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     const normalizedScore = Math.min(Math.max(score, 0), 100);
 
     const dimensions = {
-      sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-xs' },
+      sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-[10px]' },
       md: { width: 140, strokeWidth: 10, fontSize: 'text-3xl', labelSize: 'text-sm' },
       lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-base' },
     };
@@ -123,7 +123,12 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               {normalizedScore}%
             </span>
             {label && (
-              <span className={cn('font-medium text-slate-500 leading-none mt-0.5 max-w-[80%]', labelSize)}>
+              <span
+                className={cn(
+                  'font-medium text-slate-500 leading-none mt-0.5 max-w-[80%] line-clamp-2',
+                  labelSize
+                )}
+              >
                 {label}
               </span>
             )}

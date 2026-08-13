@@ -44,3 +44,10 @@ export const Loading: Story = {
     isLoading: true,
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    children: 'Action indisponible',
+    disabled: true,
+  },
+};
