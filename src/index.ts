@@ -7,3 +7,4 @@ export * from './components/UsageBar';
 export * from './components/DataTable';
 export * from './components/PricingCard';
 export * from './components/Toast';
+export * from './components/Modal';
