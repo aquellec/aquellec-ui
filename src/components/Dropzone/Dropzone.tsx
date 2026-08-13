@@ -5,46 +5,73 @@ import { UploadCloud, FileText, X, AlertCircle, Loader2 } from 'lucide-react';
 
 export interface DropzoneProps {
   onFileSelect?: (file: File) => void;
+  onFilesSelect?: (files: File[]) => void;
   accept?: string;
   maxSizeMB?: number;
   isDisabled?: boolean;
   isLoading?: boolean;
+  multiple?: boolean;
   file?: File | null;
+  files?: File[] | null;
   className?: string;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({
   onFileSelect,
+  onFilesSelect,
   accept = '.pdf',
   maxSizeMB = 5,
   isDisabled = false,
   isLoading = false,
+  multiple = false,
   file,
+  files,
   className,
 }) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const displayedFile = file ?? selectedFile;
+  const displayedFile = multiple ? null : file ?? selectedFile;
+  const displayedFiles = multiple ? files ?? selectedFiles : [];
 
-  const validateAndHandleFile = (file: File) => {
+  const validateFile = (candidate: File): string | null => {
+    if (candidate.size > maxSizeMB * 1024 * 1024) {
+      return `Le fichier "${candidate.name}" dépasse la limite autorisée de ${maxSizeMB} Mo.`;
+    }
+
+    if (accept.includes('.pdf') && candidate.type !== 'application/pdf') {
+      return `Le fichier "${candidate.name}" n'est pas un PDF valide.`;
+    }
+
+    return null;
+  };
+
+  const validateAndHandleFiles = (incomingFiles: File[]) => {
     setError(null);
 
-    if (file.size > maxSizeMB * 1024 * 1024) {
-      setError(`Le fichier dépasse la limite autorisée de ${maxSizeMB} Mo.`);
+    const validFiles: File[] = [];
+    for (const candidate of incomingFiles) {
+      const validationError = validateFile(candidate);
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+      validFiles.push(candidate);
+    }
+
+    if (validFiles.length === 0) return;
+
+    if (multiple) {
+      setSelectedFiles(validFiles);
+      onFilesSelect?.(validFiles);
       return;
     }
 
-    if (accept.includes('.pdf') && file.type !== 'application/pdf') {
-      setError('Seuls les fichiers PDF sont acceptés.');
-      return;
-    }
-
-    setSelectedFile(file);
-    if (onFileSelect) {
-      onFileSelect(file);
-    }
+    const firstFile = validFiles[0];
+    setSelectedFile(firstFile);
+    onFileSelect?.(firstFile);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -62,20 +89,21 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     setIsDragActive(false);
     if (isDisabled || isLoading) return;
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      validateAndHandleFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files?.length) {
+      validateAndHandleFiles(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      validateAndHandleFile(e.target.files[0]);
+    if (e.target.files?.length) {
+      validateAndHandleFiles(Array.from(e.target.files));
     }
   };
 
-  const removeFile = (e: React.MouseEvent) => {
+  const removeFiles = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedFile(null);
+    setSelectedFiles([]);
     setError(null);
     if (inputRef.current) {
       inputRef.current.value = '';
@@ -86,6 +114,9 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
   };
+
+  const totalSize = displayedFiles.reduce((sum, item) => sum + item.size, 0);
+  const hasSelection = multiple ? displayedFiles.length > 0 : Boolean(displayedFile);
 
   return (
     <div className="w-full">
@@ -111,22 +142,36 @@ export const Dropzone: React.FC<DropzoneProps> = ({
           ref={inputRef}
           type="file"
           accept={accept}
+          multiple={multiple}
           disabled={isDisabled || isLoading}
           onChange={handleInputChange}
           className="hidden"
         />
 
-        {displayedFile ? (
+        {hasSelection ? (
           <div className="flex items-center justify-between w-full p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
             <div className="flex items-center space-x-3 truncate">
               <div className="p-2 rounded-lg bg-brand-50 text-brand-600">
                 <FileText className="w-6 h-6" />
               </div>
               <div className="truncate text-left">
-                <p className="text-sm font-medium text-slate-800 truncate">{displayedFile.name}</p>
-                <p className={clsx('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
-                  {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile.size)}
-                </p>
+                {multiple ? (
+                  <>
+                    <p className="text-sm font-medium text-slate-800 truncate">
+                      {displayedFiles.length} CV{displayedFiles.length > 1 ? 's' : ''} sélectionné{displayedFiles.length > 1 ? 's' : ''}
+                    </p>
+                    <p className={clsx('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                      {isLoading ? 'Envoi en cours...' : `Volume total : ${formatFileSize(totalSize)}`}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm font-medium text-slate-800 truncate">{displayedFile!.name}</p>
+                    <p className={clsx('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                      {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile!.size)}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             {isLoading ? (
@@ -137,7 +182,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             ) : (
               <button
                 type="button"
-                onClick={removeFile}
+                onClick={removeFiles}
                 className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
                 aria-label="Supprimer le fichier"
               >
@@ -151,7 +196,9 @@ export const Dropzone: React.FC<DropzoneProps> = ({
               <Loader2 className="w-6 h-6 animate-spin" />
             </div>
             <p className="text-sm font-medium text-slate-700 mb-1">Analyse en cours...</p>
-            <p className="text-xs text-slate-500">Veuillez patienter pendant l&apos;envoi de votre CV</p>
+            <p className="text-xs text-slate-500">
+              Veuillez patienter pendant l&apos;envoi {multiple ? 'de vos CVs' : 'de votre CV'}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
@@ -164,9 +211,12 @@ export const Dropzone: React.FC<DropzoneProps> = ({
               <UploadCloud className="w-6 h-6" />
             </div>
             <p className="text-sm font-medium text-slate-700 mb-1">
-              <span className="text-brand-600 underline underline-offset-2">Cliquez pour parcourir</span> ou glissez votre CV ici
+              <span className="text-brand-600 underline underline-offset-2">Cliquez pour parcourir</span>{' '}
+              {multiple ? 'ou glissez vos CVs ici' : 'ou glissez votre CV ici'}
             </p>
-            <p className="text-xs text-slate-500">Format PDF uniquement (max. {maxSizeMB} Mo)</p>
+            <p className="text-xs text-slate-500">
+              Format PDF uniquement (max. {maxSizeMB} Mo{multiple ? ' par fichier' : ''})
+            </p>
           </div>
         )}
       </div>

@@ -36,3 +36,11 @@ export const Loading: Story = {
     }),
   },
 };
+
+export const MultipleUpload: Story = {
+  args: {
+    multiple: true,
+    maxSizeMB: 5,
+    accept: '.pdf',
+  },
+};
