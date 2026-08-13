@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { UploadCloud, FileText, X, AlertCircle } from 'lucide-react';
+import { UploadCloud, FileText, X, AlertCircle, Loader2 } from 'lucide-react';
 
 export interface DropzoneProps {
   onFileSelect?: (file: File) => void;
@@ -9,6 +9,7 @@ export interface DropzoneProps {
   maxSizeMB?: number;
   isDisabled?: boolean;
   isLoading?: boolean;
+  file?: File | null;
   className?: string;
 }
 
@@ -18,12 +19,14 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   maxSizeMB = 5,
   isDisabled = false,
   isLoading = false,
+  file,
   className,
 }) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const displayedFile = file ?? selectedFile;
 
   const validateAndHandleFile = (file: File) => {
     setError(null);
@@ -98,7 +101,8 @@ export const Dropzone: React.FC<DropzoneProps> = ({
               ? 'border-brand-500 bg-brand-50/50 scale-[0.99]'
               : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50',
             error && 'border-red-400 bg-red-50/30',
-            (isDisabled || isLoading) && 'opacity-60 cursor-not-allowed hover:bg-transparent border-slate-200',
+            isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait',
+            isDisabled && !isLoading && 'opacity-60 cursor-not-allowed hover:bg-transparent border-slate-200',
             className
           )
         )}
@@ -112,18 +116,25 @@ export const Dropzone: React.FC<DropzoneProps> = ({
           className="hidden"
         />
 
-        {selectedFile ? (
+        {displayedFile ? (
           <div className="flex items-center justify-between w-full p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
             <div className="flex items-center space-x-3 truncate">
               <div className="p-2 rounded-lg bg-brand-50 text-brand-600">
                 <FileText className="w-6 h-6" />
               </div>
               <div className="truncate text-left">
-                <p className="text-sm font-medium text-slate-800 truncate">{selectedFile.name}</p>
-                <p className="text-xs text-slate-500">{formatFileSize(selectedFile.size)}</p>
+                <p className="text-sm font-medium text-slate-800 truncate">{displayedFile.name}</p>
+                <p className={clsx('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                  {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile.size)}
+                </p>
               </div>
             </div>
-            {!isLoading && (
+            {isLoading ? (
+              <Loader2
+                className="w-5 h-5 animate-spin text-brand-600 flex-shrink-0"
+                aria-label="Envoi en cours"
+              />
+            ) : (
               <button
                 type="button"
                 onClick={removeFile}
@@ -133,6 +144,14 @@ export const Dropzone: React.FC<DropzoneProps> = ({
                 <X className="w-5 h-5" />
               </button>
             )}
+          </div>
+        ) : isLoading ? (
+          <div className="flex flex-col items-center text-center" role="status" aria-live="polite">
+            <div className="p-3 mb-3 rounded-full bg-brand-100 text-brand-600">
+              <Loader2 className="w-6 h-6 animate-spin" />
+            </div>
+            <p className="text-sm font-medium text-slate-700 mb-1">Analyse en cours...</p>
+            <p className="text-xs text-slate-500">Veuillez patienter pendant l&apos;envoi de votre CV</p>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
