@@ -9,6 +9,7 @@ const meta: Meta<typeof Dropzone> = {
     maxSizeMB: { control: 'number' },
     isDisabled: { control: 'boolean' },
     isLoading: { control: 'boolean' },
+    multiple: { control: 'boolean' },
   },
 };
 
