@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge } from './Badge';
 
+/**
+ * Étiquette compacte pour afficher un statut, une compétence ou un extrait IA.
+ * Les variantes sémantiques (`success`, `danger`, `warning`, `ai`) facilitent le scan visuel.
+ */
 const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,

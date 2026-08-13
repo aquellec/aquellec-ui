@@ -115,11 +115,18 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
             />
           </svg>
 
-          <div className="absolute flex flex-col items-center justify-center text-center" aria-hidden="true">
-            <span className={cn('font-bold leading-none tracking-tight', fontSize, colors.text)}>
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center p-2 pointer-events-none"
+            aria-hidden="true"
+          >
+            <span className={cn('font-bold leading-tight tracking-tight', fontSize, colors.text)}>
               {normalizedScore}%
             </span>
-            {label && <span className={cn('font-medium text-slate-400 mt-1', labelSize)}>{label}</span>}
+            {label && (
+              <span className={cn('font-medium text-slate-500 leading-none mt-0.5 max-w-[80%]', labelSize)}>
+                {label}
+              </span>
+            )}
           </div>
         </div>
 

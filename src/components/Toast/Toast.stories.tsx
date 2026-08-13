@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Toast } from './Toast';
 
+/**
+ * Notification temporaire pour confirmer une action, signaler une erreur ou un quota.
+ * Utilise `role="alert"` ou `role="status"` selon la variante pour l'accessibilité.
+ */
 const meta: Meta<typeof Toast> = {
   title: 'Components/Toast',
   component: Toast,

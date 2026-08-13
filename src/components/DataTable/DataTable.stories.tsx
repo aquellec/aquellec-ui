@@ -19,6 +19,10 @@ const mockData: AnalysisHistory[] = [
   { id: '3', candidateName: 'Sophie L.', jobTitle: 'UI/UX Designer', score: 42, date: '08 Aout 2026', status: 'rejected' },
 ];
 
+/**
+ * Tableau de données B2B avec colonnes custom, pagination et états loading / empty.
+ * Idéal pour lister candidatures, historiques d'analyse ou quotas API.
+ */
 const meta: Meta<typeof DataTable<AnalysisHistory>> = {
   title: 'Components/DataTable',
   component: DataTable,

@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PricingCard } from './PricingCard';
 
+/**
+ * Carte tarifaire pour les offres Candidat et Recruteur. Met en avant un plan
+ * recommandé via `isPopular` et liste les fonctionnalités incluses / exclues.
+ */
 const meta: Meta<typeof PricingCard> = {
   title: 'Components/PricingCard',
   component: PricingCard,

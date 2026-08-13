@@ -1,0 +1,141 @@
+import { Meta, ColorPalette, ColorItem, Typeset } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Tokens" />
+
+# Design Tokens
+
+Référence visuelle des fondations @aquellec/ui. Les valeurs sont définies dans `tailwind.config.js` et consommées via les classes utilitaires Tailwind.
+
+## Couleurs — Brand
+
+Palette principale pour les actions, liens et éléments de navigation.
+
+<ColorPalette>
+  <ColorItem
+    title="brand.50"
+    subtitle="#f0f7ff"
+    colors={['#f0f7ff']}
+  />
+  <ColorItem
+    title="brand.100"
+    subtitle="#e0effe"
+    colors={['#e0effe']}
+  />
+  <ColorItem
+    title="brand.500"
+    subtitle="#0066ff — Primary"
+    colors={['#0066ff']}
+  />
+  <ColorItem
+    title="brand.600"
+    subtitle="#0052cc"
+    colors={['#0052cc']}
+  />
+  <ColorItem
+    title="brand.700"
+    subtitle="#003d99"
+    colors={['#003d99']}
+  />
+</ColorPalette>
+
+## Couleurs — AI
+
+Réservée aux fonctionnalités IA : scoring, synthèses, boutons génératifs.
+
+<ColorPalette>
+  <ColorItem
+    title="ai.50"
+    subtitle="#f5f3ff"
+    colors={['#f5f3ff']}
+  />
+  <ColorItem
+    title="ai.500"
+    subtitle="#8b5cf6 — Accent IA"
+    colors={['#8b5cf6']}
+  />
+  <ColorItem
+    title="ai.600"
+    subtitle="#7c3aed"
+    colors={['#7c3aed']}
+  />
+  <ColorItem
+    title="ai.700"
+    subtitle="#6d28d9"
+    colors={['#6d28d9']}
+  />
+</ColorPalette>
+
+## Couleurs — Status
+
+Couleurs sémantiques Tailwind utilisées par `Badge`, `Toast`, `ScoreGauge` et `DataTable`.
+
+<ColorPalette>
+  <ColorItem
+    title="Success"
+    subtitle="emerald-600 — Match / Validé"
+    colors={['#059669']}
+  />
+  <ColorItem
+    title="Warning"
+    subtitle="amber-600 — À revoir / Quota"
+    colors={['#d97706']}
+  />
+  <ColorItem
+    title="Danger"
+    subtitle="rose-600 — Rejet / Erreur"
+    colors={['#e11d48']}
+  />
+  <ColorItem
+    title="Neutral"
+    subtitle="slate-500 — Informations secondaires"
+    colors={['#64748b']}
+  />
+</ColorPalette>
+
+## Typographie
+
+Échelle basée sur les utilitaires Tailwind `text-*` et `font-*`. Police système par défaut (`font-sans`).
+
+<Typeset
+  fontSizes={[
+    '0.75rem',
+    '0.875rem',
+    '1rem',
+    '1.125rem',
+    '1.25rem',
+    '1.5rem',
+    '1.875rem',
+  ]}
+  fontWeight={400}
+  sampleText="Optimisez votre CV pour les ATS"
+  fontFamily="Inter, system-ui, sans-serif"
+/>
+
+| Token Tailwind | Taille | Usage typique |
+| -------------- | ------ | ------------- |
+| `text-xs` | 12px | Labels, badges, métadonnées |
+| `text-sm` | 14px | Corps de texte, tableaux, formulaires |
+| `text-base` | 16px | Titres de modale, contenu principal |
+| `text-lg` | 18px | Titres de section |
+| `text-xl` | 20px | En-têtes de page template |
+| `text-2xl` | 24px | KPI dashboard |
+| `text-3xl` | 30px | Hero pricing |
+
+## Focus & accessibilité
+
+Les anneaux de focus sont centralisés dans `src/lib/focus-ring.ts` :
+
+- `focusRing` — contrôles interactifs standard
+- `focusRingDanger` — actions destructives
+- `focusRingGhost` — boutons discrets (fermeture modale, icônes)
+
+## Viewports Storybook
+
+Breakpoints configurés dans `.storybook/preview.ts` :
+
+| Clé | Nom | Dimensions |
+| --- | --- | ---------- |
+| `mobile` | Mobile | 375 × 812 |
+| `tablet` | Tablet | 768 × 1024 |
+| `desktop` | Desktop | 1280 × 800 |
+| `wide` | Wide | 1536 × 900 |

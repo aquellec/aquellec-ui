@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { expect, userEvent, within } from 'storybook/test';
 import { Modal } from './Modal';
 import { Button } from '../Button';
 import { Badge } from '../Badge';
 import { Sparkles } from 'lucide-react';
 
+/**
+ * Dialogue modal accessible pour afficher rapports ATS, confirmations ou formulaires.
+ * Fermeture via Escape, overlay ou bouton ; titre relié via `aria-labelledby`.
+ */
 const meta: Meta<typeof Modal> = {
   title: 'Components/Modal',
   component: Modal,
@@ -59,5 +64,15 @@ export const InteractiveExample: Story = {
         </Modal>
       </div>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', { name: /Voir le rapport d'analyse/i }));
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByText('Détails du Matching ATS')).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Fermer' }));
+    await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
   },
 };
