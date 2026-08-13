@@ -7,9 +7,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "files": [
@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "tsup",
+    "build": "tsup && tsc -p tsconfig.build.json",
     "type-check": "tsc --noEmit",
     "test:storybook": "vitest run --project storybook",
     "playwright:install": "playwright install chromium"
