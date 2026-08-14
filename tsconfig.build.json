@@ -18,5 +18,12 @@
     "noImplicitReturns": true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.stories.tsx"]
+  /*
+    `src/docs` holds the MDX showcase blocks, which are documentation and never
+    shipped: they are absent from `src/index.ts` and from the `files` field of
+    package.json. They also import the Storybook dictionary from
+    `.storybook/i18n`, outside `rootDir`, which fails the declaration emit
+    (TS6059). Excluding them keeps the published surface to the components.
+  */
+  "exclude": ["src/**/*.stories.tsx", "src/docs"]
 }

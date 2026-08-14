@@ -1,6 +1,12 @@
 node_modules/
 dist/
 storybook-static/
+
+# Declarations emitted next to their source by a build reaching outside
+# `rootDir`. `tsconfig.build.json` no longer compiles `src/docs`, so nothing
+# should land here again — this keeps it that way.
+.storybook/**/*.d.ts
+.storybook/**/*.d.ts.map
 debug-storybook.log
 *.log
 .DS_Store
