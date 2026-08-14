@@ -15,6 +15,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
+import { useI18n, type Dictionary } from '../../.storybook/i18n';
 import { cn } from '../lib/cn';
 import { focusRing } from '../lib/focus-ring';
 import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
@@ -95,14 +96,14 @@ const linkClass = cn(
 /* -------------------------------------------------------------------------- */
 
 export function SectionHeader({
-  kicker,
-  title,
+  section,
   id,
 }: {
-  kicker: string;
-  title: string;
+  section: keyof Dictionary['docs']['sections'];
   id: string;
 }) {
+  const { kicker, title } = useI18n().docs.sections[section];
+
   return (
     <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2">
       <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700">
@@ -120,32 +121,34 @@ export function SectionHeader({
 /*  Hero                                                                       */
 /* -------------------------------------------------------------------------- */
 
-const heroChips: Array<{ label: string; icon: LucideIcon; className: string }> = [
+type ChipKey = keyof Dictionary['docs']['introduction']['chips'];
+
+const heroChips: Array<{ key: ChipKey; icon: LucideIcon; className: string }> = [
   {
-    label: 'TypeScript strict',
+    key: 'typescript',
     icon: FileCode2,
-    className:
-      'border-semantic-info-border bg-semantic-info-bg text-semantic-info-fg',
+    className: 'border-semantic-info-border bg-semantic-info-bg text-semantic-info-fg',
   },
   {
-    label: 'WCAG 2.1 AA',
+    key: 'wcag',
     icon: Accessibility,
-    className:
-      'border-semantic-success-border bg-semantic-success-bg text-semantic-success-fg',
+    className: 'border-semantic-success-border bg-semantic-success-bg text-semantic-success-fg',
   },
   {
-    label: 'Preset Tailwind exportable',
+    key: 'preset',
     icon: Palette,
     className: 'border-brand-500/30 bg-brand-50 text-brand-700',
   },
   {
-    label: 'Storybook 10 + Vitest',
+    key: 'storybook',
     icon: FlaskConical,
     className: 'border-ai-500/30 bg-ai-50 text-ai-700',
   },
 ];
 
 export function Hero() {
+  const t = useI18n().docs.introduction;
+
   return (
     <div
       className={cn(
@@ -157,7 +160,7 @@ export function Hero() {
         <div className="flex flex-col items-start gap-4">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            Design System · React 19 · Tailwind CSS
+            {t.heroKicker}
           </p>
 
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
@@ -165,22 +168,20 @@ export function Hero() {
           </h1>
 
           <p className={cn('max-w-2xl text-base leading-relaxed md:text-lg', subtleTextClass)}>
-            Typed React component library for recruitment and AI analysis SaaS products:
-            resume parsing, ATS matching, candidate and recruiter workspaces, quotas and
-            score visualisation.
+            {t.heroDescription}
           </p>
 
           <ul className="flex list-none flex-wrap gap-2 pt-3">
-            {heroChips.map(({ label, icon: Icon, className }) => (
+            {heroChips.map(({ key, icon: Icon, className }) => (
               <li
-                key={label}
+                key={key}
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium',
                   className
                 )}
               >
                 <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                {label}
+                {t.chips[key]}
               </li>
             ))}
           </ul>
@@ -194,67 +195,27 @@ export function Hero() {
 /*  Pillars                                                                    */
 /* -------------------------------------------------------------------------- */
 
+type PillarKey = keyof Dictionary['docs']['introduction']['pillars'];
+
 interface Pillar {
-  title: string;
+  key: PillarKey;
   icon: LucideIcon;
   accent: AccentName;
-  body: React.ReactNode;
 }
 
-const inlineCode = 'rounded bg-slate-100 px-1 py-0.5 text-xs text-slate-800';
-
 const pillars: Pillar[] = [
-  {
-    title: 'Accessibility first',
-    icon: ShieldCheck,
-    accent: 'brand',
-    body: (
-      <>
-        Components built on WAI-ARIA APG patterns: associated labels, live regions, semantic
-        roles (<code className={inlineCode}>radiogroup</code>,{' '}
-        <code className={inlineCode}>dialog</code>). Dialog with a focus trap (
-        <code className={inlineCode}>focusin</code>), focus restoration, the{' '}
-        <kbd className="rounded border border-slate-300 bg-slate-50 px-1 text-xs">Escape</kbd> key
-        and <code className={inlineCode}>inert</code> background content. Contrast targets WCAG 2.1
-        AA, checked through the Storybook a11y addon.
-      </>
-    ),
-  },
-  {
-    title: 'Recruitment SaaS domain',
-    icon: Sparkles,
-    accent: 'ai',
-    body: (
-      <>
-        Components designed for real journeys: PDF upload (<strong>Dropzone</strong>), candidate
-        and recruiter switch (<strong>SegmentedControl</strong>), ATS score gauge (
-        <strong>ScoreGauge</strong>), paginated tables (<strong>DataTable</strong>), quota bars
-        (<strong>ProgressBar</strong>) and pricing cards. Dashboard templates live in the{' '}
-        <strong>Templates</strong> section.
-      </>
-    ),
-  },
-  {
-    title: 'Developer Experience',
-    icon: Code2,
-    accent: 'info',
-    body: (
-      <>
-        <code className={inlineCode}>React.forwardRef</code> APIs, props extended from native HTML
-        attributes, discriminated TypeScript unions (<strong>Dropzone</strong> single / multiple).
-        Styling through <code className={inlineCode}>cn()</code> (clsx + tailwind-merge). Light
-        runtime: no heavy UI library — <code className={inlineCode}>lucide-react</code> as a peer
-        dependency only.
-      </>
-    ),
-  },
+  { key: 'accessibility', icon: ShieldCheck, accent: 'brand' },
+  { key: 'domain', icon: Sparkles, accent: 'ai' },
+  { key: 'dx', icon: Code2, accent: 'info' },
 ];
 
 export function Pillars() {
+  const t = useI18n().docs.introduction.pillars;
+
   return (
     <div className="sb-unstyled mb-4 grid gap-4 md:grid-cols-3">
-      {pillars.map(({ title, icon: Icon, accent, body }) => (
-        <div key={title} className={cn(cardSurface, 'overflow-hidden')}>
+      {pillars.map(({ key, icon: Icon, accent }) => (
+        <div key={key} className={cn(cardSurface, 'overflow-hidden')}>
           <div className={cn('h-1 w-full', accents[accent].bar)} aria-hidden="true" />
           <div className="flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2.5">
@@ -266,9 +227,9 @@ export function Pillars() {
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
-              <p className="text-sm font-semibold text-slate-900">{title}</p>
+              <p className="text-sm font-semibold text-slate-900">{t[key].title}</p>
             </div>
-            <p className={cn('text-sm leading-relaxed', subtleTextClass)}>{body}</p>
+            <p className={cn('text-sm leading-relaxed', subtleTextClass)}>{t[key].body}</p>
           </div>
         </div>
       ))}
@@ -280,12 +241,14 @@ export function Pillars() {
 /*  Architecture: component families                                           */
 /* -------------------------------------------------------------------------- */
 
+type FamilyKey = keyof Dictionary['docs']['introduction']['families'];
+
 interface Family {
   name: string;
   icon: LucideIcon;
   accent: AccentName;
   links: Array<{ label: string; href: string }>;
-  description: string;
+  key: FamilyKey;
 }
 
 /*
@@ -304,7 +267,7 @@ const families: Family[] = [
       { label: 'Button', href: './?path=/docs/actions-button--documentation' },
       { label: 'SegmentedControl', href: './?path=/docs/actions-segmentedcontrol--documentation' },
     ],
-    description: 'Primary and AI buttons, exclusive segments with keyboard navigation.',
+    key: 'actions',
   },
   {
     name: 'Forms',
@@ -315,7 +278,7 @@ const families: Family[] = [
       { label: 'Textarea', href: './?path=/docs/forms-textarea--documentation' },
       { label: 'Dropzone', href: './?path=/docs/forms-dropzone--documentation' },
     ],
-    description: 'Forms with ARIA errors, PDF drop zone using a native label plus drag-and-drop.',
+    key: 'forms',
   },
   {
     name: 'Feedback',
@@ -327,8 +290,7 @@ const families: Family[] = [
       { label: 'Modal', href: './?path=/docs/feedback-modal--documentation' },
       { label: 'Badge', href: './?path=/docs/feedback-badge--documentation' },
     ],
-    description:
-      'Live region notifications, provider-backed queue, modal dialogs, compact statuses.',
+    key: 'feedback',
   },
   {
     name: 'Data Display',
@@ -339,7 +301,7 @@ const families: Family[] = [
       { label: 'DataTable', href: './?path=/docs/data-display-datatable--documentation' },
       { label: 'ProgressBar', href: './?path=/docs/data-display-progressbar--documentation' },
     ],
-    description: 'ATS score, paginated tables with skeletons, quotas and consumption.',
+    key: 'dataDisplay',
   },
   {
     name: 'Surfaces',
@@ -349,7 +311,7 @@ const families: Family[] = [
       { label: 'Card', href: './?path=/docs/data-display-card--documentation' },
       { label: 'PricingCard', href: './?path=/docs/data-display-pricingcard--documentation' },
     ],
-    description: 'Composable Header / Body / Footer surfaces, SaaS plan cards.',
+    key: 'surfaces',
   },
   {
     name: 'Templates',
@@ -365,14 +327,16 @@ const families: Family[] = [
         href: './?path=/docs/templates-recruiterdashboard--documentation',
       },
     ],
-    description: 'Reference pages assembling the components in product context.',
+    key: 'templates',
   },
 ];
 
 export function Families() {
+  const t = useI18n().docs.introduction.families;
+
   return (
     <div className="sb-unstyled mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {families.map(({ name, icon: Icon, accent, links, description }) => (
+      {families.map(({ name, icon: Icon, accent, links, key }) => (
         <div
           key={name}
           className={cn(cardSurface, 'flex flex-col gap-2 p-4', softTransition, accents[accent].hover)}
@@ -406,7 +370,7 @@ export function Families() {
             ))}
           </p>
 
-          <p className={cn('text-xs leading-relaxed', mutedTextClass)}>{description}</p>
+          <p className={cn('text-xs leading-relaxed', mutedTextClass)}>{t[key]}</p>
         </div>
       ))}
     </div>
@@ -433,63 +397,33 @@ export function TokensLink() {
 /*  Quality and governance                                                     */
 /* -------------------------------------------------------------------------- */
 
-const governance: Array<{
-  axis: string;
+type GovernanceEntry = {
+  axis: keyof Dictionary['docs']['introduction']['governance'];
+  practice: keyof Dictionary['docs']['introduction']['governance'];
   icon: LucideIcon;
   accent: AccentName;
-  practice: React.ReactNode;
-}> = [
-  {
-    axis: 'Accessibility',
-    icon: Accessibility,
-    accent: 'success',
-    practice: (
-      <>
-        <code className={inlineCode}>@storybook/addon-a11y</code> enabled on every story
-      </>
-    ),
-  },
-  {
-    axis: 'Interactions',
-    icon: FlaskConical,
-    accent: 'ai',
-    practice: (
-      <>
-        Vitest <code className={inlineCode}>play()</code> tests through{' '}
-        <code className={inlineCode}>@storybook/addon-vitest</code>
-      </>
-    ),
-  },
-  {
-    axis: 'Viewports',
-    icon: LayoutGrid,
-    accent: 'brand',
-    practice: <>Mobile 375 · Tablet 768 · Desktop 1280 · Wide 1536</>,
-  },
-  {
-    axis: 'Typing',
-    icon: FileCode2,
-    accent: 'info',
-    practice: (
-      <>
-        <code className={inlineCode}>strict: true</code>, <code className={inlineCode}>.d.ts</code>{' '}
-        declarations emitted to <code className={inlineCode}>dist/</code>
-      </>
-    ),
-  },
+};
+
+const governance: GovernanceEntry[] = [
+  { axis: 'accessibility', practice: 'accessibilityBody', icon: Accessibility, accent: 'success' },
+  { axis: 'interactions', practice: 'interactionsBody', icon: FlaskConical, accent: 'ai' },
+  { axis: 'viewports', practice: 'viewportsBody', icon: LayoutGrid, accent: 'brand' },
+  { axis: 'typing', practice: 'typingBody', icon: FileCode2, accent: 'info' },
 ];
 
 export function Governance() {
+  const t = useI18n().docs.introduction.governance;
+
   return (
     <div className={cn('sb-unstyled my-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
             <th scope="col" className="p-3 font-semibold text-slate-900">
-              Axis
+              {t.axis}
             </th>
             <th scope="col" className="p-3 font-semibold text-slate-900">
-              Practice
+              {t.practice}
             </th>
           </tr>
         </thead>
@@ -506,14 +440,46 @@ export function Governance() {
                   >
                     <Icon className="h-3 w-3" aria-hidden="true" />
                   </span>
-                  {axis}
+                  {t[axis]}
                 </span>
               </th>
-              <td className={cn('p-3 leading-relaxed', subtleTextClass)}>{practice}</td>
+              <td className={cn('p-3 leading-relaxed', subtleTextClass)}>{t[practice]}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Prose helpers for the MDX bodies                                           */
+/* -------------------------------------------------------------------------- */
+
+type IntroTextKey = 'catalogIntro' | 'compoundIntro' | 'tokensNote';
+type IntroHeadingKey = 'composablePatterns' | keyof Dictionary['docs']['introduction']['steps'];
+
+/** Paragraph of the Introduction page, resolved from the active locale. */
+export function IntroText({ id }: { id: IntroTextKey }) {
+  const t = useI18n().docs.introduction;
+  return <p className={cn('sb-unstyled my-4 text-sm leading-relaxed', subtleTextClass)}>{t[id]}</p>;
+}
+
+/** Sub-heading of the Introduction page (h3 level). */
+export function IntroHeading({ id }: { id: IntroHeadingKey }) {
+  const t = useI18n().docs.introduction;
+  const text = id === 'composablePatterns' ? t.composablePatterns : t.steps[id];
+  return (
+    <h3 className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900">{text}</h3>
+  );
+}
+
+/** Closing sentence of the composable patterns section, with the Tokens link. */
+export function SharedUtilities() {
+  const t = useI18n().docs.introduction;
+  return (
+    <p className={cn('sb-unstyled my-4 text-sm leading-relaxed', subtleTextClass)}>
+      {t.sharedUtilities} <TokensLink />.
+    </p>
   );
 }

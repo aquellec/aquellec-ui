@@ -67,6 +67,154 @@ export const fr: Dictionary = {
     pricingFeatures: (planTitle) => `Fonctionnalités du forfait ${planTitle}`,
   },
 
+  docs: {
+    sections: {
+      pillars: { kicker: 'Fondations', title: 'Les piliers du design system' },
+      catalog: { kicker: 'Catalogue', title: 'Architecture de la librairie' },
+      quickStart: { kicker: 'Prise en main', title: 'Démarrage rapide' },
+      governance: { kicker: 'Contrat de qualité', title: 'Qualité et gouvernance' },
+      brandColors: { kicker: 'Palettes', title: 'Couleurs de marque' },
+      semanticTokens: { kicker: 'Palettes', title: 'Tokens sémantiques' },
+      radii: { kicker: 'Fondations', title: 'Rayons et élévations' },
+      typography: { kicker: 'Fondations', title: 'Typographie' },
+      focus: { kicker: 'Accessibilité', title: 'Focus' },
+      viewports: { kicker: 'Responsive', title: 'Viewports' },
+      tokenUsage: { kicker: 'Consommation', title: 'Utiliser les tokens' },
+    },
+
+    introduction: {
+      heroKicker: 'Design System · React 19 · Tailwind CSS',
+      heroDescription:
+        "Librairie de composants React typés pour applications SaaS de recrutement et d'analyse IA : parsing de CV, matching ATS, espaces candidat et recruteur, quotas et visualisation de scores.",
+      chips: {
+        typescript: 'TypeScript strict',
+        wcag: 'WCAG 2.1 AA',
+        preset: 'Preset Tailwind exportable',
+        storybook: 'Storybook 10 + Vitest',
+      },
+      pillars: {
+        accessibility: {
+          title: "L'accessibilité d'abord",
+          body: "Composants calés sur les patterns WAI-ARIA APG : labels associés, live regions, rôles sémantiques. Modale avec piège de focus, restitution du focus, touche Échap et contenu de fond inert. Contrastes visés WCAG 2.1 AA, vérifiés via l'addon a11y de Storybook.",
+        },
+        domain: {
+          title: 'Métier SaaS recrutement',
+          body: "Composants pensés pour les parcours réels : import PDF, bascule candidat / recruteur, jauge de score ATS, tableaux paginés, barres de quota et cartes tarifaires. Les templates de dashboard sont dans la section Templates.",
+        },
+        dx: {
+          title: 'Expérience développeur',
+          body: "Props étendues depuis les attributs HTML natifs, unions TypeScript discriminées, styles via cn() (clsx + tailwind-merge). Runtime léger : aucune librairie UI lourde, lucide-react en peer dependency uniquement.",
+        },
+      },
+      families: {
+        actions: 'Boutons primaires et IA, segments exclusifs avec navigation clavier.',
+        forms: 'Formulaires avec erreurs ARIA, zone de dépôt PDF via label natif et glisser-déposer.',
+        feedback: "Notifications en live region, file d'attente via provider, dialogues modaux, statuts compacts.",
+        dataDisplay: 'Score ATS, tableaux paginés avec skeleton, quotas et consommation.',
+        surfaces: 'Surfaces composables Header / Body / Footer, cartes de forfait SaaS.',
+        templates: 'Pages de référence assemblant les composants en contexte produit.',
+      },
+      catalogIntro:
+        "Le catalogue est organisé en cinq familles. Chaque composant expose des stories interactives, une page Autodocs et — lorsque c'est pertinent — des tests Vitest exécutés depuis Storybook.",
+      composablePatterns: 'Patterns composables',
+      compoundIntro: 'La plupart des blocs structurels suivent un découpage compound :',
+      sharedUtilities: 'Les utilitaires partagés (cn, focusRing, tokens sémantiques) sont exportés depuis la racine du package. Référence visuelle des couleurs et des viewports :',
+      steps: {
+        install: '1. Installer le package',
+        peerDependencies:
+          "react, react-dom et lucide-react sont des peer dependencies — installez-les dans votre application hôte.",
+        configureTailwind: '2. Configurer Tailwind CSS',
+        presetIntro:
+          'Importez le preset du design system pour hériter des tokens brand, ai et semantic.* :',
+        esmEquivalent: 'Équivalent ESM / TypeScript :',
+        importComponents: '3. Importer les composants',
+        developLocally: '4. Développer et documenter en local',
+      },
+      governance: {
+        axis: 'Axe',
+        practice: 'Pratique',
+        accessibility: 'Accessibilité',
+        accessibilityBody: '@storybook/addon-a11y activé sur chaque story, en mode bloquant.',
+        interactions: 'Interactions',
+        interactionsBody: 'Tests play() Vitest via @storybook/addon-vitest.',
+        viewports: 'Viewports',
+        viewportsBody: 'Mobile 375 · Tablette 768 · Desktop 1280 · Large 1536.',
+        typing: 'Typage',
+        typingBody: 'strict: true, déclarations .d.ts générées dans dist/.',
+      },
+      tokensNote:
+        "Toute évolution de token ou de contraste passe par src/lib/design-tokens.ts : le preset et la page Tokens en découlent.",
+    },
+
+    tokens: {
+      heroKicker: 'Fondations · Preset Tailwind',
+      heroTitle: 'Design Tokens',
+      heroDescription:
+        "Source unique des fondations : src/lib/design-tokens.ts. Le preset Tailwind livré par le package et cette page sont générés depuis ce fichier, donc les valeurs ci-dessous sont toujours celles réellement compilées.",
+      brandIntro:
+        "Deux échelles complètes de dix paliers, exportées par le preset sous les noms brand et ai. Les paliers 500 / 600 / 700 portent les rôles documentés — accent, action, texte conforme AA sur fond blanc.",
+      scaleUsage: {
+        brand: 'Actions, liens, navigation',
+        ai: 'Fonctionnalités IA : scoring, synthèses, boutons génératifs',
+      },
+      roles: { accent: 'Accent', action: 'Action', aaText: 'Texte AA' },
+      semanticIntro:
+        "Consommés par Badge, Toast, Dropzone et Input via les helpers de src/lib/semantic-colors.ts, jamais en couleurs brutes. Chaque famille expose quatre rôles : fg (texte et icône), bg (fond de pastille), border et surface (fond de bannière).",
+      semanticNote:
+        "bg et surface partagent aujourd'hui la même valeur dans les quatre familles : la distinction existe pour pouvoir les dissocier plus tard sans toucher aux composants.",
+      semanticGroups: {
+        success: { label: 'Succès', usage: 'Correspondance validée, import réussi' },
+        error: { label: 'Erreur', usage: 'Rejet, échec de parsing' },
+        warning: { label: 'Alerte', usage: 'Quota bientôt atteint, score moyen' },
+        info: { label: 'Information', usage: 'Neutre, aide contextuelle' },
+      },
+      neutral: {
+        token: 'Token',
+        value: 'Valeur',
+        usage: 'Usage',
+        muted: 'Texte secondaire, légendes',
+        subtle: 'Corps de texte atténué, contrôles',
+      },
+      radii: 'Rayons',
+      elevations: 'Élévations',
+      typeScale: 'Échelle typographique',
+      typeScaleSubtitle: 'Utilitaires Tailwind par défaut · police système',
+      typeSample: 'Optimisez votre CV pour les ATS',
+      typeUsage: {
+        xs: 'Labels, badges, métadonnées',
+        sm: 'Corps de texte, tableaux, formulaires',
+        base: 'Titres de modale, contenu principal',
+        lg: 'Titres de section',
+        xl: 'En-têtes de page template',
+        xl2: 'KPI de dashboard',
+        xl3: 'Hero tarifaire',
+      },
+      focusRings: 'Anneaux de focus',
+      focusIntro:
+        "Centralisés dans src/lib/focus-ring.ts. Naviguez au clavier (Tab) pour les voir — ils sont en focus-visible uniquement, donc invisibles au clic.",
+      focusNote:
+        "Les trois anneaux sont en focus-visible uniquement : ils apparaissent au clavier, jamais au clic. Ils s'appliquent par-dessus un outline-none, donc les retirer via className ne laisse aucun indicateur de focus.",
+      focusVariants: {
+        standard: 'Contrôle standard',
+        destructive: 'Action destructive',
+        quiet: 'Bouton discret',
+      },
+      viewportsTitle: 'Viewports Storybook',
+      pinViewport: 'Figer un viewport sur une story',
+      pinViewportNote:
+        "Quand un viewport est défini via globals, il est appliqué automatiquement et ne peut plus être changé depuis la toolbar — utile pour figer un cas de test.",
+      shortcuts: 'Raccourcis clavier : viewport suivant Alt + V · précédent Alt + Maj + V · réinitialiser Alt + Ctrl + V.',
+      presetHeading: 'Via le preset Tailwind',
+      presetIntro: "Les tokens arrivent dans une application hôte par le preset — aucune feuille de style à importer :",
+      presetNote: "Le preset embarque aussi la neutralisation des animations sous prefers-reduced-motion.",
+      outsideHeading: 'En dehors de Tailwind',
+      outsideIntro:
+        "Les objets bruts restent disponibles pour les usages hors classes utilitaires (graphiques, e-mails, canvas) :",
+      outsideNote:
+        "Toute évolution passe par src/lib/design-tokens.ts : le preset, les composants et cette page en découlent automatiquement.",
+    },
+  },
+
   common: {
     cancel: 'Annuler',
     confirm: 'Confirmer',

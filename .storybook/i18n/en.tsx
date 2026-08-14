@@ -59,6 +59,159 @@ const components: ComponentLabels = {
 export const en = {
   components,
 
+  /*
+    Copy of the MDX documentation pages. Prose that carries inline formatting is
+    stored as `ReactNode`, so a translation keeps control of where the emphasis
+    and the code spans fall.
+  */
+  docs: {
+    sections: {
+      pillars: { kicker: 'Foundations', title: 'Design system pillars' },
+      catalog: { kicker: 'Catalog', title: 'Library architecture' },
+      quickStart: { kicker: 'Getting started', title: 'Quick start' },
+      governance: { kicker: 'Quality contract', title: 'Quality and governance' },
+      brandColors: { kicker: 'Palettes', title: 'Brand colors' },
+      semanticTokens: { kicker: 'Palettes', title: 'Semantic tokens' },
+      radii: { kicker: 'Foundations', title: 'Radii and elevations' },
+      typography: { kicker: 'Foundations', title: 'Typography' },
+      focus: { kicker: 'Accessibility', title: 'Focus' },
+      viewports: { kicker: 'Responsive', title: 'Viewports' },
+      tokenUsage: { kicker: 'Consumption', title: 'Using the tokens' },
+    },
+
+    introduction: {
+      heroKicker: 'Design System · React 19 · Tailwind CSS',
+      heroDescription:
+        'Typed React component library for recruitment and AI analysis SaaS products: resume parsing, ATS matching, candidate and recruiter workspaces, quotas and score visualisation.',
+      chips: {
+        typescript: 'TypeScript strict',
+        wcag: 'WCAG 2.1 AA',
+        preset: 'Exportable Tailwind preset',
+        storybook: 'Storybook 10 + Vitest',
+      },
+      pillars: {
+        accessibility: {
+          title: 'Accessibility first',
+          body: 'Components built on WAI-ARIA APG patterns: associated labels, live regions, semantic roles. Dialog with a focus trap, focus restoration, Escape key and inert background content. Contrast targets WCAG 2.1 AA, checked through the Storybook a11y addon.',
+        },
+        domain: {
+          title: 'Recruitment SaaS domain',
+          body: 'Components designed for real journeys: PDF upload, candidate and recruiter switch, ATS score gauge, paginated tables, quota bars and pricing cards. Dashboard templates live in the Templates section.',
+        },
+        dx: {
+          title: 'Developer experience',
+          body: 'Props extended from native HTML attributes, discriminated TypeScript unions, styling through cn() (clsx + tailwind-merge). Light runtime: no heavy UI library, lucide-react as a peer dependency only.',
+        },
+      },
+      families: {
+        actions: 'Primary and AI buttons, exclusive segments with keyboard navigation.',
+        forms: 'Forms with ARIA errors, PDF drop zone using a native label and drag-and-drop.',
+        feedback: 'Live region notifications, provider-backed queue, modal dialogs, compact statuses.',
+        dataDisplay: 'ATS score, paginated tables with skeletons, quotas and consumption.',
+        surfaces: 'Composable Header / Body / Footer surfaces, SaaS plan cards.',
+        templates: 'Reference pages assembling the components in product context.',
+      },
+      catalogIntro:
+        'The catalog is organised into five families. Every component ships interactive stories, an Autodocs page and — where relevant — Vitest tests run from Storybook.',
+      composablePatterns: 'Composable patterns',
+      compoundIntro: 'Most structural blocks follow a compound split:',
+      sharedUtilities: 'Shared utilities (cn, focusRing, semantic tokens) are exported from the package root. Visual reference for colors and viewports:',
+      steps: {
+        install: '1. Install the package',
+        peerDependencies:
+          'react, react-dom and lucide-react are peer dependencies — install them in your host application.',
+        configureTailwind: '2. Configure Tailwind CSS',
+        presetIntro:
+          'Import the design system preset to inherit the brand, ai and semantic.* tokens:',
+        esmEquivalent: 'ESM / TypeScript equivalent:',
+        importComponents: '3. Import the components',
+        developLocally: '4. Develop and document locally',
+      },
+      governance: {
+        axis: 'Axis',
+        practice: 'Practice',
+        accessibility: 'Accessibility',
+        accessibilityBody: '@storybook/addon-a11y enabled on every story, in blocking mode.',
+        interactions: 'Interactions',
+        interactionsBody: 'Vitest play() tests through @storybook/addon-vitest.',
+        viewports: 'Viewports',
+        viewportsBody: 'Mobile 375 · Tablet 768 · Desktop 1280 · Wide 1536.',
+        typing: 'Typing',
+        typingBody: 'strict: true, .d.ts declarations emitted to dist/.',
+      },
+      tokensNote:
+        'For any token or contrast change, update src/lib/design-tokens.ts: the preset and the Tokens page both derive from it.',
+    },
+
+    tokens: {
+      heroKicker: 'Foundations · Tailwind preset',
+      heroTitle: 'Design Tokens',
+      heroDescription:
+        'Single source for the foundations: src/lib/design-tokens.ts. The Tailwind preset shipped by the package and this page are both generated from that file, so the values below are always the ones actually compiled.',
+      brandIntro:
+        'Two complete ten-step scales, exported by the preset as brand and ai. Steps 500 / 600 / 700 carry the documented roles — accent, action, AA-compliant text on white.',
+      scaleUsage: {
+        brand: 'Actions, links, navigation',
+        ai: 'AI features: scoring, summaries, generative buttons',
+      },
+      roles: { accent: 'Accent', action: 'Action', aaText: 'AA text' },
+      semanticIntro:
+        'Consumed by Badge, Toast, Dropzone and Input through the helpers in src/lib/semantic-colors.ts, never as raw colors. Every family exposes four roles: fg (text and icon), bg (chip background), border and surface (banner background).',
+      semanticNote:
+        'bg and surface currently share the same value across all four families: the distinction exists so they can be split later without touching the components.',
+      semanticGroups: {
+        success: { label: 'Success', usage: 'Validated match, successful import' },
+        error: { label: 'Error', usage: 'Rejection, parsing failure' },
+        warning: { label: 'Warning', usage: 'Quota nearly reached, average score' },
+        info: { label: 'Information', usage: 'Neutral, contextual help' },
+      },
+      neutral: {
+        token: 'Token',
+        value: 'Value',
+        usage: 'Usage',
+        muted: 'Secondary text, captions',
+        subtle: 'Muted body text, controls',
+      },
+      radii: 'Radii',
+      elevations: 'Elevations',
+      typeScale: 'Type scale',
+      typeScaleSubtitle: 'Default Tailwind utilities · system font stack',
+      typeSample: 'Optimise your resume for ATS',
+      typeUsage: {
+        xs: 'Labels, badges, metadata',
+        sm: 'Body text, tables, forms',
+        base: 'Dialog titles, main content',
+        lg: 'Section titles',
+        xl: 'Template page headers',
+        xl2: 'Dashboard KPIs',
+        xl3: 'Pricing hero',
+      },
+      focusRings: 'Focus rings',
+      focusIntro:
+        'Centralised in src/lib/focus-ring.ts. Navigate with the keyboard (Tab) to see them — they are focus-visible only, so invisible on click.',
+      focusNote:
+        'All three rings are focus-visible only: they appear on keyboard navigation, never on click. They sit on top of an outline-none, so removing them through className leaves no focus indicator.',
+      focusVariants: {
+        standard: 'Standard control',
+        destructive: 'Destructive action',
+        quiet: 'Quiet button',
+      },
+      viewportsTitle: 'Storybook viewports',
+      pinViewport: 'Pinning a viewport on a story',
+      pinViewportNote:
+        'When a viewport is set through globals it is applied automatically and can no longer be changed from the toolbar — useful to pin a test case.',
+      shortcuts: 'Keyboard shortcuts: next viewport Alt + V · previous Alt + Shift + V · reset Alt + Ctrl + V.',
+      presetHeading: 'Through the Tailwind preset',
+      presetIntro: 'Tokens reach a host application through the preset — there is no stylesheet to import:',
+      presetNote: 'The preset also carries the prefers-reduced-motion animation reset.',
+      outsideHeading: 'Outside Tailwind',
+      outsideIntro:
+        'The raw objects stay available for uses outside utility classes (charts, emails, canvas):',
+      outsideNote:
+        'Every change goes through src/lib/design-tokens.ts: the preset, the components and this page all derive from it automatically.',
+    },
+  },
+
   common: {
     cancel: 'Cancel',
     confirm: 'Confirm',

@@ -2,6 +2,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { SectionHeader } from './_showcase';
 import {
   ColorScale,
+  TokensHeading,
+  TokensText,
   ElevationScale,
   FocusRings,
   NeutralText,
@@ -15,57 +17,51 @@ import {
 <Meta title="Docs/Tokens" />
 
 {/*
-  As with Introduction, the visual blocks live in `_tokens.tsx`.
-  They are generated from `src/lib/design-tokens.ts`: no value is copied here,
-  so the page cannot drift away from the preset.
+  Structure only. Values come from `src/lib/design-tokens.ts` and copy from the
+  story dictionary, so the page follows both the preset and the toolbar locale.
 */}
 
 <TokensHero />
 
-<SectionHeader kicker="Palettes" title="Brand colors" id="brand-colors" />
+<SectionHeader section="brandColors" id="brand-colors" />
 
-Two complete ten-step scales, exported by the preset as `brand` and `ai`.
-Steps 500 / 600 / 700 carry the documented roles — accent, action, AA-compliant text on white.
+<TokensText id="brandIntro" />
 
-<ColorScale name="brand" usage="Actions, links, navigation" />
+<ColorScale name="brand" />
 
-<ColorScale name="ai" usage="AI features: scoring, summaries, generative buttons" />
+<ColorScale name="ai" />
 
-<SectionHeader kicker="Palettes" title="Semantic tokens" id="semantic-tokens" />
+<SectionHeader section="semanticTokens" id="semantic-tokens" />
 
-Consumed by `Badge`, `Toast`, `Dropzone` and `Input` through the helpers in `src/lib/semantic-colors.ts`,
-never as raw colors. Every family exposes four roles: `fg` (text and icon),
-`bg` (chip background), `border` and `surface` (banner background).
+<TokensText id="semanticIntro" />
 
 <SemanticTokens />
 
-`bg` and `surface` currently share the same value across all four families: the distinction exists
-so they can be split later without touching the components.
+<TokensText id="semanticNote" />
 
 <NeutralText />
 
-<SectionHeader kicker="Foundations" title="Radii and elevations" id="radii-and-elevations" />
+<SectionHeader section="radii" id="radii-and-elevations" />
 
 <RadiusScale />
 
 <ElevationScale />
 
-<SectionHeader kicker="Foundations" title="Typography" id="typography" />
+<SectionHeader section="typography" id="typography" />
 
 <TypeScale />
 
-<SectionHeader kicker="Accessibility" title="Focus" id="focus" />
+<SectionHeader section="focus" id="focus" />
 
 <FocusRings />
 
-All three rings are `focus-visible` only: they appear on keyboard navigation, never on click.
-They sit on top of an `outline-none`, so removing them through `className` leaves no focus indicator.
+<TokensText id="focusNote" />
 
-<SectionHeader kicker="Responsive" title="Viewports" id="viewports" />
+<SectionHeader section="viewports" id="viewports" />
 
 <Viewports />
 
-### Pinning a viewport on a story
+<TokensHeading id="pinViewport" />
 
 ```tsx
 export const OnMobile: Story = {
@@ -76,16 +72,15 @@ export const OnMobile: Story = {
 };
 ```
 
-When a viewport is set through `globals` it is applied automatically and can no longer be changed
-from the toolbar — useful to pin a test case.
+<TokensText id="pinViewportNote" />
 
-**Keyboard shortcuts**: next viewport `Alt + V` · previous `Alt + Shift + V` · reset `Alt + Ctrl + V`.
+<TokensText id="shortcuts" />
 
-<SectionHeader kicker="Consumption" title="Using the tokens" id="using-the-tokens" />
+<SectionHeader section="tokenUsage" id="using-the-tokens" />
 
-### Through the Tailwind preset
+<TokensHeading id="presetHeading" />
 
-Tokens reach a host application through the preset — there is no stylesheet to import:
+<TokensText id="presetIntro" />
 
 ```ts
 // tailwind.config.ts
@@ -100,11 +95,11 @@ export default {
 };
 ```
 
-The preset also carries the `prefers-reduced-motion` animation reset.
+<TokensText id="presetNote" />
 
-### Outside Tailwind
+<TokensHeading id="outsideHeading" />
 
-The raw objects stay available for uses outside utility classes (charts, emails, canvas):
+<TokensText id="outsideIntro" />
 
 ```ts
 import { aquellecColors, aquellecThemeExtensions } from '@aquellec/ui';
@@ -113,5 +108,4 @@ aquellecColors.brand[600];              // '#0052cc'
 aquellecThemeExtensions.boxShadow.card; // Card surface shadow
 ```
 
-Every change goes through `src/lib/design-tokens.ts`: the preset, the components and this page all
-derive from it automatically.
+<TokensText id="outsideNote" />

@@ -3,35 +3,35 @@ import {
   Families,
   Governance,
   Hero,
+  IntroHeading,
+  IntroText,
   Pillars,
   SectionHeader,
-  TokensLink,
+  SharedUtilities,
 } from './_showcase';
 
 <Meta title="Docs/Introduction" />
 
 {/*
-  Visual blocks are imported from `_showcase.tsx` so they can be shared with the
-  Tokens page and typed. Storybook applies its own documentation styles to MDX
-  pages, which is why every block carries the `sb-unstyled` escape hatch.
+  This page holds structure only. Every string comes from the story dictionary
+  through the blocks below, so the toolbar locale switch drives the page too.
 */}
 
 <Hero />
 
-<SectionHeader kicker="Foundations" title="Design system pillars" id="design-system-pillars" />
+<SectionHeader section="pillars" id="design-system-pillars" />
 
 <Pillars />
 
-<SectionHeader kicker="Catalog" title="Library architecture" id="library-architecture" />
+<SectionHeader section="catalog" id="library-architecture" />
 
-The catalog is organised into five families. Every component ships interactive stories, an Autodocs
-page and — where relevant — Vitest tests run from Storybook.
+<IntroText id="catalogIntro" />
 
 <Families />
 
-### Composable patterns
+<IntroHeading id="composablePatterns" />
 
-Most structural blocks follow a compound split:
+<IntroText id="compoundIntro" />
 
 ```tsx
 <Card>
@@ -45,23 +45,22 @@ Most structural blocks follow a compound split:
 </Modal>
 ```
 
-Shared utilities (<code>cn</code>, <code>focusRing</code>, semantic tokens) are exported from the package root.
-Visual reference for colors and viewports: the <TokensLink /> page.
+<SharedUtilities />
 
-<SectionHeader kicker="Getting started" title="Quick start" id="quick-start" />
+<SectionHeader section="quickStart" id="quick-start" />
 
-### 1. Install the package
+<IntroHeading id="install" />
 
 ```bash
 pnpm add @aquellec/ui lucide-react
 # ou : npm install @aquellec/ui lucide-react
 ```
 
-`react`, `react-dom` and `lucide-react` are **peer dependencies** — install them in your host application.
+<IntroText id="peerDependencies" />
 
-### 2. Configure Tailwind CSS
+<IntroHeading id="configureTailwind" />
 
-Import the design system preset to inherit the <code>brand</code>, <code>ai</code> and <code>semantic.*</code> tokens:
+<IntroText id="presetIntro" />
 
 ```js
 // tailwind.config.js
@@ -75,7 +74,7 @@ module.exports = {
 };
 ```
 
-ESM / TypeScript equivalent:
+<IntroText id="esmEquivalent" />
 
 ```ts
 // tailwind.config.ts
@@ -88,7 +87,7 @@ export default {
 } satisfies Config;
 ```
 
-### 3. Import the components
+<IntroHeading id="importComponents" />
 
 ```tsx
 import { Button, Card, Dropzone, ToastProvider, useToast } from '@aquellec/ui';
@@ -107,7 +106,7 @@ export function App() {
 }
 ```
 
-### 4. Develop and document locally
+<IntroHeading id="developLocally" />
 
 ```bash
 pnpm install
@@ -117,8 +116,8 @@ pnpm test:storybook   # Vitest interaction and a11y tests
 pnpm build-storybook  # Static documentation export
 ```
 
-<SectionHeader kicker="Quality contract" title="Quality and governance" id="quality-and-governance" />
+<SectionHeader section="governance" id="quality-and-governance" />
 
 <Governance />
 
-For any token or contrast change, update `src/lib/design-tokens.ts`: the preset and the **Tokens** page both derive from it.
+<IntroText id="tokensNote" />

@@ -1,4 +1,5 @@
 import { Palette, Ruler, Layers, Type, Focus, MonitorSmartphone, Sparkles } from 'lucide-react';
+import { useI18n, type Dictionary } from '../../.storybook/i18n';
 import { cn } from '../lib/cn';
 import { aquellecColors, aquellecThemeExtensions } from '../lib/design-tokens';
 import { focusRing, focusRingDanger, focusRingGhost } from '../lib/focus-ring';
@@ -23,6 +24,8 @@ import { cardSurface, softTransition } from './_showcase';
 /* -------------------------------------------------------------------------- */
 
 export function TokensHero() {
+  const t = useI18n().docs.tokens;
+
   return (
     <div
       className={cn(
@@ -33,17 +36,15 @@ export function TokensHero() {
       <div className="flex flex-col items-start gap-4">
         <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
           <Palette className="h-3.5 w-3.5" aria-hidden="true" />
-          Foundations · Tailwind preset
+          {t.heroKicker}
         </p>
 
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-          Design Tokens
+          {t.heroTitle}
         </h1>
 
         <p className={cn('max-w-2xl text-base leading-relaxed md:text-lg', subtleTextClass)}>
-          Single source for the foundations: <code className="text-sm">src/lib/design-tokens.ts</code>.
-          The Tailwind preset shipped by the package and this page are both generated from that
-          file, so the values below are always the ones actually compiled.
+          {t.heroDescription}
         </p>
       </div>
     </div>
@@ -55,14 +56,16 @@ export function TokensHero() {
 /* -------------------------------------------------------------------------- */
 
 /** Steps carrying a documented role, highlighted within the scale. */
-const keyShades: Record<string, string> = {
-  '500': 'Accent',
-  '600': 'Action',
-  '700': 'AA text',
+const keyShadeRoles: Record<string, keyof Dictionary['docs']['tokens']['roles']> = {
+  '500': 'accent',
+  '600': 'action',
+  '700': 'aaText',
 };
 
 function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; hex: string }) {
-  const role = keyShades[shade];
+  const roles = useI18n().docs.tokens.roles;
+  const roleKey = keyShadeRoles[shade];
+  const role = roleKey ? roles[roleKey] : undefined;
 
   return (
     <div className="flex flex-col">
@@ -83,13 +86,9 @@ function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; h
   );
 }
 
-export function ColorScale({
-  name,
-  usage,
-}: {
-  name: 'brand' | 'ai';
-  usage: string;
-}) {
+export function ColorScale({ name }: { name: 'brand' | 'ai' }) {
+  const t = useI18n().docs.tokens;
+  const usage = t.scaleUsage[name];
   const scale = aquellecColors[name];
 
   return (
@@ -115,18 +114,20 @@ export function ColorScale({
 /* -------------------------------------------------------------------------- */
 
 const semanticGroups = [
-  { key: 'success', label: 'Success', usage: 'Validated match, successful import', tokens: aquellecColors.semantic.success },
-  { key: 'error', label: 'Error', usage: 'Rejection, parsing failure', tokens: aquellecColors.semantic.error },
-  { key: 'warning', label: 'Warning', usage: 'Quota nearly reached, average score', tokens: aquellecColors.semantic.warning },
-  { key: 'info', label: 'Information', usage: 'Neutral, contextual help', tokens: aquellecColors.semantic.info },
+  { key: 'success', tokens: aquellecColors.semantic.success },
+  { key: 'error', tokens: aquellecColors.semantic.error },
+  { key: 'warning', tokens: aquellecColors.semantic.warning },
+  { key: 'info', tokens: aquellecColors.semantic.info },
 ] as const;
 
 const semanticRoles = ['fg', 'bg', 'border', 'surface'] as const;
 
 export function SemanticTokens() {
+  const t = useI18n().docs.tokens.semanticGroups;
+
   return (
     <div className="sb-unstyled mb-4 grid gap-4 sm:grid-cols-2">
-      {semanticGroups.map(({ key, label, usage, tokens }) => (
+      {semanticGroups.map(({ key, tokens }) => (
         <section key={key} className={cn('flex flex-col gap-3 p-5', cardSurface)}>
           <div className="flex items-center gap-2.5">
             <span
@@ -136,12 +137,12 @@ export function SemanticTokens() {
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-slate-900">{label}</p>
+              <p className="text-sm font-semibold text-slate-900">{t[key].label}</p>
               <p className={cn('font-mono text-xs', mutedTextClass)}>semantic-{key}-*</p>
             </div>
           </div>
 
-          <p className={cn('text-xs', mutedTextClass)}>{usage}</p>
+          <p className={cn('text-xs', mutedTextClass)}>{t[key].usage}</p>
 
           {/* `div` rather than `dl/dt/dd`: Storybook prose styles italicise
               `dt` elements and break the visual alignment. */}
@@ -166,9 +167,10 @@ export function SemanticTokens() {
 
 /** Neutral text tones, outside the semantic families. */
 export function NeutralText() {
+  const t = useI18n().docs.tokens.neutral;
   const neutrals = [
-    { token: 'semantic-muted', hex: aquellecColors.semantic.muted, usage: 'Secondary text, captions' },
-    { token: 'semantic-subtle', hex: aquellecColors.semantic.subtle, usage: 'Muted body text, controls' },
+    { token: 'semantic-muted', hex: aquellecColors.semantic.muted, usage: t.muted },
+    { token: 'semantic-subtle', hex: aquellecColors.semantic.subtle, usage: t.subtle },
   ];
 
   return (
@@ -176,9 +178,9 @@ export function NeutralText() {
       <table className="w-full text-left text-xs">
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
-            <th scope="col" className="p-3 font-semibold text-slate-900">Token</th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">Value</th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">Usage</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900">{t.token}</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900">{t.value}</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900">{t.usage}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -209,13 +211,15 @@ export function NeutralText() {
 /* -------------------------------------------------------------------------- */
 
 export function RadiusScale() {
+  const t = useI18n().docs.tokens;
+
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-500/20">
           <Ruler className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Radii</p>
+        <p className="text-sm font-semibold text-slate-900">{t.radii}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -236,13 +240,15 @@ export function RadiusScale() {
 }
 
 export function ElevationScale() {
+  const t = useI18n().docs.tokens;
+
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ai-50 text-ai-700 ring-1 ring-ai-500/20">
           <Layers className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Elevations</p>
+        <p className="text-sm font-semibold text-slate-900">{t.elevations}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -266,17 +272,23 @@ export function ElevationScale() {
 /*  Typography                                                                 */
 /* -------------------------------------------------------------------------- */
 
-const typeScale = [
-  { token: 'text-xs', size: '12px', usage: 'Labels, badges, metadata' },
-  { token: 'text-sm', size: '14px', usage: 'Body text, tables, forms' },
-  { token: 'text-base', size: '16px', usage: 'Dialog titles, main content' },
-  { token: 'text-lg', size: '18px', usage: 'Section titles' },
-  { token: 'text-xl', size: '20px', usage: 'Template page headers' },
-  { token: 'text-2xl', size: '24px', usage: 'Dashboard KPIs' },
-  { token: 'text-3xl', size: '30px', usage: 'Pricing hero' },
+const typeScale: Array<{
+  token: string;
+  size: string;
+  usage: keyof Dictionary['docs']['tokens']['typeUsage'];
+}> = [
+  { token: 'text-xs', size: '12px', usage: 'xs' },
+  { token: 'text-sm', size: '14px', usage: 'sm' },
+  { token: 'text-base', size: '16px', usage: 'base' },
+  { token: 'text-lg', size: '18px', usage: 'lg' },
+  { token: 'text-xl', size: '20px', usage: 'xl' },
+  { token: 'text-2xl', size: '24px', usage: 'xl2' },
+  { token: 'text-3xl', size: '30px', usage: 'xl3' },
 ];
 
 export function TypeScale() {
+  const t = useI18n().docs.tokens;
+
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
@@ -284,9 +296,9 @@ export function TypeScale() {
           <Type className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
-          <p className="text-sm font-semibold text-slate-900">Type scale</p>
+          <p className="text-sm font-semibold text-slate-900">{t.typeScale}</p>
           <p className={cn('text-xs', mutedTextClass)}>
-            Default Tailwind utilities · system font stack (<code>font-sans</code>)
+            {t.typeScaleSubtitle} (<code>font-sans</code>)
           </p>
         </div>
       </div>
@@ -295,11 +307,13 @@ export function TypeScale() {
         {typeScale.map(({ token, size, usage }) => (
           <li key={token} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-2.5">
             <span className={cn(token, 'min-w-0 flex-1 font-semibold text-slate-900')}>
-              Optimise your resume for ATS
+              {t.typeSample}
             </span>
             <span className="font-mono text-xs font-semibold text-slate-900">{token}</span>
             <span className={cn('w-12 text-right font-mono text-xs', mutedTextClass)}>{size}</span>
-            <span className={cn('w-full text-xs sm:w-56 sm:text-right', mutedTextClass)}>{usage}</span>
+            <span className={cn('w-full text-xs sm:w-56 sm:text-right', mutedTextClass)}>
+              {t.typeUsage[usage]}
+            </span>
           </li>
         ))}
       </ul>
@@ -311,27 +325,40 @@ export function TypeScale() {
 /*  Focus                                                                      */
 /* -------------------------------------------------------------------------- */
 
-const focusVariants = [
-  { name: 'focusRing', className: focusRing, label: 'Standard control', accent: 'bg-brand-600 text-white' },
-  { name: 'focusRingDanger', className: focusRingDanger, label: 'Destructive action', accent: 'bg-rose-600 text-white' },
-  { name: 'focusRingGhost', className: focusRingGhost, label: 'Quiet button', accent: 'bg-slate-100 text-slate-800' },
+const focusVariants: Array<{
+  name: string;
+  className: string;
+  label: keyof Dictionary['docs']['tokens']['focusVariants'];
+  accent: string;
+}> = [
+  { name: 'focusRing', className: focusRing, label: 'standard', accent: 'bg-brand-600 text-white' },
+  {
+    name: 'focusRingDanger',
+    className: focusRingDanger,
+    label: 'destructive',
+    accent: 'bg-rose-600 text-white',
+  },
+  {
+    name: 'focusRingGhost',
+    className: focusRingGhost,
+    label: 'quiet',
+    accent: 'bg-slate-100 text-slate-800',
+  },
 ];
 
 export function FocusRings() {
+  const t = useI18n().docs.tokens;
+
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-1 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border">
           <Focus className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Focus rings</p>
+        <p className="text-sm font-semibold text-slate-900">{t.focusRings}</p>
       </div>
 
-      <p className={cn('text-xs', mutedTextClass)}>
-        Centralised in <code>src/lib/focus-ring.ts</code>. Navigate with the keyboard
-        (<kbd className="rounded border border-slate-300 bg-slate-50 px-1">Tab</kbd>) to see them —
-        they are `focus-visible` only, so invisible on click.
-      </p>
+      <p className={cn('text-xs', mutedTextClass)}>{t.focusIntro}</p>
 
       <div className="mt-4 flex flex-wrap gap-3">
         {focusVariants.map(({ name, className, label, accent }) => (
@@ -345,7 +372,7 @@ export function FocusRings() {
               className
             )}
           >
-            {label}
+            {t.focusVariants[label]}
             <span className="font-mono text-xs opacity-80">{name}</span>
           </button>
         ))}
@@ -367,13 +394,15 @@ const viewports = [
 ];
 
 export function Viewports() {
+  const t = useI18n().docs.tokens;
+
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border">
           <MonitorSmartphone className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Storybook viewports</p>
+        <p className="text-sm font-semibold text-slate-900">{t.viewportsTitle}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -386,5 +415,39 @@ export function Viewports() {
         ))}
       </div>
     </section>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Prose helpers for the MDX body                                             */
+/* -------------------------------------------------------------------------- */
+
+type TokensTextKey =
+  | 'brandIntro'
+  | 'semanticIntro'
+  | 'semanticNote'
+  | 'focusNote'
+  | 'pinViewportNote'
+  | 'shortcuts'
+  | 'presetIntro'
+  | 'presetNote'
+  | 'outsideIntro'
+  | 'outsideNote';
+
+type TokensHeadingKey = 'pinViewport' | 'presetHeading' | 'outsideHeading';
+
+/** Paragraph of the Tokens page, resolved from the active locale. */
+export function TokensText({ id }: { id: TokensTextKey }) {
+  const t = useI18n().docs.tokens;
+  return <p className={cn('sb-unstyled my-4 text-sm leading-relaxed', subtleTextClass)}>{t[id]}</p>;
+}
+
+/** Sub-heading of the Tokens page (h3 level). */
+export function TokensHeading({ id }: { id: TokensHeadingKey }) {
+  const t = useI18n().docs.tokens;
+  return (
+    <h3 className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900">
+      {t[id]}
+    </h3>
   );
 }
