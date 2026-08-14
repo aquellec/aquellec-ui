@@ -91,6 +91,7 @@ import {
 - **Typage** — `strict: true`, unions discriminées (`Dropzone` single / multiple), déclarations `.d.ts` générées.
 - **Localisation** — aucun texte n'est figé : `Dropzone` et `DataTable` acceptent une prop `labels`, `Modal` et `Toast` un `closeLabel`, `ScoreGauge` des `statusLabels`. Les valeurs par défaut sont en français ; les défauts sont exportés (`defaultDropzoneLabels`, etc.) pour servir de base à une traduction.
 - **Distribution** — dual ESM / CJS, `sideEffects: false` pour le tree-shaking.
+- **Primitives headless** — réservées aux futurs widgets flottants ou composites (`Select`, `Combobox`, `Popover`, `Tooltip`, `Menu`) ; les patterns APG simples restent maison. Voir [ADR 0001](docs/adr/0001-primitives-headless.md).
 
 ## Développement local
 
