@@ -86,6 +86,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         <ul className="space-y-3 mb-8 flex-1" aria-label={`Fonctionnalités du plan ${title}`}>
           {features.map((feature) => (
             <li key={feature.text} className="flex items-start text-xs">
+              <span className="sr-only">{feature.included ? 'Inclus : ' : 'Non inclus : '}</span>
               <div
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',

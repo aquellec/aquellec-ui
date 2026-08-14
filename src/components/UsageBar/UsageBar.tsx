@@ -32,7 +32,8 @@ export const UsageBar = React.forwardRef<HTMLDivElement, UsageBarProps>(
     },
     ref
   ) => {
-    const percentage = Math.min(Math.max(Math.round((current / max) * 100), 0), 100);
+    const percentage =
+      max > 0 ? Math.min(Math.max(Math.round((current / max) * 100), 0), 100) : 0;
 
     const progressColor =
       percentage >= 90 ? 'bg-rose-500' : percentage >= 75 ? 'bg-amber-500' : 'bg-brand-600';
@@ -76,7 +77,7 @@ export const UsageBar = React.forwardRef<HTMLDivElement, UsageBarProps>(
               type="button"
               onClick={onUpgradeClick}
               className={cn(
-                'text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors',
+                'inline-flex min-h-6 items-center px-2 -mx-2 text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors',
                 focusRingGhost
               )}
             >

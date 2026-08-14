@@ -49,8 +49,13 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     isDisabled = false,
     isLoading = false,
     className,
+    multiple: _multiple,
+    onFileSelect: _onFileSelect,
+    onFilesSelect: _onFilesSelect,
+    file: _file,
+    files: _files,
     ...rest
-  } = props;
+  } = props as DropzoneProps & Record<string, unknown>;
 
   const multiple = props.multiple === true;
   const onFileSelect = !multiple ? props.onFileSelect : undefined;

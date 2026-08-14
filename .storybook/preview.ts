@@ -38,7 +38,7 @@ const preview: Preview = {
       options: aquellecViewports,
     },
     a11y: {
-      test: 'todo',
+      test: 'error',
     },
     interactions: {
       disable: false,
