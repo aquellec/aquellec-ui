@@ -94,6 +94,7 @@ function RecruiterDashboardPage() {
                 score={72}
                 size="sm"
                 label={t.dashboard.recruiter.kpi.matchLabel}
+                statusLabels={t.components.gaugeStatus}
                 isAiTheme
                 showStatus={false}
                 className="border-0 bg-transparent p-0 shadow-none"
@@ -121,7 +122,7 @@ function RecruiterDashboardPage() {
             subtitle={t.dashboard.recruiter.upload.subtitle}
           />
           <Card.Body>
-            <Dropzone multiple maxSizeMB={5} accept=".pdf" />
+            <Dropzone multiple labels={t.components.dropzone} maxSizeMB={5} accept=".pdf" />
           </Card.Body>
         </Card>
 
@@ -134,6 +135,7 @@ function RecruiterDashboardPage() {
             <DataTable
               data={mockData}
               keyExtractor={(item) => item.id}
+              labels={t.components.dataTable}
               columns={[
                 {
                   header: t.dashboard.recruiter.history.columns.candidate,

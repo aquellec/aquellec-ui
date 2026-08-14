@@ -89,6 +89,7 @@ import {
 - **Accessibilité** — patterns WAI-ARIA APG, navigation clavier, `:focus-visible` centralisé, `prefers-reduced-motion`. L'addon a11y tourne en mode bloquant (`test: 'error'`) : une violation axe fait échouer la CI.
 - **Styles** — `tailwind-merge` + `clsx` pour surcharger les classes sans conflit.
 - **Typage** — `strict: true`, unions discriminées (`Dropzone` single / multiple), déclarations `.d.ts` générées.
+- **Localisation** — aucun texte n'est figé : `Dropzone` et `DataTable` acceptent une prop `labels`, `Modal` et `Toast` un `closeLabel`, `ScoreGauge` des `statusLabels`. Les valeurs par défaut sont en français ; les défauts sont exportés (`defaultDropzoneLabels`, etc.) pour servir de base à une traduction.
 - **Distribution** — dual ESM / CJS, `sideEffects: false` pour le tree-shaking.
 
 ## Développement local

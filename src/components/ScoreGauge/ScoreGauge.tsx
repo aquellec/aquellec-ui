@@ -1,7 +1,29 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
 
+/** Mentions de statut affichées sous la jauge, selon le palier atteint. */
+export interface ScoreGaugeStatusLabels {
+  /** Score ≥ 75. */
+  high: string;
+  /** Score ≥ 50. */
+  medium: string;
+  /** Score < 50. */
+  low: string;
+  /** Utilisé à la place des paliers quand `isAiTheme` est actif. */
+  ai: string;
+}
+
+/** Valeurs par défaut en français, conservées pour les intégrations existantes. */
+export const defaultScoreGaugeStatusLabels: ScoreGaugeStatusLabels = {
+  high: 'Excellent Match',
+  medium: 'Compatibilité Moyenne',
+  low: 'Optimisation Nécessaire',
+  ai: 'Analyse IA',
+};
+
 export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Surcharge partielle des mentions de statut, fusionnée avec les défauts. */
+  statusLabels?: Partial<ScoreGaugeStatusLabels>;
   /** ATS compatibility score between 0 and 100. */
   score: number;
   /** Diameter preset for the circular gauge. */
@@ -19,7 +41,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     {
       score,
       size = 'md',
-      label = 'Score ATS',
+      label,
+      statusLabels: statusLabelsProp,
       showStatus = true,
       isAiTheme = false,
       className,
@@ -28,6 +51,10 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     ref
   ) => {
     const normalizedScore = Math.min(Math.max(score, 0), 100);
+    const statusLabels: ScoreGaugeStatusLabels = {
+      ...defaultScoreGaugeStatusLabels,
+      ...statusLabelsProp,
+    };
 
     const dimensions = {
       sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-[10px]' },
@@ -46,7 +73,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           stroke: 'stroke-ai-500',
           text: 'text-ai-700',
           bg: 'bg-ai-50 text-ai-700 border-ai-200',
-          statusText: 'Analyse IA',
+          statusText: statusLabels.ai,
         };
       }
 
@@ -55,7 +82,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           stroke: 'stroke-emerald-500',
           text: 'text-emerald-700',
           bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-          statusText: 'Excellent Match',
+          statusText: statusLabels.high,
         };
       }
       if (normalizedScore >= 50) {
@@ -63,19 +90,23 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           stroke: 'stroke-amber-500',
           text: 'text-amber-700',
           bg: 'bg-amber-50 text-amber-700 border-amber-200',
-          statusText: 'Compatibilité Moyenne',
+          statusText: statusLabels.medium,
         };
       }
       return {
         stroke: 'stroke-rose-500',
         text: 'text-rose-700',
         bg: 'bg-rose-50 text-rose-700 border-rose-200',
-        statusText: 'Optimisation Nécessaire',
+        statusText: statusLabels.low,
       };
     };
 
     const colors = getScoreColor();
-    const gaugeLabel = `${label} : ${normalizedScore}%. ${colors.statusText}.`;
+    // `aria-valuetext` : la ponctuation ne dépend pas de la langue, seules les
+    // parties variables viennent des props.
+    const gaugeLabel = label
+      ? `${label} — ${normalizedScore}%. ${colors.statusText}.`
+      : `${normalizedScore}%. ${colors.statusText}.`;
 
     return (
       <div

@@ -13,10 +13,26 @@ export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   /** When provided, renders a dismiss button and calls this handler on click. */
   onClose?: () => void;
+  /** Nom accessible du bouton de fermeture. */
+  closeLabel?: string;
 }
 
+/** Libellé par défaut du bouton de fermeture, conservé en français. */
+export const DEFAULT_TOAST_CLOSE_LABEL = 'Fermer la notification';
+
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
-  ({ variant = 'info', title, description, onClose, className, ...props }, ref) => {
+  (
+    {
+      variant = 'info',
+      title,
+      description,
+      onClose,
+      closeLabel = DEFAULT_TOAST_CLOSE_LABEL,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const liveRole = variant === 'error' ? 'alert' : 'status';
 
     const renderIcon = () => {
@@ -58,7 +74,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
             type="button"
             onClick={onClose}
             className={cn('p-1 rounded-md hover:bg-black/5 transition-colors', subtleTextClass, focusRingGhost)}
-            aria-label="Fermer la notification"
+            aria-label={closeLabel}
           >
             <X className="w-4 h-4" aria-hidden="true" />
           </button>

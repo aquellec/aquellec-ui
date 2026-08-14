@@ -4,9 +4,71 @@ import { cn } from '../../lib/cn';
 import { errorTextClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
 
+/**
+ * Toutes les chaînes visibles du composant, y compris celles réservées aux
+ * technologies d'assistance. Les entrées paramétrées sont des fonctions pour
+ * laisser chaque langue placer ses variables et gérer ses pluriels.
+ */
+export interface DropzoneLabels {
+  /** Nom accessible de l'input fichier, seul élément focusable de la zone. */
+  inputLabel: (multiple: boolean) => string;
+  /** Segment cliquable de l'invite. */
+  browse: string;
+  /** Suite de l'invite, après le segment cliquable. */
+  dropHint: (multiple: boolean) => string;
+  /** Rappel des contraintes de format et de taille. */
+  constraint: (maxSizeMB: number, multiple: boolean) => string;
+  loadingTitle: string;
+  loadingHint: (multiple: boolean) => string;
+  /** Texte affiché sous le nom du fichier pendant l'envoi. */
+  uploading: string;
+  /** Nom accessible de l'indicateur d'envoi. */
+  uploadingStatus: string;
+  remove: (multiple: boolean) => string;
+  /** Résumé de la sélection en mode multiple. */
+  selection: (count: number) => string;
+  totalSize: (formattedSize: string) => string;
+  /** Formatage d'une taille en octets. */
+  fileSize: (bytes: number) => string;
+  errorTooLarge: (fileName: string, maxSizeMB: number) => string;
+  errorInvalidType: (fileName: string) => string;
+}
+
+/**
+ * Valeurs par défaut en français, conservées pour ne pas modifier le rendu des
+ * intégrations existantes. Passez `labels` pour toute autre langue.
+ */
+export const defaultDropzoneLabels: DropzoneLabels = {
+  inputLabel: (multiple) =>
+    multiple
+      ? 'Zone de dépôt de fichiers. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.'
+      : 'Zone de dépôt de fichier. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.',
+  browse: 'Cliquez pour parcourir',
+  dropHint: (multiple) => (multiple ? 'ou glissez vos fichiers ici' : 'ou glissez votre fichier ici'),
+  constraint: (maxSizeMB, multiple) =>
+    `Format PDF uniquement (max. ${maxSizeMB} Mo${multiple ? ' par fichier' : ''})`,
+  loadingTitle: 'Analyse en cours...',
+  loadingHint: (multiple) =>
+    `Veuillez patienter pendant l'envoi ${multiple ? 'de vos fichiers' : 'de votre fichier'}`,
+  uploading: 'Envoi en cours...',
+  uploadingStatus: 'Envoi en cours',
+  remove: (multiple) => (multiple ? 'Supprimer les fichiers' : 'Supprimer le fichier'),
+  selection: (count) => `${count} fichier${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`,
+  totalSize: (formattedSize) => `Volume total : ${formattedSize}`,
+  fileSize: (bytes) =>
+    bytes < 1024 * 1024
+      ? `${(bytes / 1024).toFixed(1)} Ko`
+      : `${(bytes / (1024 * 1024)).toFixed(1)} Mo`,
+  errorTooLarge: (fileName, maxSizeMB) =>
+    `Le fichier "${fileName}" dépasse la limite autorisée de ${maxSizeMB} Mo.`,
+  errorInvalidType: (fileName) => `Le fichier "${fileName}" n'est pas un PDF valide.`,
+};
+
 interface DropzoneBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Called when the current selection is cleared by the user. */
   onClear?: () => void;
+  /** Surcharge partielle des textes du composant, fusionnée avec les défauts. */
+  labels?: Partial<DropzoneLabels>;
   /** Accepted file extensions or MIME types passed to the native input. */
   accept?: string;
   /** Maximum allowed file size in megabytes per file. */
@@ -49,6 +111,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     isDisabled = false,
     isLoading = false,
     className,
+    labels: labelsProp,
     multiple: _multiple,
     onFileSelect: _onFileSelect,
     onFilesSelect: _onFilesSelect,
@@ -57,6 +120,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     ...rest
   } = props as DropzoneProps & Record<string, unknown>;
 
+  const labels: DropzoneLabels = { ...defaultDropzoneLabels, ...labelsProp };
   const multiple = props.multiple === true;
   const onFileSelect = !multiple ? props.onFileSelect : undefined;
   const onFilesSelect = multiple ? props.onFilesSelect : undefined;
@@ -98,11 +162,11 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
     const validateFile = (candidate: File): string | null => {
       if (candidate.size > maxSizeMB * 1024 * 1024) {
-        return `Le fichier "${candidate.name}" dépasse la limite autorisée de ${maxSizeMB} Mo.`;
+        return labels.errorTooLarge(candidate.name, maxSizeMB);
       }
 
       if (accept.includes('.pdf') && candidate.type !== 'application/pdf') {
-        return `Le fichier "${candidate.name}" n'est pas un PDF valide.`;
+        return labels.errorInvalidType(candidate.name);
       }
 
       return null;
@@ -179,19 +243,13 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
       onClear?.();
     };
 
-    const formatFileSize = (bytes: number) => {
-      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
-      return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
-    };
+    const formatFileSize = labels.fileSize;
 
     const totalSize = displayedFiles.reduce((sum, item) => sum + item.size, 0);
     const hasSelection = multiple ? displayedFiles.length > 0 : Boolean(displayedFile);
 
-    const dropzoneLabel = multiple
-      ? 'Zone de dépôt de CVs. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.'
-      : 'Zone de dépôt de CV. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.';
-
-    const removeLabel = multiple ? 'Supprimer les fichiers' : 'Supprimer le fichier';
+    const dropzoneLabel = labels.inputLabel(multiple);
+    const removeLabel = labels.remove(multiple);
 
     const dropzoneSurfaceClassName = cn(
       'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ease-in-out',
@@ -234,18 +292,17 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 {multiple ? (
                   <>
                     <p className="truncate text-sm font-medium text-slate-800">
-                      {displayedFiles.length} CV{displayedFiles.length > 1 ? 's' : ''} sélectionné
-                      {displayedFiles.length > 1 ? 's' : ''}
+                      {labels.selection(displayedFiles.length)}
                     </p>
                     <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
-                      {isLoading ? 'Envoi en cours...' : `Volume total : ${formatFileSize(totalSize)}`}
+                      {isLoading ? labels.uploading : labels.totalSize(formatFileSize(totalSize))}
                     </p>
                   </>
                 ) : (
                   <>
                     <p className="truncate text-sm font-medium text-slate-800">{displayedFile!.name}</p>
                     <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
-                      {isLoading ? 'Envoi en cours...' : formatFileSize(displayedFile!.size)}
+                      {isLoading ? labels.uploading : formatFileSize(displayedFile!.size)}
                     </p>
                   </>
                 )}
@@ -254,7 +311,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
             {isLoading ? (
               <Loader2
                 className="h-5 w-5 flex-shrink-0 animate-spin text-brand-600"
-                aria-label="Envoi en cours"
+                aria-label={labels.uploadingStatus}
               />
             ) : (
               <button
@@ -286,10 +343,8 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600">
                   <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700">Analyse en cours...</p>
-                <p className="text-xs text-slate-500">
-                  Veuillez patienter pendant l&apos;envoi {multiple ? 'de vos CVs' : 'de votre CV'}
-                </p>
+                <p className="mb-1 text-sm font-medium text-slate-700">{labels.loadingTitle}</p>
+                <p className="text-xs text-slate-500">{labels.loadingHint(multiple)}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center text-center">
@@ -302,12 +357,10 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <p className="mb-1 text-sm font-medium text-slate-700">
-                  <span className="text-brand-600 underline underline-offset-2">Cliquez pour parcourir</span>{' '}
-                  {multiple ? 'ou glissez vos CVs ici' : 'ou glissez votre CV ici'}
+                  <span className="text-brand-600 underline underline-offset-2">{labels.browse}</span>{' '}
+                  {labels.dropHint(multiple)}
                 </p>
-                <p className="text-xs text-slate-500">
-                  Format PDF uniquement (max. {maxSizeMB} Mo{multiple ? ' par fichier' : ''})
-                </p>
+                <p className="text-xs text-slate-500">{labels.constraint(maxSizeMB, multiple)}</p>
               </div>
             )}
           </label>

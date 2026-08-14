@@ -9,7 +9,84 @@
   facturation, équipe) : le design system n'est pas réservé au recrutement.
   Seuls les templates de dashboard conservent leur contexte métier.
 */
+import type { DataTableLabels } from '../../src/components/DataTable/DataTable';
+import type { DropzoneLabels } from '../../src/components/Dropzone/Dropzone';
+import type { ScoreGaugeStatusLabels } from '../../src/components/ScoreGauge/ScoreGauge';
+
+/*
+  Textes internes aux composants, passés via leurs props `labels`.
+
+  Le bloc est annoté — et non `satisfies` — pour que `Dictionary` porte les
+  interfaces des composants plutôt que les littéraux anglais : sans quoi la
+  traduction française, plus large, ne serait pas assignable.
+*/
+export interface ComponentLabels {
+  dropzone: DropzoneLabels;
+  dataTable: DataTableLabels;
+  gaugeStatus: ScoreGaugeStatusLabels;
+  modalClose: string;
+  toastClose: string;
+  toastRegion: string;
+  pricingIncluded: string;
+  pricingExcluded: string;
+}
+
+const components: ComponentLabels = {
+  dropzone: {
+      inputLabel: (multiple) =>
+        multiple
+          ? 'File drop zone. Press Enter or Space to browse your files.'
+          : 'File drop zone. Press Enter or Space to browse your file.',
+      browse: 'Click to browse',
+      dropHint: (multiple) => (multiple ? 'or drop your files here' : 'or drop your file here'),
+      constraint: (maxSizeMB, multiple) =>
+        `PDF only (max. ${maxSizeMB} MB${multiple ? ' per file' : ''})`,
+      loadingTitle: 'Processing…',
+      loadingHint: (multiple) =>
+        `Please wait while ${multiple ? 'your files are' : 'your file is'} uploaded`,
+      uploading: 'Uploading…',
+      uploadingStatus: 'Uploading',
+      remove: (multiple) => (multiple ? 'Remove files' : 'Remove file'),
+      selection: (count) => `${count} file${count > 1 ? 's' : ''} selected`,
+      totalSize: (formattedSize) => `Total size: ${formattedSize}`,
+      fileSize: (bytes) =>
+        bytes < 1024 * 1024
+          ? `${(bytes / 1024).toFixed(1)} KB`
+          : `${(bytes / (1024 * 1024)).toFixed(1)} MB`,
+      errorTooLarge: (fileName, maxSizeMB) =>
+        `"${fileName}" exceeds the ${maxSizeMB} MB limit.`,
+      errorInvalidType: (fileName) => `"${fileName}" is not a valid PDF.`,
+  },
+
+    dataTable: {
+      pagination: 'Table pagination',
+      previousPage: 'Previous page',
+      nextPage: 'Next page',
+      pageStatus: (currentPage, totalPages) => (
+        <>
+          Page <strong className="text-slate-800">{currentPage}</strong> of{' '}
+          <strong className="text-slate-800">{totalPages}</strong>
+        </>
+      ),
+  },
+
+    gaugeStatus: {
+      high: 'Excellent match',
+      medium: 'Average match',
+      low: 'Needs work',
+      ai: 'AI analysis',
+  },
+
+  modalClose: 'Close dialog',
+  toastClose: 'Dismiss notification',
+  toastRegion: 'Notifications',
+  pricingIncluded: 'Included: ',
+  pricingExcluded: 'Not included: ',
+};
+
 export const en = {
+  components,
+
   common: {
     cancel: 'Cancel',
     confirm: 'Confirm',

@@ -1,16 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
+import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Dropzone } from './Dropzone';
 
 const pdfFile = (name = 'cv-test.pdf', sizeBytes = 1024) =>
   new File([new ArrayBuffer(sizeBytes)], name, { type: 'application/pdf' });
 
-function getFileInput(canvasElement: HTMLElement, name: RegExp) {
+function getFileInput(canvasElement: HTMLElement, name: string | RegExp) {
   return within(canvasElement).getByLabelText(name);
 }
 
-function getDropzoneLabel(canvasElement: HTMLElement, name: RegExp) {
+function getDropzoneLabel(canvasElement: HTMLElement, name: string | RegExp) {
   const input = getFileInput(canvasElement, name) as HTMLInputElement;
   return input.labels?.[0] ?? (() => {
     throw new Error('Dropzone label not found');
@@ -47,15 +48,20 @@ function dropOnDropzone(dropzone: HTMLElement, files: File[]) {
  * Zone de dépôt drag-and-drop. Modes simple et multiple, validation de taille
  * et de type, états chargement / désactivé, activation par label natif.
  *
- * Seul composant dont **aucune chaîne ne suit le sélecteur de langue** : ses
- * textes (instructions, messages d'erreur, libellés de boutons) sont codés en
- * dur dans le composant et non passés par les stories. Les localiser suppose
- * d'ouvrir son API, ce qui dépasse le cadre de l'i18n des stories.
+ * Tous ses textes — instructions, contraintes, messages d'erreur, libellés de
+ * boutons et noms accessibles — passent par la prop `labels`. Les défauts sont
+ * en français ; les stories injectent ceux de la langue active.
  */
 const meta: Meta<typeof Dropzone> = {
   title: 'Forms/Dropzone',
   component: Dropzone,
   tags: ['autodocs'],
+  /* `render` au niveau du meta : toutes les stories qui n'en définissent pas
+     reçoivent les libellés de la langue active sans le répéter. */
+  render: (args) => {
+    const t = useI18n();
+    return <Dropzone {...args} labels={t.components.dropzone} />;
+  },
   argTypes: {
     maxSizeMB: { control: 'number' },
     isDisabled: { control: 'boolean' },
@@ -104,9 +110,10 @@ export const FileSelectionInteraction: Story = {
     onFileSelect: fn(),
     onClear: fn(),
   },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
-    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
+    const d = getDictionary(globals.locale).components.dropzone;
+    const fileInput = getFileInput(canvasElement, d.inputLabel(false));
 
     await expect(fileInput).toBeEnabled();
     await userEvent.upload(fileInput, pdfFile());
@@ -114,7 +121,7 @@ export const FileSelectionInteraction: Story = {
     await expect(canvas.getByText('cv-test.pdf')).toBeInTheDocument();
     await expect(args.onFileSelect).toHaveBeenCalled();
 
-    await userEvent.click(canvas.getByRole('button', { name: /Supprimer le fichier/i }));
+    await userEvent.click(canvas.getByRole('button', { name: d.remove(false) }));
     await expect(canvas.queryByText('cv-test.pdf')).not.toBeInTheDocument();
     await expect(args.onClear).toHaveBeenCalled();
   },
@@ -125,13 +132,14 @@ export const InvalidFileType: Story = {
     maxSizeMB: 5,
     accept: '.pdf',
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
     const invalidFile = new File(['not a pdf'], 'cv.txt', { type: 'text/plain' });
 
     uploadFiles(canvasElement, [invalidFile]);
 
-    await expect(canvas.getByRole('alert')).toHaveTextContent(/n'est pas un PDF valide/i);
+    await expect(canvas.getByRole('alert')).toHaveTextContent(d.errorInvalidType('cv.txt'));
   },
 };
 
@@ -140,12 +148,13 @@ export const FileTooLarge: Story = {
     maxSizeMB: 1,
     accept: '.pdf',
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     uploadFiles(canvasElement, [pdfFile('cv-heavy.pdf', 2 * 1024 * 1024)]);
 
-    await expect(canvas.getByRole('alert')).toHaveTextContent(/dépasse la limite autorisée/i);
+    await expect(canvas.getByRole('alert')).toHaveTextContent(d.errorTooLarge('cv-heavy.pdf', 1));
   },
 };
 
@@ -155,9 +164,10 @@ export const DragAndDropInteraction: Story = {
     accept: '.pdf',
     onFileSelect: fn(),
   },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
-    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
+    const d = getDictionary(globals.locale).components.dropzone;
+    const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
 
     fireEvent.dragOver(dropzone);
     await expect(dropzone).toHaveClass('border-brand-500');
@@ -166,7 +176,7 @@ export const DragAndDropInteraction: Story = {
     uploadFiles(canvasElement, [pdfFile('cv-drag.pdf', 512 * 1024)]);
 
     await expect(canvas.getByText('cv-drag.pdf')).toBeInTheDocument();
-    await expect(canvas.getByText(/512\.0 Ko/i)).toBeInTheDocument();
+    await expect(canvas.getByText(d.fileSize(512 * 1024))).toBeInTheDocument();
     await expect(args.onFileSelect).toHaveBeenCalled();
   },
 };
@@ -176,8 +186,9 @@ export const KeyboardInteraction: Story = {
     maxSizeMB: 5,
     accept: '.pdf',
   },
-  play: async ({ canvasElement }) => {
-    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
+  play: async ({ canvasElement, globals }) => {
+    const d = getDictionary(globals.locale).components.dropzone;
+    const fileInput = getFileInput(canvasElement, d.inputLabel(false));
 
     fileInput.focus();
     await expect(fileInput).toHaveFocus();
@@ -192,26 +203,29 @@ export const MultipleFilesInteraction: Story = {
     onFilesSelect: fn(),
     onClear: fn(),
   },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     uploadFiles(canvasElement, [pdfFile('cv-a.pdf'), pdfFile('cv-b.pdf')]);
 
-    await expect(canvas.getByText(/2 CVs sélectionnés/i)).toBeInTheDocument();
+    await expect(canvas.getByText(d.selection(2))).toBeInTheDocument();
     await expect(args.onFilesSelect).toHaveBeenCalled();
 
-    await userEvent.click(canvas.getByRole('button', { name: /Supprimer les fichiers/i }));
-    await expect(canvas.queryByText(/2 CVs sélectionnés/i)).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: d.remove(true) }));
+    await expect(canvas.queryByText(d.selection(2))).not.toBeInTheDocument();
     await expect(args.onClear).toHaveBeenCalled();
   },
 };
 
 export const ControlledFileInteraction: Story = {
   render: () => {
+    const t = useI18n();
     const [file, setFile] = useState<File | null>(null);
 
     return (
       <Dropzone
+        labels={t.components.dropzone}
         file={file}
         onFileSelect={setFile}
         onClear={() => setFile(null)}
@@ -220,25 +234,28 @@ export const ControlledFileInteraction: Story = {
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     uploadFiles(canvasElement, [pdfFile('cv-controlled.pdf')]);
     await expect(canvas.getByText('cv-controlled.pdf')).toBeInTheDocument();
 
-    await userEvent.click(canvas.getByRole('button', { name: /Supprimer le fichier/i }));
+    await userEvent.click(canvas.getByRole('button', { name: d.remove(false) }));
     await expect(canvas.queryByText('cv-controlled.pdf')).not.toBeInTheDocument();
-    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, d.inputLabel(false))).toBeInTheDocument();
   },
 };
 
 export const ControlledMultipleFilesInteraction: Story = {
   render: () => {
+    const t = useI18n();
     const [files, setFiles] = useState<File[] | null>(null);
 
     return (
       <Dropzone
         multiple
+        labels={t.components.dropzone}
         files={files}
         onFilesSelect={setFiles}
         onClear={() => setFiles(null)}
@@ -247,14 +264,15 @@ export const ControlledMultipleFilesInteraction: Story = {
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     uploadFiles(canvasElement, [pdfFile('cv-unique.pdf')]);
-    await expect(canvas.getByText(/1 CV sélectionné$/i)).toBeInTheDocument();
+    await expect(canvas.getByText(d.selection(1))).toBeInTheDocument();
 
-    await userEvent.click(canvas.getByRole('button', { name: /Supprimer les fichiers/i }));
-    await expect(getFileInput(canvasElement, /Zone de dépôt de CVs/i)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: d.remove(true) }));
+    await expect(getFileInput(canvasElement, d.inputLabel(true))).toBeInTheDocument();
   },
 };
 
@@ -265,10 +283,11 @@ export const DisabledInteraction: Story = {
     accept: '.pdf',
     onFileSelect: fn(),
   },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
-    const fileInput = getFileInput(canvasElement, /Zone de dépôt de CV/i);
-    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
+    const d = getDictionary(globals.locale).components.dropzone;
+    const fileInput = getFileInput(canvasElement, d.inputLabel(false));
+    const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
 
     await expect(fileInput).toBeDisabled();
 
@@ -288,13 +307,14 @@ export const LoadingDropzoneInteraction: Story = {
     maxSizeMB: 5,
     accept: '.pdf',
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
+    const d = getDictionary(globals.locale).components.dropzone;
+    const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
 
     await expect(dropzone).toHaveAttribute('aria-busy', 'true');
-    await expect(canvas.getByRole('status')).toHaveTextContent(/Analyse en cours/i);
-    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeDisabled();
+    await expect(canvas.getByRole('status')).toHaveTextContent(d.loadingTitle);
+    await expect(getFileInput(canvasElement, d.inputLabel(false))).toBeDisabled();
   },
 };
 
@@ -303,13 +323,14 @@ export const LoadingPreviewInteraction: Story = {
     isLoading: true,
     file: pdfFile('cv-envoi.pdf', 2 * 1024 * 1024),
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     await expect(canvas.getByText('cv-envoi.pdf')).toBeInTheDocument();
-    await expect(canvas.getByText(/Envoi en cours/i)).toBeInTheDocument();
-    await expect(canvas.getByLabelText('Envoi en cours')).toBeInTheDocument();
-    await expect(canvas.queryByRole('button', { name: /Supprimer le fichier/i })).not.toBeInTheDocument();
+    await expect(canvas.getByText(d.uploading)).toBeInTheDocument();
+    await expect(canvas.getByLabelText(d.uploadingStatus)).toBeInTheDocument();
+    await expect(canvas.queryByRole('button', { name: d.remove(false) })).not.toBeInTheDocument();
   },
 };
 
@@ -337,13 +358,14 @@ export const LargeFilePreviewInteraction: Story = {
     accept: '.pdf',
     onFileSelect: fn(),
   },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
+    const d = getDictionary(globals.locale).components.dropzone;
 
     uploadFiles(canvasElement, [pdfFile('cv-large.pdf', 2 * 1024 * 1024)]);
 
     await expect(canvas.getByText('cv-large.pdf')).toBeInTheDocument();
-    await expect(canvas.getByText(/2\.0 Mo/i)).toBeInTheDocument();
+    await expect(canvas.getByText(d.fileSize(2 * 1024 * 1024))).toBeInTheDocument();
     await expect(args.onFileSelect).toHaveBeenCalled();
   },
 };
@@ -354,12 +376,13 @@ export const EmptyDropInteraction: Story = {
     accept: '.pdf',
     onFileSelect: fn(),
   },
-  play: async ({ canvasElement, args }) => {
-    const dropzone = getDropzoneLabel(canvasElement, /Zone de dépôt de CV/i);
+  play: async ({ canvasElement, args, globals }) => {
+    const d = getDictionary(globals.locale).components.dropzone;
+    const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
 
     dropOnDropzone(dropzone, []);
 
-    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, d.inputLabel(false))).toBeInTheDocument();
     await expect(args.onFileSelect).not.toHaveBeenCalled();
   },
 };
@@ -384,13 +407,14 @@ export const OtherKeyIgnored: Story = {
     maxSizeMB: 5,
     accept: '.pdf',
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
+    const d = getDictionary(globals.locale).components.dropzone;
     const onFileSelect = fn();
 
-    getFileInput(canvasElement, /Zone de dépôt de CV/i).focus();
-    fireEvent.keyDown(getFileInput(canvasElement, /Zone de dépôt de CV/i), { key: 'a' });
+    getFileInput(canvasElement, d.inputLabel(false)).focus();
+    fireEvent.keyDown(getFileInput(canvasElement, d.inputLabel(false)), { key: 'a' });
 
-    await expect(getFileInput(canvasElement, /Zone de dépôt de CV/i)).toBeInTheDocument();
+    await expect(getFileInput(canvasElement, d.inputLabel(false))).toBeInTheDocument();
     await expect(onFileSelect).not.toHaveBeenCalled();
   },
 };

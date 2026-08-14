@@ -15,7 +15,32 @@ export interface Column<T> {
   className?: string;
 }
 
+/** Textes de la pagination et de la navigation du tableau. */
+export interface DataTableLabels {
+  /** Nom accessible de la zone de pagination. */
+  pagination: string;
+  previousPage: string;
+  nextPage: string;
+  /** Indicateur de page courante, rendu à gauche des contrôles. */
+  pageStatus: (currentPage: number, totalPages: number) => React.ReactNode;
+}
+
+/** Valeurs par défaut en français, conservées pour les intégrations existantes. */
+export const defaultDataTableLabels: DataTableLabels = {
+  pagination: 'Pagination du tableau',
+  previousPage: 'Page précédente',
+  nextPage: 'Page suivante',
+  pageStatus: (currentPage, totalPages) => (
+    <>
+      Page <strong className="text-slate-800">{currentPage}</strong> sur{' '}
+      <strong className="text-slate-800">{totalPages}</strong>
+    </>
+  ),
+};
+
 export interface DataTableProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+  /** Surcharge partielle des textes du composant, fusionnée avec les défauts. */
+  labels?: Partial<DataTableLabels>;
   /** Rows to display in the table body. */
   data: T[];
   /** Column configuration describing headers and cell rendering. */
@@ -42,11 +67,14 @@ function DataTableInner<T>(
     isLoading = false,
     emptyMessage = 'Aucune donnée disponible',
     pagination,
+    labels: labelsProp,
     className,
     ...props
   }: DataTableProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
+  const labels: DataTableLabels = { ...defaultDataTableLabels, ...labelsProp };
+
   return (
     <div
       ref={ref}
@@ -108,13 +136,10 @@ function DataTableInner<T>(
 
       {pagination && !isLoading && data.length > 0 && (
         <nav
-          aria-label="Pagination du tableau"
+          aria-label={labels.pagination}
           className="flex items-center justify-between px-4 py-3 bg-slate-50/50 border-t border-slate-100 text-xs text-slate-500"
         >
-          <span>
-            Page <strong className="text-slate-800">{pagination.currentPage}</strong> sur{' '}
-            <strong className="text-slate-800">{pagination.totalPages}</strong>
-          </span>
+          <span>{labels.pageStatus(pagination.currentPage, pagination.totalPages)}</span>
           <div className="flex items-center space-x-1">
             <button
               type="button"
@@ -124,7 +149,7 @@ function DataTableInner<T>(
                 'p-1 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
                 focusRing
               )}
-              aria-label="Page précédente"
+              aria-label={labels.previousPage}
             >
               <ChevronLeft className="w-4 h-4" aria-hidden="true" />
             </button>
@@ -136,7 +161,7 @@ function DataTableInner<T>(
                 'p-1 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
                 focusRing
               )}
-              aria-label="Page suivante"
+              aria-label={labels.nextPage}
             >
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </button>

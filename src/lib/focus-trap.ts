@@ -29,9 +29,11 @@ export function useFocusTrap(
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     const focusInitialElement = () => {
-      const closeButton = container.querySelector<HTMLElement>('[aria-label="Fermer la fenêtre"]');
+      // Cible explicite plutôt qu'un libellé en dur : `[data-autofocus]` reste
+      // valable quelle que soit la langue de l'interface.
+      const preferredTarget = container.querySelector<HTMLElement>('[data-autofocus]');
       const focusableElements = getFocusableElements(container);
-      const fallbackTarget = closeButton ?? focusableElements[0] ?? container;
+      const fallbackTarget = preferredTarget ?? focusableElements[0] ?? container;
 
       if (fallbackTarget === container && !container.hasAttribute('tabindex')) {
         container.setAttribute('tabindex', '-1');

@@ -28,7 +28,7 @@ type Story = StoryObj<typeof ScoreGauge>;
 export const HighScore: Story = {
   render: (args) => {
     const t = useI18n();
-    return <ScoreGauge {...args} label={t.gauge.performance} />;
+    return <ScoreGauge {...args} statusLabels={t.components.gaugeStatus} label={t.gauge.performance} />;
   },
   args: { score: 88, size: 'md' },
   play: async ({ canvasElement }) => {
@@ -43,7 +43,7 @@ export const HighScore: Story = {
 export const MediumScore: Story = {
   render: (args) => {
     const t = useI18n();
-    return <ScoreGauge {...args} label={t.gauge.quality} />;
+    return <ScoreGauge {...args} statusLabels={t.components.gaugeStatus} label={t.gauge.quality} />;
   },
   args: { score: 62, size: 'md' },
 };
@@ -51,7 +51,7 @@ export const MediumScore: Story = {
 export const LowScore: Story = {
   render: (args) => {
     const t = useI18n();
-    return <ScoreGauge {...args} label={t.gauge.health} />;
+    return <ScoreGauge {...args} statusLabels={t.components.gaugeStatus} label={t.gauge.health} />;
   },
   args: { score: 35, size: 'md' },
 };
@@ -59,7 +59,7 @@ export const LowScore: Story = {
 export const AITheme: Story = {
   render: (args) => {
     const t = useI18n();
-    return <ScoreGauge {...args} label={t.gauge.match} />;
+    return <ScoreGauge {...args} statusLabels={t.components.gaugeStatus} label={t.gauge.match} />;
   },
   args: { score: 94, size: 'lg', isAiTheme: true },
 };
@@ -70,9 +70,9 @@ export const Bounds: Story = {
     const t = useI18n();
     return (
       <div className="flex flex-wrap items-center gap-6">
-        <ScoreGauge score={0} size="sm" label={t.gauge.performance} showStatus={false} />
-        <ScoreGauge score={100} size="sm" label={t.gauge.performance} showStatus={false} />
-        <ScoreGauge score={140} size="sm" label={t.gauge.performance} showStatus={false} />
+        <ScoreGauge score={0} size="sm" label={t.gauge.performance} showStatus={false} statusLabels={t.components.gaugeStatus} />
+        <ScoreGauge score={100} size="sm" label={t.gauge.performance} showStatus={false} statusLabels={t.components.gaugeStatus} />
+        <ScoreGauge score={140} size="sm" label={t.gauge.performance} showStatus={false} statusLabels={t.components.gaugeStatus} />
       </div>
     );
   },
@@ -91,7 +91,7 @@ export const Bounds: Story = {
 export const CompactDashboard: Story = {
   render: (args) => {
     const t = useI18n();
-    return <ScoreGauge {...args} label={t.gauge.match} />;
+    return <ScoreGauge {...args} statusLabels={t.components.gaugeStatus} label={t.gauge.match} />;
   },
   args: {
     score: 72,

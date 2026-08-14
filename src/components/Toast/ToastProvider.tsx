@@ -41,15 +41,21 @@ export interface ToastProviderProps {
   defaultDuration?: number;
   /** Classes applied to the fixed viewport container. */
   viewportClassName?: string;
+  /** Nom accessible de la région qui regroupe les notifications. */
+  regionLabel?: string;
+  /** Nom accessible du bouton de fermeture de chaque notification. */
+  closeLabel?: string;
 }
 
 function ToastViewportItem({
   toast,
   defaultDuration,
+  closeLabel,
   onDismiss,
 }: {
   toast: ToastRecord;
   defaultDuration: number;
+  closeLabel?: string;
   onDismiss: (id: string) => void;
 }) {
   const duration = toast.duration ?? defaultDuration;
@@ -65,6 +71,7 @@ function ToastViewportItem({
       variant={toast.variant}
       title={toast.title}
       description={toast.description}
+      closeLabel={closeLabel}
       onClose={() => onDismiss(toast.id)}
     />
   );
@@ -75,6 +82,8 @@ export function ToastProvider({
   limit = 5,
   defaultDuration = 5000,
   viewportClassName,
+  regionLabel = 'Notifications',
+  closeLabel,
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
 
@@ -112,7 +121,7 @@ export function ToastProvider({
       {children}
       <div
         role="region"
-        aria-label="Notifications"
+        aria-label={regionLabel}
         className={cn(
           'pointer-events-none fixed bottom-4 right-4 z-50 flex w-full max-w-md flex-col gap-2',
           viewportClassName
@@ -120,7 +129,12 @@ export function ToastProvider({
       >
         {toasts.map((toast) => (
           <div key={toast.id} className="pointer-events-auto">
-            <ToastViewportItem toast={toast} defaultDuration={defaultDuration} onDismiss={dismiss} />
+            <ToastViewportItem
+              toast={toast}
+              defaultDuration={defaultDuration}
+              closeLabel={closeLabel}
+              onDismiss={dismiss}
+            />
           </div>
         ))}
       </div>

@@ -32,6 +32,10 @@ export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onSelect?: () => void;
   /** Text displayed in the popular badge. */
   badgeText?: string;
+  /** Préfixe `sr-only` annoncé devant une fonctionnalité incluse. */
+  includedLabel?: string;
+  /** Préfixe `sr-only` annoncé devant une fonctionnalité exclue. */
+  excludedLabel?: string;
 }
 
 export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
@@ -47,6 +51,8 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
       buttonVariant,
       onSelect,
       badgeText = 'Le plus populaire',
+      includedLabel = 'Inclus : ',
+      excludedLabel = 'Non inclus : ',
       className,
       ...props
     },
@@ -86,7 +92,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         <ul className="space-y-3 mb-8 flex-1" aria-label={`Fonctionnalités du plan ${title}`}>
           {features.map((feature) => (
             <li key={feature.text} className="flex items-start text-xs">
-              <span className="sr-only">{feature.included ? 'Inclus : ' : 'Non inclus : '}</span>
+              <span className="sr-only">{feature.included ? includedLabel : excludedLabel}</span>
               <div
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',

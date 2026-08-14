@@ -92,6 +92,7 @@ export const Default: Story = {
       <DataTable
         data={products}
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={fullColumns(t)}
         pagination={{ currentPage: 1, totalPages: 3, onPageChange: fn() }}
       />
@@ -107,6 +108,7 @@ export const LoadingState: Story = {
         data={[]}
         isLoading
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={compactColumns(t)}
       />
     );
@@ -121,6 +123,7 @@ export const EmptyState: Story = {
         data={[]}
         emptyMessage={t.table.emptyMessage}
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={compactColumns(t)}
       />
     );
@@ -143,17 +146,17 @@ export const PaginationInteraction: Story = {
       <DataTable
         data={products}
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={compactColumns(t)}
         pagination={{ currentPage: page, totalPages: 3, onPageChange }}
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    // Les libellés de pagination viennent du composant, pas des stories :
-    // ils restent en français tant que DataTable n'expose pas ses textes.
-    const previous = canvas.getByRole('button', { name: 'Page précédente' });
-    const next = canvas.getByRole('button', { name: 'Page suivante' });
+    const t = getDictionary(globals.locale);
+    const previous = canvas.getByRole('button', { name: t.components.dataTable.previousPage });
+    const next = canvas.getByRole('button', { name: t.components.dataTable.nextPage });
 
     await expect(canvas.getByText(/Page/i)).toHaveTextContent('2');
     await expect(previous).toBeEnabled();
@@ -174,15 +177,17 @@ export const PaginationBoundaries: Story = {
       <DataTable
         data={products}
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={compactColumns(t)}
         pagination={{ currentPage: 1, totalPages: 1, onPageChange: fn() }}
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    const previous = canvas.getByRole('button', { name: 'Page précédente' });
-    const next = canvas.getByRole('button', { name: 'Page suivante' });
+    const t = getDictionary(globals.locale);
+    const previous = canvas.getByRole('button', { name: t.components.dataTable.previousPage });
+    const next = canvas.getByRole('button', { name: t.components.dataTable.nextPage });
 
     await expect(previous).toBeDisabled();
     await expect(next).toBeDisabled();
@@ -201,6 +206,7 @@ export const AccessorKeyColumns: Story = {
       <DataTable
         data={products}
         keyExtractor={(item) => item.id}
+        labels={t.components.dataTable}
         columns={[
           { header: t.table.columns.name, accessorKey: 'name' },
           { header: t.table.columns.price, accessorKey: 'price' },

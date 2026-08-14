@@ -107,6 +107,7 @@ function CandidateDashboardPage() {
                       {t.dashboard.candidate.analysis.resumeLabel}
                     </p>
                     <Dropzone
+                      labels={t.components.dropzone}
                       maxSizeMB={5}
                       accept=".pdf"
                       className="min-h-[280px] [&>div]:min-h-[240px]"
@@ -192,7 +193,12 @@ function CandidateDashboardPage() {
           <aside className="space-y-6">
             <Card className="text-center">
               <Card.Body className="flex flex-col items-center gap-2 py-8">
-                <ScoreGauge score={88} size="lg" label={t.dashboard.candidate.score.label} />
+                <ScoreGauge
+                  score={88}
+                  size="lg"
+                  label={t.dashboard.candidate.score.label}
+                  statusLabels={t.components.gaugeStatus}
+                />
                 <p className="text-sm font-medium text-emerald-700">
                   {t.dashboard.candidate.score.status}
                 </p>
@@ -231,6 +237,7 @@ function CandidateDashboardPage() {
             <DataTable
               data={recentAnalyses}
               keyExtractor={(item) => item.id}
+              labels={t.components.dataTable}
               columns={[
                 {
                   header: t.dashboard.candidate.history.columns.position,

@@ -39,6 +39,7 @@ export const InteractiveExample: Story = {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           maxWidth="lg"
+          closeLabel={t.components.modalClose}
           title={t.modal.report.title}
           footer={
             <>
@@ -98,7 +99,12 @@ export const CloseWithEscape: Story = {
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t.modal.confirm.title}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        closeLabel={t.components.modalClose}
+        title={t.modal.confirm.title}
+      >
         {t.modal.confirm.body}
       </Modal>
     );
@@ -118,7 +124,12 @@ export const CloseOnOverlayClick: Story = {
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t.modal.overlay.title}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        closeLabel={t.components.modalClose}
+        title={t.modal.overlay.title}
+      >
         {t.modal.overlay.body}
       </Modal>
     );
@@ -142,6 +153,7 @@ export const FocusTrapInteraction: Story = {
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
+        closeLabel={t.components.modalClose}
         title={t.modal.keyboard.title}
         footer={
           <>
@@ -162,9 +174,8 @@ export const FocusTrapInteraction: Story = {
     const body = within(document.body);
     const t = getDictionary(globals.locale);
 
-    // « Fermer la fenêtre » vient du composant : ce libellé reste en français.
     await expect(body.getByRole('dialog')).toBeInTheDocument();
-    await expect(body.getByRole('button', { name: 'Fermer la fenêtre' })).toHaveFocus();
+    await expect(body.getByRole('button', { name: t.components.modalClose })).toHaveFocus();
 
     await userEvent.tab();
     await expect(body.getByRole('button', { name: t.modal.keyboard.cancel })).toHaveFocus();
@@ -173,7 +184,7 @@ export const FocusTrapInteraction: Story = {
     await expect(body.getByRole('button', { name: t.modal.keyboard.submit })).toHaveFocus();
 
     await userEvent.tab();
-    await expect(body.getByRole('button', { name: 'Fermer la fenêtre' })).toHaveFocus();
+    await expect(body.getByRole('button', { name: t.components.modalClose })).toHaveFocus();
 
     await userEvent.tab({ shift: true });
     await expect(body.getByRole('button', { name: t.modal.keyboard.submit })).toHaveFocus();
@@ -212,15 +223,21 @@ export const CloseWithHeaderButton: Story = {
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t.modal.headerClose.title}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        closeLabel={t.components.modalClose}
+        title={t.modal.headerClose.title}
+      >
         {t.modal.headerClose.body}
       </Modal>
     );
   },
-  play: async () => {
+  play: async ({ globals }) => {
     const body = within(document.body);
+    const t = getDictionary(globals.locale);
 
-    await userEvent.click(body.getByRole('button', { name: 'Fermer la fenêtre' }));
+    await userEvent.click(body.getByRole('button', { name: t.components.modalClose }));
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
   },
 };
@@ -262,6 +279,7 @@ export const CompoundComponents: Story = {
         <Modal.Header
           title={t.modal.compound.title}
           titleId={titleId}
+          closeLabel={t.components.modalClose}
           onClose={() => setIsOpen(false)}
         />
         <Modal.Body>{t.modal.compound.body}</Modal.Body>

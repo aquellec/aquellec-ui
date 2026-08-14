@@ -27,7 +27,7 @@ type Story = StoryObj<typeof Toast>;
 export const Success: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.success.title} description={t.toast.success.description} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.success.title} description={t.toast.success.description} />;
   },
   args: { variant: 'success', onClose: fn() },
 };
@@ -35,7 +35,7 @@ export const Success: Story = {
 export const AIProcessing: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.ai.title} description={t.toast.ai.description} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.ai.title} description={t.toast.ai.description} />;
   },
   args: { variant: 'ai', onClose: fn() },
 };
@@ -43,7 +43,7 @@ export const AIProcessing: Story = {
 export const WarningLimit: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.warning.title} description={t.toast.warning.description} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.warning.title} description={t.toast.warning.description} />;
   },
   args: { variant: 'warning' },
 };
@@ -51,7 +51,7 @@ export const WarningLimit: Story = {
 export const ErrorState: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.error.title} description={t.toast.error.description} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.error.title} description={t.toast.error.description} />;
   },
   args: { variant: 'error' },
 };
@@ -59,7 +59,7 @@ export const ErrorState: Story = {
 export const Info: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.info.title} description={t.toast.info.description} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.info.title} description={t.toast.info.description} />;
   },
   args: { variant: 'info' },
 };
@@ -67,7 +67,7 @@ export const Info: Story = {
 export const TitleOnly: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.titleOnly.title} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.titleOnly.title} />;
   },
   args: { variant: 'success' },
 };
@@ -86,6 +86,7 @@ export const CloseInteraction: Story = {
         variant="warning"
         title={t.toast.warning.title}
         description={t.toast.warning.description}
+        closeLabel={t.components.toastClose}
         onClose={() => setVisible(false)}
       />
     );
@@ -95,8 +96,7 @@ export const CloseInteraction: Story = {
     const t = getDictionary(globals.locale);
 
     await expect(canvas.getByRole('status')).toBeInTheDocument();
-    // Le libellé du bouton vient du composant : il reste en français.
-    await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
+    await userEvent.click(canvas.getByRole('button', { name: t.components.toastClose }));
     await expect(canvas.getByText(t.toast.dismissed)).toBeInTheDocument();
   },
 };
@@ -105,14 +105,15 @@ export const CloseInteraction: Story = {
 export const ErrorAlertRole: Story = {
   render: (args) => {
     const t = useI18n();
-    return <Toast {...args} title={t.toast.error.title} />;
+    return <Toast {...args} closeLabel={t.components.toastClose} title={t.toast.error.title} />;
   },
   args: { variant: 'error', onClose: fn() },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, globals }) => {
     const canvas = within(canvasElement);
+    const t = getDictionary(globals.locale);
 
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
-    await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
+    await userEvent.click(canvas.getByRole('button', { name: t.components.toastClose }));
     await expect(args.onClose).toHaveBeenCalled();
   },
 };
@@ -138,18 +139,25 @@ function ToastQueueDemo() {
 }
 
 export const ProviderQueue: Story = {
-  render: () => (
-    <ToastProvider defaultDuration={0}>
-      <ToastQueueDemo />
-    </ToastProvider>
-  ),
+  render: () => {
+    const t = useI18n();
+    return (
+      <ToastProvider
+        defaultDuration={0}
+        regionLabel={t.components.toastRegion}
+        closeLabel={t.components.toastClose}
+      >
+        <ToastQueueDemo />
+      </ToastProvider>
+    );
+  },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
     const t = getDictionary(globals.locale);
 
     await userEvent.click(canvas.getByRole('button', { name: t.toast.queue.trigger }));
-    await expect(body.getByRole('region', { name: 'Notifications' })).toBeInTheDocument();
+    await expect(body.getByRole('region', { name: t.components.toastRegion })).toBeInTheDocument();
     await expect(body.getByText(t.toast.queue.title)).toBeInTheDocument();
   },
 };

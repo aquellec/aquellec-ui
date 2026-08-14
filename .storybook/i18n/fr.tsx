@@ -1,3 +1,8 @@
+import { defaultDataTableLabels } from '../../src/components/DataTable/DataTable';
+import { defaultDropzoneLabels } from '../../src/components/Dropzone/Dropzone';
+import { DEFAULT_MODAL_CLOSE_LABEL } from '../../src/components/Modal/Modal';
+import { defaultScoreGaugeStatusLabels } from '../../src/components/ScoreGauge/ScoreGauge';
+import { DEFAULT_TOAST_CLOSE_LABEL } from '../../src/components/Toast/Toast';
 import type { Dictionary } from './types';
 
 /*
@@ -5,6 +10,21 @@ import type { Dictionary } from './types';
   manquante, en trop ou mal orthographiée casse `pnpm type-check`.
 */
 export const fr: Dictionary = {
+  /*
+    Les défauts des composants sont déjà en français : on les réutilise tels
+    quels plutôt que de les recopier, ce qui garantit qu'ils ne divergeront pas.
+  */
+  components: {
+    dropzone: defaultDropzoneLabels,
+    dataTable: defaultDataTableLabels,
+    gaugeStatus: defaultScoreGaugeStatusLabels,
+    modalClose: DEFAULT_MODAL_CLOSE_LABEL,
+    toastClose: DEFAULT_TOAST_CLOSE_LABEL,
+    toastRegion: 'Notifications',
+    pricingIncluded: 'Inclus : ',
+    pricingExcluded: 'Non inclus : ',
+  },
+
   common: {
     cancel: 'Annuler',
     confirm: 'Confirmer',

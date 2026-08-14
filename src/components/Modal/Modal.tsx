@@ -26,6 +26,8 @@ export interface ModalProps {
   children: React.ReactNode;
   /** Optional footer slot, typically action buttons. */
   footer?: React.ReactNode;
+  /** Nom accessible du bouton de fermeture de l'en-tête. */
+  closeLabel?: string;
   /** Maximum width preset of the dialog panel. */
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
   /** Additional classes applied to the dialog panel. */
@@ -41,10 +43,27 @@ export interface ModalHeaderProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   onClose?: () => void;
   /** ID used to associate the title with `aria-labelledby`. */
   titleId?: string;
+  /** Nom accessible du bouton de fermeture. */
+  closeLabel?: string;
 }
 
+/** Libellé par défaut du bouton de fermeture, conservé en français. */
+export const DEFAULT_MODAL_CLOSE_LABEL = 'Fermer la fenêtre';
+
 export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
-  ({ title, titleAs, onClose, titleId, children, className, ...props }, ref) => {
+  (
+    {
+      title,
+      titleAs,
+      onClose,
+      titleId,
+      closeLabel = DEFAULT_MODAL_CLOSE_LABEL,
+      children,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const TitleElement = resolveSectionHeading(title, titleAs);
 
     return (
@@ -65,12 +84,15 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
           <button
             type="button"
             onClick={onClose}
+            /* Cible du focus initial du piège : repérée par attribut et non par
+               son libellé, qui dépend de la langue. */
+            data-autofocus=""
             className={cn(
               'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
               subtleTextClass,
               focusRingGhost
             )}
-            aria-label="Fermer la fenêtre"
+            aria-label={closeLabel}
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -123,6 +145,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       labelledBy,
       describedBy,
       titleAs,
+      closeLabel,
       children,
       footer,
       maxWidth = 'md',
@@ -199,7 +222,13 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           )}
         >
           {title && (
-            <ModalHeader title={title} titleAs={titleAs} titleId={titleId} onClose={onClose} />
+            <ModalHeader
+              title={title}
+              titleAs={titleAs}
+              titleId={titleId}
+              closeLabel={closeLabel}
+              onClose={onClose}
+            />
           )}
           <ModalBody>{children}</ModalBody>
           {footer && <ModalFooter>{footer}</ModalFooter>}

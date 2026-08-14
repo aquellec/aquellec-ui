@@ -27,6 +27,8 @@ export const Starter: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         {...args}
         title={t.pricing.starter.title}
         description={t.pricing.starter.description}
@@ -52,6 +54,8 @@ export const Growth: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         {...args}
         title={t.pricing.growth.title}
         description={t.pricing.growth.description}
@@ -76,6 +80,8 @@ export const FreePlan: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         title={t.pricing.free.title}
         description={t.pricing.free.description}
         price={t.pricing.free.price}
@@ -91,6 +97,8 @@ export const CustomQuote: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         title={t.pricing.enterprise.title}
         description={t.pricing.enterprise.description}
         price={t.pricing.enterprise.price}
@@ -109,6 +117,8 @@ export const ExcludedFeature: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         title={t.pricing.free.title}
         description={t.pricing.free.description}
         price={t.pricing.free.price}
@@ -135,6 +145,8 @@ export const SelectPlanInteraction: Story = {
     const t = useI18n();
     return (
       <PricingCard
+        includedLabel={t.components.pricingIncluded}
+        excludedLabel={t.components.pricingExcluded}
         {...args}
         title={t.pricing.select.title}
         description={t.pricing.select.description}
