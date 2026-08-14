@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Dropzone } from '../../components/Dropzone';
-import { RoleToggle, type Role } from '../../components/RoleToggle';
+import { SegmentedControl } from '../../components/SegmentedControl';
 import { ScoreGauge } from '../../components/ScoreGauge';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
-import { UsageBar } from '../../components/UsageBar';
+import { ProgressBar } from '../../components/ProgressBar';
 import { Textarea } from '../../components/Textarea';
 import { Input } from '../../components/Input';
 import { DataTable } from '../../components/DataTable';
 import { getScoreTextClass } from '../../lib/score-tier';
 import { cn } from '../../lib/cn';
-import { Sparkles, ArrowRight, Briefcase } from 'lucide-react';
+import { Sparkles, ArrowRight, Briefcase, User, Zap } from 'lucide-react';
 
 interface CandidateAnalysis {
   id: string;
@@ -62,14 +62,14 @@ const recentAnalyses: CandidateAnalysis[] = [
  * Page template candidat : upload de CV, fiche de poste, score ATS et historique.
  */
 const meta: Meta = {
-  title: 'Templates/Candidate Dashboard',
+  title: 'Templates/CandidateDashboard',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Composition dashboard candidat : RoleToggle, Dropzone, fiche de poste, ScoreGauge, recommandations et historique des analyses.',
+          'Composition dashboard candidat : SegmentedControl, Dropzone, fiche de poste, ScoreGauge, recommandations et historique des analyses.',
       },
     },
   },
@@ -78,8 +78,13 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+const roleOptions = [
+  { value: 'candidate', label: 'Espace Candidat', icon: <User className="h-3.5 w-3.5 text-brand-600" /> },
+  { value: 'recruiter', label: 'Espace Recruteur', icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" /> },
+];
+
 function CandidateDashboardPage() {
-  const [role, setRole] = useState<Role>('candidate');
+  const [role, setRole] = useState('candidate');
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -89,7 +94,12 @@ function CandidateDashboardPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">aquellec</p>
             <h1 className="text-xl font-bold text-slate-900">Mon espace candidat</h1>
           </div>
-          <RoleToggle activeRole={role} onChange={setRole} />
+          <SegmentedControl
+            options={roleOptions}
+            value={role}
+            onChange={setRole}
+            ariaLabel="Choisir l'espace utilisateur"
+          />
         </div>
       </header>
 
@@ -200,7 +210,19 @@ function CandidateDashboardPage() {
             <Card>
               <Card.Header title="Quota mensuel" />
               <Card.Body>
-                <UsageBar current={3} max={10} label="Analyses du mois" unit="CVs" />
+                <ProgressBar
+                  value={3}
+                  max={10}
+                  label="Analyses du mois"
+                  icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600" />}
+                  formatValue={(value, max) => `${value} / ${max} CVs`}
+                  helperText="Plan Gratuit"
+                  action={
+                    <Button variant="ghost" size="sm">
+                      Passer à la version Pro
+                    </Button>
+                  }
+                />
               </Card.Body>
             </Card>
           </aside>

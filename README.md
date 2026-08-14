@@ -60,13 +60,14 @@ export function App() {
 
 ## Composants inclus
 
+Les composants sont génériques : aucun texte métier n'est codé en dur, tout passe par les props.
+
 | Famille | Composants |
 | --- | --- |
-| **Actions** | `Button` (5 variantes dont IA), `RoleToggle` (bascule Candidat / Recruteur) |
-| **Formulaires** | `Input`, `Textarea` (compteur de caractères), `Dropzone` (upload PDF, mono ou multi-fichiers) |
+| **Actions** | `Button` (5 variantes dont IA), `SegmentedControl` (segments exclusifs, options en prop) |
+| **Forms** | `Input`, `Textarea` (compteur de caractères), `Dropzone` (upload PDF, mono ou multi-fichiers) |
 | **Feedback** | `Toast` + `ToastProvider` / `useToast`, `Modal` (focus trap, `inert`), `Badge` |
-| **Data & dataviz** | `ScoreGauge` (score ATS 0–100), `DataTable` (pagination, skeleton), `UsageBar` (quota) |
-| **Layout** | `Card` (+ `Header` / `Body` / `Footer`), `PricingCard` |
+| **Data Display** | `ScoreGauge` (score 0–100), `DataTable` (pagination, skeleton), `ProgressBar` (quota, seuils configurables), `Card` (+ `Header` / `Body` / `Footer`), `PricingCard` |
 
 **Templates** — dashboards Candidat et Recruteur complets, assemblés dans Storybook.
 

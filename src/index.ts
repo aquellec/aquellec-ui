@@ -3,12 +3,12 @@ export * from './components/Dropzone';
 export * from './components/ScoreGauge';
 export * from './components/Badge';
 export * from './components/Card';
-export * from './components/UsageBar';
+export * from './components/ProgressBar';
 export * from './components/DataTable';
 export * from './components/PricingCard';
 export * from './components/Toast';
 export * from './components/Modal';
-export * from './components/RoleToggle';
+export * from './components/SegmentedControl';
 export * from './components/Textarea';
 export * from './components/Input';
 

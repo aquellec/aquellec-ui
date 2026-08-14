@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Dropzone } from '../../components/Dropzone';
-import { RoleToggle, type Role } from '../../components/RoleToggle';
+import { SegmentedControl } from '../../components/SegmentedControl';
 import { DataTable } from '../../components/DataTable';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
@@ -9,7 +9,7 @@ import { Badge } from '../../components/Badge';
 import { ScoreGauge } from '../../components/ScoreGauge';
 import { getScoreTextClass } from '../../lib/score-tier';
 import { cn } from '../../lib/cn';
-import { FileText, ExternalLink } from 'lucide-react';
+import { FileText, ExternalLink, User, Briefcase } from 'lucide-react';
 
 interface AnalysisHistory {
   id: string;
@@ -30,7 +30,7 @@ const mockData: AnalysisHistory[] = [
  * Page template recruteur : import de CVs, KPIs et historique des analyses.
  */
 const meta: Meta = {
-  title: 'Templates/Recruiter Dashboard',
+  title: 'Templates/RecruiterDashboard',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -46,8 +46,13 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+const roleOptions = [
+  { value: 'candidate', label: 'Espace Candidat', icon: <User className="h-3.5 w-3.5 text-brand-600" /> },
+  { value: 'recruiter', label: 'Espace Recruteur', icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" /> },
+];
+
 function RecruiterDashboardPage() {
-  const [role, setRole] = useState<Role>('recruiter');
+  const [role, setRole] = useState('recruiter');
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -57,7 +62,12 @@ function RecruiterDashboardPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-ai-600">aquellec RH</p>
             <h1 className="text-xl font-bold text-slate-900">Pipeline de recrutement</h1>
           </div>
-          <RoleToggle activeRole={role} onChange={setRole} />
+          <SegmentedControl
+            options={roleOptions}
+            value={role}
+            onChange={setRole}
+            ariaLabel="Choisir l'espace utilisateur"
+          />
         </div>
       </header>
 
