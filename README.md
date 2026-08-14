@@ -2,42 +2,115 @@
 
 Composants UI React pour applications SaaS de recrutement (analyse de CV, matching ATS, espaces candidat et recruteur).
 
+**📖 [Documentation interactive](https://27473af902f42be3efeb0973435f662f.share.chromatic.com)** — Storybook publié : composants, pages Tokens et Introduction, templates de dashboard.
+
 ## Pourquoi ce projet ?
 
 Une librairie créée pour alimenter mes projets perso (Dashboard Next.js & API Python d'analyse de CV). L'objectif était de construire des composants propres, accessibles et directement réutilisables pour des interfaces SaaS.
 
 **Stack :** React 19, TypeScript, Tailwind CSS, Lucide Icons.
 
-**Documentation & tests :** Storybook 10 (A11y, viewports, interactions).
+**Documentation & tests :** Storybook 10 (a11y, viewports, tests d'interaction Vitest).
 
-## Installation & usage local
+## Installation
 
 ```bash
-# Installer les dépendances
-pnpm install
+pnpm add @aquellec/ui lucide-react
+```
 
-# Lancer Storybook en local
-pnpm dev
+`react`, `react-dom` et `lucide-react` sont des **peer dependencies** — à installer dans l'application hôte. `tailwindcss` est une peer dependency optionnelle, nécessaire uniquement pour utiliser le preset.
 
-# Builder la librairie
-pnpm build
+### Configurer Tailwind
+
+Le package ne publie aucune feuille de style : les tokens arrivent par le preset.
+
+```ts
+// tailwind.config.ts
+import aquellecPreset from '@aquellec/ui/tailwind-preset';
+
+export default {
+  presets: [aquellecPreset],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@aquellec/ui/dist/**/*.{js,mjs}',
+  ],
+};
+```
+
+Le preset apporte les palettes `brand`, `ai` et `semantic.*`, les rayons et élévations partagés, et neutralise les animations sous `prefers-reduced-motion`.
+
+### Utiliser un composant
+
+```tsx
+import { Button, Card, Dropzone, ToastProvider, useToast } from '@aquellec/ui';
+
+export function App() {
+  return (
+    <ToastProvider>
+      <Card className="max-w-md">
+        <Card.Header title="Importer un CV" />
+        <Card.Body>
+          <Dropzone accept=".pdf" maxSizeMB={5} onFileSelect={(file) => console.log(file.name)} />
+        </Card.Body>
+      </Card>
+    </ToastProvider>
+  );
+}
 ```
 
 ## Composants inclus
 
-**Actions & inputs** — Button, Dropzone (upload PDF), Textarea, RoleToggle (switch Candidat / Recruteur).
+| Famille | Composants |
+| --- | --- |
+| **Actions** | `Button` (5 variantes dont IA), `RoleToggle` (bascule Candidat / Recruteur) |
+| **Formulaires** | `Input`, `Textarea` (compteur de caractères), `Dropzone` (upload PDF, mono ou multi-fichiers) |
+| **Feedback** | `Toast` + `ToastProvider` / `useToast`, `Modal` (focus trap, `inert`), `Badge` |
+| **Data & dataviz** | `ScoreGauge` (score ATS 0–100), `DataTable` (pagination, skeleton), `UsageBar` (quota) |
+| **Layout** | `Card` (+ `Header` / `Body` / `Footer`), `PricingCard` |
 
-**Data & dataviz** — ScoreGauge (score ATS 0–100 %), DataTable (pagination et skeleton), UsageBar (quota de crédits), Badge.
+**Templates** — dashboards Candidat et Recruteur complets, assemblés dans Storybook.
 
-**Layout & structure** — Card, Modal, PricingCard, Toast.
+### Utilitaires exportés
 
-**Showcase / templates** — Dashboards complets Candidat et Recruteur dans Storybook.
+```ts
+import {
+  cn,                          // clsx + tailwind-merge
+  aquellecColors,              // tokens bruts, hors Tailwind
+  aquellecThemeExtensions,     // rayons et élévations
+  focusRing,                   // + focusRingDanger, focusRingGhost
+  getScoreTextClass,           // couleur de texte selon le palier de score
+} from '@aquellec/ui';
+```
 
-## Choix techniques simples
+## Choix techniques
 
-- **Composables** — Sous-composants (`Card.Header`, `Modal.Footer`, etc.) pour garder de la flexibilité.
-- **Accessibilité** — Navigation clavier, attributs ARIA et états `:focus-visible`.
-- **Styles** — `tailwind-merge` + `clsx` pour surcharger facilement les classes sans conflits CSS.
+- **Composables** — sous-composants (`Card.Header`, `Modal.Footer`) pour garder de la flexibilité.
+- **Accessibilité** — patterns WAI-ARIA APG, navigation clavier, `:focus-visible` centralisé, `prefers-reduced-motion`. L'addon a11y tourne en mode bloquant (`test: 'error'`) : une violation axe fait échouer la CI.
+- **Styles** — `tailwind-merge` + `clsx` pour surcharger les classes sans conflit.
+- **Typage** — `strict: true`, unions discriminées (`Dropzone` single / multiple), déclarations `.d.ts` générées.
+- **Distribution** — dual ESM / CJS, `sideEffects: false` pour le tree-shaking.
+
+## Développement local
+
+```bash
+pnpm install
+pnpm playwright:install   # Chromium, requis pour les tests
+
+pnpm dev                  # Storybook → http://localhost:6006
+pnpm type-check           # tsc --noEmit
+pnpm build                # Build ESM/CJS + types dans dist/
+pnpm test:storybook       # Tests d'interaction et a11y (Vitest browser mode)
+pnpm build-storybook      # Export statique de la doc
+```
+
+Les blocs visuels des pages MDX vivent dans `src/docs/_showcase.tsx` et `src/docs/_tokens.tsx`, et portent la classe `sb-unstyled` : sans elle, les styles de doc de Storybook écrasent les utilitaires Tailwind.
+
+Toute évolution de token passe par `src/lib/design-tokens.ts` — le preset et la page Tokens en découlent automatiquement.
+
+## Limitations connues
+
+- **Next.js App Router** — la directive `"use client"` n'est pas encore émise au build. Importez les composants depuis un Client Component en attendant.
+- Le composant `DataTable` n'est pas virtualisé : il est prévu pour des vues paginées.
 
 ## Licence
 
