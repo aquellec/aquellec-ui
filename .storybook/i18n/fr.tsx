@@ -68,6 +68,23 @@ export const fr: Dictionary = {
   },
 
   docs: {
+    components: {
+      'Actions/Button': "Bouton d'action du design system. primary pour les actions principales, ai pour les traitements génératifs, outline et ghost pour le secondaire.",
+      'Actions/SegmentedControl': 'Groupe de segments exclusifs. Les options sont passées en prop, et le pattern radiogroup WAI-ARIA lui donne un roving tabindex, les flèches et Home / End.',
+      'Forms/Input': "Champ de saisie sur une ligne. Libellé, message d'erreur et texte d'aide sont reliés via htmlFor et aria-describedby.",
+      'Forms/Textarea': 'Saisie multi-lignes pour descriptions et notes longues. Affiche un compteur de caractères dès que maxLength est défini.',
+      'Forms/Dropzone': "Zone de dépôt par glisser-déposer. Modes simple et multiple, validation de taille et de type, états chargement et désactivé. Tous les textes sont surchargeables via la prop labels.",
+      'Feedback/Toast': "Notification temporaire. La variante error passe en role=\"alert\" pour être annoncée sans attendre ; les autres utilisent role=\"status\".",
+      'Feedback/Modal': "Dialogue modal accessible. Fermeture par Échap, par le fond ou par le bouton, titre relié en aria-labelledby, focus piégé et restitué à la fermeture.",
+      'Feedback/Badge': 'Étiquette compacte pour un statut, une catégorie ou une valeur extraite. Les variantes sémantiques facilitent le scan visuel.',
+      'Data Display/DataTable': "Tableau de données avec colonnes personnalisées, pagination et états chargement ou vide. N'importe quelle forme de ligne est acceptée via Column<T>.",
+      'Data Display/Card': 'Conteneur structuré regroupant contenu, actions et métadonnées, composé de Card.Header, Card.Body et Card.Footer.',
+      'Data Display/PricingCard': "Carte tarifaire. isPopular met un forfait en avant, et les fonctionnalités incluses comme exclues sont annoncées aux lecteurs d'écran.",
+      'Data Display/ScoreGauge': 'Jauge circulaire pour un score sur 100. La couleur suit le palier et la valeur est exposée en meter, donc annoncée comme une valeur.',
+      'Data Display/ProgressBar': 'Barre de progression générique pour quotas, consommation ou remplissage. Aucun texte codé en dur, et la couleur bascule à des seuils configurables.',
+      'Templates/CandidateDashboard': "Template de page candidat : import de CV, fiche de poste, score ATS et historique des analyses.",
+      'Templates/RecruiterDashboard': 'Template de page recruteur : import massif de CV, KPI et historique des analyses.',
+    },
     sections: {
       pillars: { kicker: 'Fondations', title: 'Les piliers du design system' },
       catalog: { kicker: 'Catalogue', title: 'Architecture de la librairie' },

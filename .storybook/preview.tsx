@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import { DocsContainer, type DocsContainerProps } from '@storybook/addon-docs/blocks';
 import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
+import { LocalizedDocsPage } from './docs-page';
 import { aquellecTheme } from './theme';
 import {
   DEFAULT_LOCALE,
@@ -168,6 +169,7 @@ const preview: Preview = {
       theme: aquellecTheme,
       toc: true,
       container: I18nDocsContainer,
+      page: LocalizedDocsPage,
     },
     options: {
       storySort: {

@@ -65,6 +65,28 @@ export const en = {
     and the code spans fall.
   */
   docs: {
+    /*
+      Component descriptions rendered at the top of every autodocs page, keyed by
+      story title. The custom docs page reads them, so they follow the toolbar
+      locale; the JSDoc block above each meta stays as the in-editor reference.
+    */
+    components: {
+      'Actions/Button': 'Action button of the design system. Use primary for main actions, ai for generative workflows, outline and ghost for secondary ones.',
+      'Actions/SegmentedControl': 'Group of exclusive segments. Options are passed as a prop, and the WAI-ARIA radio group pattern gives it a roving tabindex, arrow keys and Home / End.',
+      'Forms/Input': 'Single-line text field. Label, error message and helper text are tied together through htmlFor and aria-describedby.',
+      'Forms/Textarea': 'Multi-line input for descriptions and long notes. Shows a character counter as soon as maxLength is set.',
+      'Forms/Dropzone': 'Drag-and-drop upload zone. Single and multiple modes, size and type validation, loading and disabled states. Every string is overridable through the labels prop.',
+      'Feedback/Toast': 'Transient notification. The error variant switches to role="alert" so it is announced immediately; the others use role="status".',
+      'Feedback/Modal': 'Accessible modal dialog. Dismissed with Escape, the overlay or the close button, with the title wired through aria-labelledby, focus trapped and restored on close.',
+      'Feedback/Badge': 'Compact label for a status, a category or an extracted value. Semantic variants make scanning easier.',
+      'Data Display/DataTable': 'Data table with custom columns, pagination and loading or empty states. Any row shape is accepted through Column<T>.',
+      'Data Display/Card': 'Structured container grouping content, actions and metadata, composed of Card.Header, Card.Body and Card.Footer.',
+      'Data Display/PricingCard': 'Pricing card. isPopular highlights a plan, and included as well as excluded features are both announced to screen readers.',
+      'Data Display/ScoreGauge': 'Circular gauge for a score out of 100. The color follows the tier and the value is exposed as a meter, so it is announced as a value.',
+      'Data Display/ProgressBar': 'Generic progress bar for quotas, consumption or fill level. No copy is hardcoded, and the color switches at configurable thresholds.',
+      'Templates/CandidateDashboard': 'Candidate page template: resume upload, job description, ATS score and analysis history.',
+      'Templates/RecruiterDashboard': 'Recruiter page template: bulk resume import, KPIs and analysis history.',
+    },
     sections: {
       pillars: { kicker: 'Foundations', title: 'Design system pillars' },
       catalog: { kicker: 'Catalog', title: 'Library architecture' },

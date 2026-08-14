@@ -15,6 +15,23 @@ export interface ComponentLabels {
 export declare const en: {
     components: ComponentLabels;
     docs: {
+        components: {
+            'Actions/Button': string;
+            'Actions/SegmentedControl': string;
+            'Forms/Input': string;
+            'Forms/Textarea': string;
+            'Forms/Dropzone': string;
+            'Feedback/Toast': string;
+            'Feedback/Modal': string;
+            'Feedback/Badge': string;
+            'Data Display/DataTable': string;
+            'Data Display/Card': string;
+            'Data Display/PricingCard': string;
+            'Data Display/ScoreGauge': string;
+            'Data Display/ProgressBar': string;
+            'Templates/CandidateDashboard': string;
+            'Templates/RecruiterDashboard': string;
+        };
         sections: {
             pillars: {
                 kicker: string;
