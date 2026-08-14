@@ -91,8 +91,12 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
             width={width}
             height={width}
             className="transform -rotate-90"
-            role="img"
-            aria-label={gaugeLabel}
+            role="meter"
+            aria-valuenow={normalizedScore}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuetext={gaugeLabel}
+            aria-label={label}
           >
             <circle
               cx={width / 2}

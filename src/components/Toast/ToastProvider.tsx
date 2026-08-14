@@ -113,7 +113,6 @@ export function ToastProvider({
       <div
         role="region"
         aria-label="Notifications"
-        aria-live="polite"
         className={cn(
           'pointer-events-none fixed bottom-4 right-4 z-50 flex w-full max-w-md flex-col gap-2',
           viewportClassName
