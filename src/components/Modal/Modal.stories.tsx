@@ -9,7 +9,7 @@ import { Button } from '../Button';
 import { Badge } from '../Badge';
 
 /**
- * Dialogue modal accessible : rapport, confirmation, formulaire court.
+ * Accessible modal dialog: report, confirmation, short form.
  * Dismissed with Escape, by clicking the overlay or the close button; title
  * wired through `aria-labelledby`, focus trapped and restored on close.
  */

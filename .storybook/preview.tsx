@@ -1,6 +1,8 @@
 import '../src/index.css';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Decorator, Preview } from '@storybook/react-vite';
+import { DocsContainer, type DocsContainerProps } from '@storybook/addon-docs/blocks';
+import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
 import { aquellecTheme } from './theme';
 import {
   DEFAULT_LOCALE,
@@ -9,6 +11,7 @@ import {
   getDictionary,
   isLocale,
   localeLabels,
+  type Locale,
 } from './i18n';
 
 const aquellecViewports = {
@@ -72,6 +75,61 @@ const withI18n: Decorator = (Story, context) => {
   );
 };
 
+/**
+ * Reads the active locale from a docs context.
+ *
+ * MDX pages render outside the story pipeline, so decorators never run on them
+ * and the preview hooks (`useGlobals`) throw. The locale therefore has to be
+ * read from the docs context, and kept in sync through the preview channel so
+ * the toolbar switch updates the page without a reload.
+ */
+function useDocsLocale(context: DocsContainerProps['context']): Locale {
+  const readLocale = useCallback((): Locale => {
+    const store = (context as unknown as { store?: { userGlobals?: { globals?: Record<string, unknown> } } })
+      ?.store;
+    const value = store?.userGlobals?.globals?.locale;
+    return isLocale(value) ? value : DEFAULT_LOCALE;
+  }, [context]);
+
+  const [locale, setLocale] = useState<Locale>(readLocale);
+
+  useEffect(() => {
+    setLocale(readLocale());
+
+    const channel = (context as unknown as { channel?: {
+      on: (event: string, handler: (payload: { globals?: Record<string, unknown> }) => void) => void;
+      off: (event: string, handler: (payload: { globals?: Record<string, unknown> }) => void) => void;
+    } })?.channel;
+    if (!channel) return;
+
+    const handleGlobalsUpdated = ({ globals }: { globals?: Record<string, unknown> }) => {
+      if (isLocale(globals?.locale)) setLocale(globals.locale);
+    };
+
+    channel.on(GLOBALS_UPDATED, handleGlobalsUpdated);
+    return () => channel.off(GLOBALS_UPDATED, handleGlobalsUpdated);
+  }, [context, readLocale]);
+
+  return locale;
+}
+
+/** Gives MDX documentation pages the same dictionary and `lang` as the stories. */
+function I18nDocsContainer({ children, ...rest }: DocsContainerProps) {
+  const locale = useDocsLocale(rest.context);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  return (
+    <I18nContext.Provider value={getDictionary(locale)}>
+      <DocsContainer {...rest}>
+        <div lang={locale}>{children}</div>
+      </DocsContainer>
+    </I18nContext.Provider>
+  );
+}
+
 const preview: Preview = {
   decorators: [withI18n],
   globalTypes: {
@@ -109,6 +167,7 @@ const preview: Preview = {
     docs: {
       theme: aquellecTheme,
       toc: true,
+      container: I18nDocsContainer,
     },
     options: {
       storySort: {
