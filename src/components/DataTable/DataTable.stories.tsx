@@ -9,8 +9,8 @@ import { Button } from '../Button';
 
 /**
  * Data table with custom columns, pagination and loading / empty states.
- * The example uses a product catalog, but the data shape is fully generic
- * (`Column<T>`).
+ * Rows are deliberately neutral: the component takes any shape through
+ * `Column<T>`, so the example demonstrates the API rather than a domain.
  */
 interface Product {
   id: string;
@@ -22,9 +22,9 @@ interface Product {
 }
 
 const products: Product[] = [
-  { id: '1', name: 'Aurora Headphones', category: 'audio', status: 'active', price: '129,00', updatedAt: '2026-08-12' },
-  { id: '2', name: 'Nimbus Keyboard', category: 'accessories', status: 'review', price: '89,00', updatedAt: '2026-08-10' },
-  { id: '3', name: 'Vertex Monitor 27"', category: 'displays', status: 'archived', price: '349,00', updatedAt: '2026-08-08' },
+  { id: '1', name: 'Item one', category: 'audio', status: 'active', price: '129.00', updatedAt: '2026-08-12' },
+  { id: '2', name: 'Item two', category: 'accessories', status: 'review', price: '89.00', updatedAt: '2026-08-10' },
+  { id: '3', name: 'Item three', category: 'displays', status: 'archived', price: '349.00', updatedAt: '2026-08-08' },
 ];
 
 const statusVariant = {
@@ -54,7 +54,7 @@ function fullColumns(t: Dictionary): Column<Product>[] {
         </Badge>
       ),
     },
-    { header: t.table.columns.price, cell: (item) => <span className="font-medium">{item.price} €</span> },
+    { header: t.table.columns.price, cell: (item) => <span className="font-medium">{item.price}</span> },
     { header: t.table.columns.updated, accessorKey: 'updatedAt' },
     {
       header: t.table.columns.action,
@@ -218,8 +218,8 @@ export const AccessorKeyColumns: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByText('Aurora Headphones')).toBeInTheDocument();
-    await expect(canvas.getByText('Nimbus Keyboard')).toBeInTheDocument();
+    await expect(canvas.getByText('Item one')).toBeInTheDocument();
+    await expect(canvas.getByText('Item two')).toBeInTheDocument();
     await expect(canvas.queryByRole('navigation', { name: /Pagination/i })).not.toBeInTheDocument();
   },
 };

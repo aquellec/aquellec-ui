@@ -93,7 +93,7 @@ export const CharacterCountInteraction: Story = {
     const textarea = canvas.getByRole('textbox', { name: t.textarea.description.label });
 
     // Input longer than `maxLength`: the counter must saturate, not overflow.
-    await userEvent.type(textarea, 'Wireless mechanical keyboard');
+    await userEvent.type(textarea, 'Nunc laoreet egestas nulla');
     await expect(canvas.getByText(/20\s*\/\s*20/)).toBeInTheDocument();
   },
 };
