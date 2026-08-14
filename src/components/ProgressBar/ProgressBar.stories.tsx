@@ -6,9 +6,9 @@ import { Button } from '../Button';
 import { ProgressBar } from './ProgressBar';
 
 /**
- * Barre de progression générique : quota, consommation, remplissage.
- * Aucun texte n'est codé en dur — libellé, compteur, aide et action sont des props.
- * La couleur bascule aux seuils configurables (ambre 75 %, rouge 90 % par défaut).
+ * Generic progress bar: quota, consumption, fill level.
+ * No copy is hardcoded — label, counter, helper and action are all props.
+ * The color switches at configurable thresholds (amber 75%, red 90% by default).
  */
 const meta: Meta<typeof ProgressBar> = {
   title: 'Data Display/ProgressBar',
@@ -31,7 +31,7 @@ export const Default: Story = {
   args: { value: 3, max: 10 },
 };
 
-/** Au-delà de 75 %, la barre passe en ambre. */
+/** Past 75%, the bar turns amber. */
 export const WarningLevel: Story = {
   render: (args) => {
     const t = useI18n();
@@ -40,7 +40,7 @@ export const WarningLevel: Story = {
   args: { value: 8, max: 10 },
 };
 
-/** Au-delà de 90 %, elle passe en rouge. */
+/** Past 90%, it turns red. */
 export const NearLimit: Story = {
   render: (args) => {
     const t = useI18n();
@@ -49,7 +49,7 @@ export const NearLimit: Story = {
   args: { value: 9.5, max: 10 },
 };
 
-/** Le compteur accepte un rendu personnalisé via `formatValue`. */
+/** The counter accepts a custom rendering through `formatValue`. */
 export const CustomFormat: Story = {
   render: (args) => {
     const t = useI18n();
@@ -65,7 +65,7 @@ export const CustomFormat: Story = {
   args: { value: 42, max: 50 },
 };
 
-/** Sièges d'une équipe : même composant, tout autre domaine. */
+/** Team seats: same component, an entirely different domain. */
 export const TeamSeats: Story = {
   render: (args) => {
     const t = useI18n();
@@ -80,7 +80,7 @@ export const TeamSeats: Story = {
   args: { value: 4, max: 5 },
 };
 
-/** `helperText` et `action` remplacent tout bloc de conversion codé en dur. */
+/** `helperText` and `action` replace any hardcoded conversion block. */
 export const WithAction: Story = {
   render: (args) => {
     const t = useI18n();
@@ -102,9 +102,9 @@ export const WithAction: Story = {
 };
 
 /**
- * Sans libellé visible ni action, pour une intégration compacte.
- * `ariaLabel` reste indispensable : une `progressbar` anonyme est une
- * violation axe (`aria-progressbar-name`), vérifiée par la suite de tests.
+ * Without a visible label or action, for a compact integration.
+ * `ariaLabel` stays mandatory: an unnamed `progressbar` is an axe violation
+ * (`aria-progressbar-name`), which the test suite checks.
  */
 export const BarOnly: Story = {
   render: (args) => {
@@ -114,7 +114,7 @@ export const BarOnly: Story = {
   args: { value: 30, max: 100 },
 };
 
-/** `max` à zéro ne doit produire ni division par zéro ni `aria-valuenow` invalide. */
+/** A zero `max` must produce neither a division by zero nor an invalid `aria-valuenow`. */
 export const ZeroMax: Story = {
   render: (args) => {
     const t = useI18n();

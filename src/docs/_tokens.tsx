@@ -6,16 +6,16 @@ import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
 import { cardSurface, softTransition } from './_showcase';
 
 /*
-  Blocs visuels de la page Docs/Tokens.
+  Visual blocks of the Docs/Tokens page.
 
-  Tout ce qui est affiché ici est **dérivé de `src/lib/design-tokens.ts`** :
-  aucune valeur hexadécimale n'est recopiée. Ajouter un palier à la palette ou
-  une ombre au preset met la documentation à jour sans intervention, ce qui
-  évite la dérive constatée sur la version précédente de cette page.
+  Everything shown here is derived from `src/lib/design-tokens.ts`: no hex value
+  is copied by hand. Adding a step to a palette or a shadow to the preset updates
+  the documentation with no further action, which avoids the drift the previous
+  version of this page had accumulated.
 
-  Les couleurs sont posées en `style` inline et non en classes Tailwind : elles
-  proviennent d'un objet au runtime, donc aucune classe ne pourrait être
-  générée statiquement par le compilateur.
+  Colors are applied through inline `style` rather than Tailwind classes: they
+  come from a runtime object, so no class could be generated statically by the
+  compiler.
 */
 
 /* -------------------------------------------------------------------------- */
@@ -33,7 +33,7 @@ export function TokensHero() {
       <div className="flex flex-col items-start gap-4">
         <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
           <Palette className="h-3.5 w-3.5" aria-hidden="true" />
-          Fondations · Preset Tailwind
+          Foundations · Tailwind preset
         </p>
 
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
@@ -41,9 +41,9 @@ export function TokensHero() {
         </h1>
 
         <p className={cn('max-w-2xl text-base leading-relaxed md:text-lg', subtleTextClass)}>
-          Source unique des fondations&nbsp;: <code className="text-sm">src/lib/design-tokens.ts</code>.
-          Le preset Tailwind exporté par le package et cette page sont générés depuis ce même
-          fichier — les valeurs ci-dessous sont donc toujours celles réellement compilées.
+          Single source for the foundations: <code className="text-sm">src/lib/design-tokens.ts</code>.
+          The Tailwind preset shipped by the package and this page are both generated from that
+          file, so the values below are always the ones actually compiled.
         </p>
       </div>
     </div>
@@ -51,14 +51,14 @@ export function TokensHero() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Échelles de couleur                                                        */
+/*  Color scales                                                               */
 /* -------------------------------------------------------------------------- */
 
-/** Paliers qui portent un rôle documenté, mis en avant dans l'échelle. */
+/** Steps carrying a documented role, highlighted within the scale. */
 const keyShades: Record<string, string> = {
   '500': 'Accent',
   '600': 'Action',
-  '700': 'Texte AA',
+  '700': 'AA text',
 };
 
 function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; hex: string }) {
@@ -94,8 +94,8 @@ export function ColorScale({
 
   return (
     <section className={cn('sb-unstyled mb-8 p-5', cardSurface)}>
-      {/* Libellé de carte, volontairement pas un `h3` : le sommaire Storybook
-          cible les `h3` et remonterait « brand » / « ai » comme sections. */}
+      {/* Card label, deliberately not an `h3`: the Storybook table of contents
+          targets `h3` and would list "brand" / "ai" as sections. */}
       <div className="mb-4 flex items-baseline justify-between gap-4">
         <p className="font-mono text-sm font-bold text-slate-900">{name}</p>
         <p className={cn('text-xs', mutedTextClass)}>{usage}</p>
@@ -111,14 +111,14 @@ export function ColorScale({
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Tokens sémantiques                                                         */
+/*  Semantic tokens                                                            */
 /* -------------------------------------------------------------------------- */
 
 const semanticGroups = [
-  { key: 'success', label: 'Succès', usage: 'Match validé, import réussi', tokens: aquellecColors.semantic.success },
-  { key: 'error', label: 'Erreur', usage: 'Rejet, échec de parsing', tokens: aquellecColors.semantic.error },
-  { key: 'warning', label: 'Alerte', usage: 'Quota proche, score moyen', tokens: aquellecColors.semantic.warning },
-  { key: 'info', label: 'Information', usage: 'Neutre, aide contextuelle', tokens: aquellecColors.semantic.info },
+  { key: 'success', label: 'Success', usage: 'Validated match, successful import', tokens: aquellecColors.semantic.success },
+  { key: 'error', label: 'Error', usage: 'Rejection, parsing failure', tokens: aquellecColors.semantic.error },
+  { key: 'warning', label: 'Warning', usage: 'Quota nearly reached, average score', tokens: aquellecColors.semantic.warning },
+  { key: 'info', label: 'Information', usage: 'Neutral, contextual help', tokens: aquellecColors.semantic.info },
 ] as const;
 
 const semanticRoles = ['fg', 'bg', 'border', 'surface'] as const;
@@ -143,8 +143,8 @@ export function SemanticTokens() {
 
           <p className={cn('text-xs', mutedTextClass)}>{usage}</p>
 
-          {/* `div` plutôt que `dl/dt/dd` : les styles prose de Storybook
-              mettent les `dt` en italique et cassent l'alignement visuel. */}
+          {/* `div` rather than `dl/dt/dd`: Storybook prose styles italicise
+              `dt` elements and break the visual alignment. */}
           <div className="grid grid-cols-4 gap-2">
             {semanticRoles.map((role) => (
               <div key={role}>
@@ -164,11 +164,11 @@ export function SemanticTokens() {
   );
 }
 
-/** Tons de texte neutres, hors familles sémantiques. */
+/** Neutral text tones, outside the semantic families. */
 export function NeutralText() {
   const neutrals = [
-    { token: 'semantic-muted', hex: aquellecColors.semantic.muted, usage: 'Texte secondaire, légendes' },
-    { token: 'semantic-subtle', hex: aquellecColors.semantic.subtle, usage: 'Corps de texte atténué, contrôles' },
+    { token: 'semantic-muted', hex: aquellecColors.semantic.muted, usage: 'Secondary text, captions' },
+    { token: 'semantic-subtle', hex: aquellecColors.semantic.subtle, usage: 'Muted body text, controls' },
   ];
 
   return (
@@ -177,7 +177,7 @@ export function NeutralText() {
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
             <th scope="col" className="p-3 font-semibold text-slate-900">Token</th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">Valeur</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900">Value</th>
             <th scope="col" className="p-3 font-semibold text-slate-900">Usage</th>
           </tr>
         </thead>
@@ -205,7 +205,7 @@ export function NeutralText() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Rayons et élévations                                                       */
+/*  Radii and elevations                                                       */
 /* -------------------------------------------------------------------------- */
 
 export function RadiusScale() {
@@ -215,7 +215,7 @@ export function RadiusScale() {
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-500/20">
           <Ruler className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Rayons</p>
+        <p className="text-sm font-semibold text-slate-900">Radii</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -242,7 +242,7 @@ export function ElevationScale() {
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ai-50 text-ai-700 ring-1 ring-ai-500/20">
           <Layers className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Élévations</p>
+        <p className="text-sm font-semibold text-slate-900">Elevations</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -263,17 +263,17 @@ export function ElevationScale() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Typographie                                                                */
+/*  Typography                                                                 */
 /* -------------------------------------------------------------------------- */
 
 const typeScale = [
-  { token: 'text-xs', size: '12px', usage: 'Labels, badges, métadonnées' },
-  { token: 'text-sm', size: '14px', usage: 'Corps de texte, tableaux, formulaires' },
-  { token: 'text-base', size: '16px', usage: 'Titres de modale, contenu principal' },
-  { token: 'text-lg', size: '18px', usage: 'Titres de section' },
-  { token: 'text-xl', size: '20px', usage: 'En-têtes de page template' },
-  { token: 'text-2xl', size: '24px', usage: 'KPI dashboard' },
-  { token: 'text-3xl', size: '30px', usage: 'Hero pricing' },
+  { token: 'text-xs', size: '12px', usage: 'Labels, badges, metadata' },
+  { token: 'text-sm', size: '14px', usage: 'Body text, tables, forms' },
+  { token: 'text-base', size: '16px', usage: 'Dialog titles, main content' },
+  { token: 'text-lg', size: '18px', usage: 'Section titles' },
+  { token: 'text-xl', size: '20px', usage: 'Template page headers' },
+  { token: 'text-2xl', size: '24px', usage: 'Dashboard KPIs' },
+  { token: 'text-3xl', size: '30px', usage: 'Pricing hero' },
 ];
 
 export function TypeScale() {
@@ -284,9 +284,9 @@ export function TypeScale() {
           <Type className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
-          <p className="text-sm font-semibold text-slate-900">Échelle typographique</p>
+          <p className="text-sm font-semibold text-slate-900">Type scale</p>
           <p className={cn('text-xs', mutedTextClass)}>
-            Utilitaires Tailwind par défaut · police système (<code>font-sans</code>)
+            Default Tailwind utilities · system font stack (<code>font-sans</code>)
           </p>
         </div>
       </div>
@@ -295,7 +295,7 @@ export function TypeScale() {
         {typeScale.map(({ token, size, usage }) => (
           <li key={token} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-2.5">
             <span className={cn(token, 'min-w-0 flex-1 font-semibold text-slate-900')}>
-              Optimisez votre CV pour les ATS
+              Optimise your resume for ATS
             </span>
             <span className="font-mono text-xs font-semibold text-slate-900">{token}</span>
             <span className={cn('w-12 text-right font-mono text-xs', mutedTextClass)}>{size}</span>
@@ -312,9 +312,9 @@ export function TypeScale() {
 /* -------------------------------------------------------------------------- */
 
 const focusVariants = [
-  { name: 'focusRing', className: focusRing, label: 'Contrôle standard', accent: 'bg-brand-600 text-white' },
-  { name: 'focusRingDanger', className: focusRingDanger, label: 'Action destructive', accent: 'bg-rose-600 text-white' },
-  { name: 'focusRingGhost', className: focusRingGhost, label: 'Bouton discret', accent: 'bg-slate-100 text-slate-800' },
+  { name: 'focusRing', className: focusRing, label: 'Standard control', accent: 'bg-brand-600 text-white' },
+  { name: 'focusRingDanger', className: focusRingDanger, label: 'Destructive action', accent: 'bg-rose-600 text-white' },
+  { name: 'focusRingGhost', className: focusRingGhost, label: 'Quiet button', accent: 'bg-slate-100 text-slate-800' },
 ];
 
 export function FocusRings() {
@@ -324,13 +324,13 @@ export function FocusRings() {
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border">
           <Focus className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Anneaux de focus</p>
+        <p className="text-sm font-semibold text-slate-900">Focus rings</p>
       </div>
 
       <p className={cn('text-xs', mutedTextClass)}>
-        Centralisés dans <code>src/lib/focus-ring.ts</code>. Naviguez au clavier
-        (<kbd className="rounded border border-slate-300 bg-slate-50 px-1">Tab</kbd>) pour les voir —
-        ils sont en <code>focus-visible</code>, donc invisibles au clic.
+        Centralised in <code>src/lib/focus-ring.ts</code>. Navigate with the keyboard
+        (<kbd className="rounded border border-slate-300 bg-slate-50 px-1">Tab</kbd>) to see them —
+        they are `focus-visible` only, so invisible on click.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-3">
@@ -358,7 +358,7 @@ export function FocusRings() {
 /*  Viewports                                                                  */
 /* -------------------------------------------------------------------------- */
 
-/** Doit rester aligné sur `aquellecViewports` dans `.storybook/preview.ts`. */
+/** Must stay aligned with `aquellecViewports` in `.storybook/preview.tsx`. */
 const viewports = [
   { key: 'mobile', name: 'Mobile', size: '375 × 812' },
   { key: 'tablet', name: 'Tablet', size: '768 × 1024' },
@@ -373,7 +373,7 @@ export function Viewports() {
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border">
           <MonitorSmartphone className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">Viewports Storybook</p>
+        <p className="text-sm font-semibold text-slate-900">Storybook viewports</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

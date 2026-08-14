@@ -5,69 +5,65 @@ import { errorTextClass, subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
 
 /**
- * Toutes les chaînes visibles du composant, y compris celles réservées aux
- * technologies d'assistance. Les entrées paramétrées sont des fonctions pour
- * laisser chaque langue placer ses variables et gérer ses pluriels.
+ * Every user-facing string of the component, including the ones only exposed to
+ * assistive technology. Parameterised entries are functions so each language can
+ * place its variables and handle its own pluralisation.
  */
 export interface DropzoneLabels {
-  /** Nom accessible de l'input fichier, seul élément focusable de la zone. */
+  /** Accessible name of the file input, the only focusable element of the zone. */
   inputLabel: (multiple: boolean) => string;
-  /** Segment cliquable de l'invite. */
+  /** Clickable part of the prompt. */
   browse: string;
-  /** Suite de l'invite, après le segment cliquable. */
+  /** Remainder of the prompt, after the clickable part. */
   dropHint: (multiple: boolean) => string;
-  /** Rappel des contraintes de format et de taille. */
+  /** Reminder of the accepted format and size limit. */
   constraint: (maxSizeMB: number, multiple: boolean) => string;
   loadingTitle: string;
   loadingHint: (multiple: boolean) => string;
-  /** Texte affiché sous le nom du fichier pendant l'envoi. */
+  /** Shown under the file name while uploading. */
   uploading: string;
-  /** Nom accessible de l'indicateur d'envoi. */
+  /** Accessible name of the upload spinner. */
   uploadingStatus: string;
   remove: (multiple: boolean) => string;
-  /** Résumé de la sélection en mode multiple. */
+  /** Selection summary in multiple mode. */
   selection: (count: number) => string;
   totalSize: (formattedSize: string) => string;
-  /** Formatage d'une taille en octets. */
+  /** Formats a size expressed in bytes. */
   fileSize: (bytes: number) => string;
   errorTooLarge: (fileName: string, maxSizeMB: number) => string;
   errorInvalidType: (fileName: string) => string;
 }
 
-/**
- * Valeurs par défaut en français, conservées pour ne pas modifier le rendu des
- * intégrations existantes. Passez `labels` pour toute autre langue.
- */
+/** English defaults. Pass `labels` to render the component in another language. */
 export const defaultDropzoneLabels: DropzoneLabels = {
   inputLabel: (multiple) =>
     multiple
-      ? 'Zone de dépôt de fichiers. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.'
-      : 'Zone de dépôt de fichier. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.',
-  browse: 'Cliquez pour parcourir',
-  dropHint: (multiple) => (multiple ? 'ou glissez vos fichiers ici' : 'ou glissez votre fichier ici'),
+      ? 'File drop zone. Press Enter or Space to browse your files.'
+      : 'File drop zone. Press Enter or Space to browse your file.',
+  browse: 'Click to browse',
+  dropHint: (multiple) => (multiple ? 'or drop your files here' : 'or drop your file here'),
   constraint: (maxSizeMB, multiple) =>
-    `Format PDF uniquement (max. ${maxSizeMB} Mo${multiple ? ' par fichier' : ''})`,
-  loadingTitle: 'Analyse en cours...',
+    `PDF only (max. ${maxSizeMB} MB${multiple ? ' per file' : ''})`,
+  loadingTitle: 'Processing…',
   loadingHint: (multiple) =>
-    `Veuillez patienter pendant l'envoi ${multiple ? 'de vos fichiers' : 'de votre fichier'}`,
-  uploading: 'Envoi en cours...',
-  uploadingStatus: 'Envoi en cours',
-  remove: (multiple) => (multiple ? 'Supprimer les fichiers' : 'Supprimer le fichier'),
-  selection: (count) => `${count} fichier${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`,
-  totalSize: (formattedSize) => `Volume total : ${formattedSize}`,
+    `Please wait while ${multiple ? 'your files are' : 'your file is'} uploaded`,
+  uploading: 'Uploading…',
+  uploadingStatus: 'Uploading',
+  remove: (multiple) => (multiple ? 'Remove files' : 'Remove file'),
+  selection: (count) => `${count} file${count > 1 ? 's' : ''} selected`,
+  totalSize: (formattedSize) => `Total size: ${formattedSize}`,
   fileSize: (bytes) =>
     bytes < 1024 * 1024
-      ? `${(bytes / 1024).toFixed(1)} Ko`
-      : `${(bytes / (1024 * 1024)).toFixed(1)} Mo`,
-  errorTooLarge: (fileName, maxSizeMB) =>
-    `Le fichier "${fileName}" dépasse la limite autorisée de ${maxSizeMB} Mo.`,
-  errorInvalidType: (fileName) => `Le fichier "${fileName}" n'est pas un PDF valide.`,
+      ? `${(bytes / 1024).toFixed(1)} KB`
+      : `${(bytes / (1024 * 1024)).toFixed(1)} MB`,
+  errorTooLarge: (fileName, maxSizeMB) => `"${fileName}" exceeds the ${maxSizeMB} MB limit.`,
+  errorInvalidType: (fileName) => `"${fileName}" is not a valid PDF.`,
 };
 
 interface DropzoneBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Called when the current selection is cleared by the user. */
   onClear?: () => void;
-  /** Surcharge partielle des textes du composant, fusionnée avec les défauts. */
+  /** Partial override of the component copy, merged over the defaults. */
   labels?: Partial<DropzoneLabels>;
   /** Accepted file extensions or MIME types passed to the native input. */
   accept?: string;

@@ -41,9 +41,9 @@ export interface ToastProviderProps {
   defaultDuration?: number;
   /** Classes applied to the fixed viewport container. */
   viewportClassName?: string;
-  /** Nom accessible de la région qui regroupe les notifications. */
+  /** Accessible name of the region grouping the notifications. */
   regionLabel?: string;
-  /** Nom accessible du bouton de fermeture de chaque notification. */
+  /** Accessible name of each notification dismiss button. */
   closeLabel?: string;
 }
 

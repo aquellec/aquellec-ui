@@ -15,57 +15,57 @@ import {
 <Meta title="Docs/Tokens" />
 
 {/*
-  Comme pour Introduction, les blocs visuels vivent dans `_tokens.tsx`.
-  Ils sont générés depuis `src/lib/design-tokens.ts` : aucune valeur n'est
-  recopiée ici, la page ne peut donc pas se désynchroniser du preset.
+  As with Introduction, the visual blocks live in `_tokens.tsx`.
+  They are generated from `src/lib/design-tokens.ts`: no value is copied here,
+  so the page cannot drift away from the preset.
 */}
 
 <TokensHero />
 
-<SectionHeader kicker="Palettes" title="Couleurs de marque" id="couleurs-de-marque" />
+<SectionHeader kicker="Palettes" title="Brand colors" id="brand-colors" />
 
-Deux échelles complètes de dix paliers, exportées par le preset sous les noms `brand` et `ai`.
-Les paliers 500 / 600 / 700 portent les rôles documentés — accent, action, texte conforme AA sur fond blanc.
+Two complete ten-step scales, exported by the preset as `brand` and `ai`.
+Steps 500 / 600 / 700 carry the documented roles — accent, action, AA-compliant text on white.
 
-<ColorScale name="brand" usage="Actions, liens, navigation" />
+<ColorScale name="brand" usage="Actions, links, navigation" />
 
-<ColorScale name="ai" usage="Fonctionnalités IA : scoring, synthèses, boutons génératifs" />
+<ColorScale name="ai" usage="AI features: scoring, summaries, generative buttons" />
 
-<SectionHeader kicker="Palettes" title="Tokens sémantiques" id="tokens-semantiques" />
+<SectionHeader kicker="Palettes" title="Semantic tokens" id="semantic-tokens" />
 
-Consommés par `Badge`, `Toast`, `Dropzone` et `Input` via les helpers de `src/lib/semantic-colors.ts`,
-jamais en couleurs brutes. Chaque famille expose quatre rôles&nbsp;: `fg` (texte et icône),
-`bg` (fond de pastille), `border` et `surface` (fond de bannière).
+Consumed by `Badge`, `Toast`, `Dropzone` and `Input` through the helpers in `src/lib/semantic-colors.ts`,
+never as raw colors. Every family exposes four roles: `fg` (text and icon),
+`bg` (chip background), `border` and `surface` (banner background).
 
 <SemanticTokens />
 
-`bg` et `surface` partagent aujourd'hui la même valeur dans les quatre familles&nbsp;: la distinction
-est là pour permettre de les dissocier plus tard sans toucher aux composants.
+`bg` and `surface` currently share the same value across all four families: the distinction exists
+so they can be split later without touching the components.
 
 <NeutralText />
 
-<SectionHeader kicker="Fondations" title="Rayons & élévations" id="rayons-elevations" />
+<SectionHeader kicker="Foundations" title="Radii and elevations" id="radii-and-elevations" />
 
 <RadiusScale />
 
 <ElevationScale />
 
-<SectionHeader kicker="Fondations" title="Typographie" id="typographie" />
+<SectionHeader kicker="Foundations" title="Typography" id="typography" />
 
 <TypeScale />
 
-<SectionHeader kicker="Accessibilité" title="Focus" id="focus" />
+<SectionHeader kicker="Accessibility" title="Focus" id="focus" />
 
 <FocusRings />
 
-Les trois anneaux sont en `focus-visible` uniquement&nbsp;: ils apparaissent au clavier, jamais au clic.
-Ils s'appliquent sur un `outline-none`, d'où l'importance de ne pas les retirer via `className`.
+All three rings are `focus-visible` only: they appear on keyboard navigation, never on click.
+They sit on top of an `outline-none`, so removing them through `className` leaves no focus indicator.
 
 <SectionHeader kicker="Responsive" title="Viewports" id="viewports" />
 
 <Viewports />
 
-### Forcer un viewport sur une story
+### Pinning a viewport on a story
 
 ```tsx
 export const OnMobile: Story = {
@@ -76,16 +76,16 @@ export const OnMobile: Story = {
 };
 ```
 
-Quand un viewport est défini via `globals`, il est appliqué automatiquement et ne peut plus être changé
-depuis la toolbar — utile pour figer un cas de test.
+When a viewport is set through `globals` it is applied automatically and can no longer be changed
+from the toolbar — useful to pin a test case.
 
-**Raccourcis clavier**&nbsp;: viewport suivant `Alt + V` · précédent `Alt + Shift + V` · réinitialiser `Alt + Ctrl + V`.
+**Keyboard shortcuts**: next viewport `Alt + V` · previous `Alt + Shift + V` · reset `Alt + Ctrl + V`.
 
-<SectionHeader kicker="Consommation" title="Utiliser les tokens" id="utiliser-les-tokens" />
+<SectionHeader kicker="Consumption" title="Using the tokens" id="using-the-tokens" />
 
-### Via le preset Tailwind
+### Through the Tailwind preset
 
-Les tokens arrivent dans une application hôte par le preset — aucune feuille de style à importer&nbsp;:
+Tokens reach a host application through the preset — there is no stylesheet to import:
 
 ```ts
 // tailwind.config.ts
@@ -100,18 +100,18 @@ export default {
 };
 ```
 
-Le preset embarque aussi la neutralisation des animations sous `prefers-reduced-motion`.
+The preset also carries the `prefers-reduced-motion` animation reset.
 
-### En dehors de Tailwind
+### Outside Tailwind
 
-Les objets bruts restent accessibles pour les usages hors classes utilitaires (graphiques, e-mails, canvas)&nbsp;:
+The raw objects stay available for uses outside utility classes (charts, emails, canvas):
 
 ```ts
 import { aquellecColors, aquellecThemeExtensions } from '@aquellec/ui';
 
 aquellecColors.brand[600];              // '#0052cc'
-aquellecThemeExtensions.boxShadow.card; // ombre des surfaces Card
+aquellecThemeExtensions.boxShadow.card; // Card surface shadow
 ```
 
-Toute évolution passe par `src/lib/design-tokens.ts`&nbsp;: le preset, les composants et cette page
-en découlent automatiquement.
+Every change goes through `src/lib/design-tokens.ts`: the preset, the components and this page all
+derive from it automatically.

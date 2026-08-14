@@ -3,10 +3,10 @@ import plugin from 'tailwindcss/plugin';
 import { aquellecColors, aquellecThemeExtensions } from './lib/design-tokens';
 
 /**
- * Neutralise animations et transitions quand l'utilisateur demande moins de
- * mouvement (WCAG 2.3.3). Porté par le preset plutôt que par `src/index.css`,
- * qui n'est pas publié : les applications hôtes en héritent ainsi sans import
- * supplémentaire, dès lors qu'elles appliquent le preset.
+ * Neutralises animations and transitions when the user asks for reduced motion
+ * (WCAG 2.3.3). Carried by the preset rather than by `src/index.css`, which is
+ * not published: host applications inherit it with no extra import as soon as
+ * they apply the preset.
  */
 const reducedMotion = plugin(({ addBase }) => {
   addBase({

@@ -1,28 +1,28 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
 
-/** Mentions de statut affichées sous la jauge, selon le palier atteint. */
+/** Status wording shown under the gauge, based on the tier reached. */
 export interface ScoreGaugeStatusLabels {
-  /** Score ≥ 75. */
+  /** Score >= 75. */
   high: string;
-  /** Score ≥ 50. */
+  /** Score >= 50. */
   medium: string;
-  /** Score < 50. */
+  /** Score below 50. */
   low: string;
-  /** Utilisé à la place des paliers quand `isAiTheme` est actif. */
+  /** Used instead of the tiers when `isAiTheme` is on. */
   ai: string;
 }
 
-/** Valeurs par défaut en français, conservées pour les intégrations existantes. */
+/** English defaults. Pass `statusLabels` to render the gauge in another language. */
 export const defaultScoreGaugeStatusLabels: ScoreGaugeStatusLabels = {
-  high: 'Excellent Match',
-  medium: 'Compatibilité Moyenne',
-  low: 'Optimisation Nécessaire',
-  ai: 'Analyse IA',
+  high: 'Excellent match',
+  medium: 'Average match',
+  low: 'Needs work',
+  ai: 'AI analysis',
 };
 
 export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Surcharge partielle des mentions de statut, fusionnée avec les défauts. */
+  /** Partial override of the status wording, merged over the defaults. */
   statusLabels?: Partial<ScoreGaugeStatusLabels>;
   /** ATS compatibility score between 0 and 100. */
   score: number;
@@ -102,8 +102,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     };
 
     const colors = getScoreColor();
-    // `aria-valuetext` : la ponctuation ne dépend pas de la langue, seules les
-    // parties variables viennent des props.
+    // `aria-valuetext`: punctuation is language agnostic here, only the variable
+    // parts come from props.
     const gaugeLabel = label
       ? `${label} — ${normalizedScore}%. ${colors.statusText}.`
       : `${normalizedScore}%. ${colors.statusText}.`;

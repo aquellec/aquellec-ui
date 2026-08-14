@@ -8,8 +8,8 @@ import { Button } from '../Button';
 import { Badge } from '../Badge';
 
 /**
- * Conteneur structuré pour regrouper contenu, actions et métadonnées.
- * Compose `Card.Header`, `Card.Body` et `Card.Footer`.
+ * Structured container grouping content, actions and metadata.
+ * Composes `Card.Header`, `Card.Body` and `Card.Footer`.
  */
 const meta: Meta<typeof Card> = {
   title: 'Data Display/Card',

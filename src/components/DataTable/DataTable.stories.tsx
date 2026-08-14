@@ -8,9 +8,9 @@ import { Badge } from '../Badge';
 import { Button } from '../Button';
 
 /**
- * Tableau de données avec colonnes personnalisées, pagination et états
- * chargement / vide. L'exemple porte sur un catalogue produit, mais la forme
- * des données est entièrement générique (`Column<T>`).
+ * Data table with custom columns, pagination and loading / empty states.
+ * The example uses a product catalog, but the data shape is fully generic
+ * (`Column<T>`).
  */
 interface Product {
   id: string;
@@ -33,7 +33,7 @@ const statusVariant = {
   archived: 'danger',
 } as const;
 
-/** Colonnes complètes, construites depuis le dictionnaire actif. */
+/** Full column set, built from the active dictionary. */
 function fullColumns(t: Dictionary): Column<Product>[] {
   return [
     {
@@ -67,7 +67,7 @@ function fullColumns(t: Dictionary): Column<Product>[] {
   ];
 }
 
-/** Colonnes réduites, pour les scénarios de pagination. */
+/** Reduced column set, for the pagination scenarios. */
 function compactColumns(t: Dictionary): Column<Product>[] {
   return [
     { header: t.table.columns.name, accessorKey: 'name' },
@@ -198,7 +198,7 @@ export const PaginationBoundaries: Story = {
   },
 };
 
-/** Colonne sans `accessorKey` ni `cell` : la cellule doit rester vide, sans erreur. */
+/** Column with neither `accessorKey` nor `cell`: the cell must stay empty, without error. */
 export const AccessorKeyColumns: Story = {
   render: () => {
     const t = useI18n();

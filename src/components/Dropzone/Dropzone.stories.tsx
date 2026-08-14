@@ -45,19 +45,19 @@ function dropOnDropzone(dropzone: HTMLElement, files: File[]) {
 }
 
 /**
- * Zone de dépôt drag-and-drop. Modes simple et multiple, validation de taille
- * et de type, états chargement / désactivé, activation par label natif.
+ * Drag-and-drop upload zone. Single and multiple modes, size and type
+ * validation, loading / disabled states, activation through a native label.
  *
- * Tous ses textes — instructions, contraintes, messages d'erreur, libellés de
- * boutons et noms accessibles — passent par la prop `labels`. Les défauts sont
- * en français ; les stories injectent ceux de la langue active.
+ * Every string — instructions, constraints, error messages, button labels and
+ * accessible names — goes through the `labels` prop. The stories inject the
+ * ones of the active locale.
  */
 const meta: Meta<typeof Dropzone> = {
   title: 'Forms/Dropzone',
   component: Dropzone,
   tags: ['autodocs'],
-  /* `render` au niveau du meta : toutes les stories qui n'en définissent pas
-     reçoivent les libellés de la langue active sans le répéter. */
+  /* Meta-level `render`: every story that does not define its own receives the
+     active locale labels without repeating the wiring. */
   render: (args) => {
     const t = useI18n();
     return <Dropzone {...args} labels={t.components.dropzone} />;

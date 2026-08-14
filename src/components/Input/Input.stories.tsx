@@ -5,8 +5,8 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Input } from './Input';
 
 /**
- * Champ de saisie sur une ligne. Associe libellé, message d'erreur et texte
- * d'aide via `htmlFor` et `aria-describedby`.
+ * Single-line text field. Ties label, error message and helper text together
+ * through `htmlFor` and `aria-describedby`.
  */
 const meta: Meta<typeof Input> = {
   title: 'Forms/Input',
@@ -84,7 +84,7 @@ export const Disabled: Story = {
   args: { id: 'workspace-disabled', disabled: true },
 };
 
-/** L'icône est décorative : le libellé reste le seul nom accessible du champ. */
+/** The icon is decorative: the label remains the field's only accessible name. */
 export const WithIcon: Story = {
   render: () => {
     const t = useI18n();

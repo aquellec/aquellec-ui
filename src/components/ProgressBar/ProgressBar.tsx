@@ -3,31 +3,31 @@ import { cn } from '../../lib/cn';
 import { mutedTextClass } from '../../lib/semantic-colors';
 
 export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Valeur courante, exprimée dans la même unité que `max`. */
+  /** Current value, expressed in the same unit as `max`. */
   value: number;
-  /** Valeur maximale. Une valeur nulle ou négative affiche une barre vide. */
+  /** Maximum value. Zero or negative renders an empty bar. */
   max: number;
-  /** Libellé visible décrivant ce qui est mesuré. Sert aussi de nom accessible. */
+  /** Visible label describing what is measured. Also acts as accessible name. */
   label?: string;
   /**
-   * Nom accessible de la barre quand aucun `label` visible n'est rendu.
-   * Une `progressbar` sans nom est une violation axe (`aria-progressbar-name`).
+   * Accessible name of the bar when no visible `label` is rendered.
+   * An unnamed `progressbar` is an axe violation (`aria-progressbar-name`).
    */
   ariaLabel?: string;
-  /** Illustration optionnelle placée avant le libellé. Rendue décorative. */
+  /** Optional illustration placed before the label. Rendered as decorative. */
   icon?: React.ReactNode;
-  /** Texte secondaire sous la barre (contexte, palier, rappel de plan). */
+  /** Secondary text under the bar (context, tier, plan reminder). */
   helperText?: React.ReactNode;
-  /** Élément d'action aligné à droite du `helperText` (lien, bouton). */
+  /** Action element aligned to the right of `helperText` (link, button). */
   action?: React.ReactNode;
   /**
-   * Rendu du compteur affiché à droite du libellé.
-   * Par défaut : `value / max`.
+   * Rendering of the counter shown to the right of the label.
+   * Defaults to `value / max`.
    */
   formatValue?: (value: number, max: number) => React.ReactNode;
   /**
-   * Seuils de bascule de couleur, en pourcentage.
-   * Par défaut : ambre à 75 %, rouge à 90 %.
+   * Color switching thresholds, as percentages.
+   * Defaults to amber at 75%, red at 90%.
    */
   thresholds?: { warning: number; danger: number };
 }

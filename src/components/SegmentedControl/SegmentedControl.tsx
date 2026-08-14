@@ -4,28 +4,28 @@ import { subtleTextClass } from '../../lib/semantic-colors';
 import { focusRing } from '../../lib/focus-ring';
 
 export interface SegmentedControlOption {
-  /** Valeur remontée par `onChange` lorsque l'option est sélectionnée. */
+  /** Value reported by `onChange` when the option is selected. */
   value: string;
-  /** Libellé visible, également utilisé comme nom accessible de l'option. */
+  /** Visible label, also used as the accessible name of the option. */
   label: string;
-  /** Illustration optionnelle placée avant le libellé. Rendue décorative. */
+  /** Optional illustration placed before the label. Rendered as decorative. */
   icon?: React.ReactNode;
 }
 
 export interface SegmentedControlProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
-  /** Options affichées, dans l'ordre. */
+  /** Options rendered, in order. */
   options: SegmentedControlOption[];
-  /** Valeur sélectionnée. Le composant est contrôlé. */
+  /** Selected value. The component is controlled. */
   value: string;
-  /** Appelé avec la valeur de l'option choisie. */
+  /** Called with the value of the chosen option. */
   onChange: (value: string) => void;
   /**
-   * Nom accessible du groupe. Requis si aucun `aria-labelledby` n'est fourni :
-   * un `radiogroup` sans nom n'est pas exploitable au lecteur d'écran.
+   * Accessible name of the group. Required unless an `aria-labelledby` is
+   * provided: an unnamed `radiogroup` is unusable with a screen reader.
    */
   ariaLabel?: string;
-  /** Taille des segments. */
+  /** Segment size. */
   size?: 'sm' | 'md';
 }
 
@@ -35,9 +35,9 @@ const sizes = {
 } as const;
 
 /**
- * Groupe de segments exclusifs, implémenté selon le pattern WAI-ARIA « radio
- * group » : un seul segment est dans l'ordre de tabulation (roving tabindex),
- * les flèches déplacent la sélection, `Home` et `End` vont aux extrémités.
+ * Group of exclusive segments, implementing the WAI-ARIA radio group pattern:
+ * a single segment sits in the tab order (roving tabindex), arrow keys move the
+ * selection, `Home` and `End` jump to either end.
  */
 export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
   (
@@ -50,8 +50,8 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
       const option = options[index];
       if (!option) return;
       onChange(option.value);
-      // Le focus suit la sélection : la liste est re-rendue avec le nouveau
-      // roving tabindex, d'où le report à la frame suivante.
+      // Focus follows selection: the list re-renders with the new roving
+      // tabindex, hence deferring to the next frame.
       requestAnimationFrame(() => optionRefs.current[index]?.focus());
     };
 

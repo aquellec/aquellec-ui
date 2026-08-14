@@ -30,8 +30,8 @@ const mockData: AnalysisHistory[] = [
 const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
 
 /**
- * Page template recruteur : import massif de CV, KPI et historique des analyses.
- * Toute la copie suit le sélecteur de langue de la barre d'outils.
+ * Recruiter page template: bulk resume import, KPIs and analysis history.
+ * All copy follows the language selector in the toolbar.
  */
 const meta: Meta = {
   title: 'Templates/RecruiterDashboard',
@@ -41,7 +41,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composition dashboard recruteur : upload multiple, KPI et DataTable des candidatures analysées.',
+          'Recruiter dashboard composition: multiple upload, KPIs and a DataTable of analyzed applications.',
       },
     },
   },

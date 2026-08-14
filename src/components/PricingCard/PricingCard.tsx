@@ -12,13 +12,16 @@ export interface PricingFeature {
 }
 
 export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Plan name (e.g. Candidat Pro). */
+  /** Plan name (e.g. Growth). */
   title: string;
   /** Short plan description shown under the title. */
   description: string;
-  /** Display price string; use "Gratuit" or "Sur devis" to hide the period suffix. */
+  /** Display price string, already formatted (e.g. "$9", "Free", "Custom"). */
   price: string;
-  /** Billing period suffix displayed next to the price. */
+  /**
+   * Billing period suffix shown next to the price. Omit it for plans that have
+   * no recurring price, such as a free or quote-based tier.
+   */
   period?: string;
   /** List of plan features with inclusion state. */
   features: PricingFeature[];
@@ -32,10 +35,12 @@ export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onSelect?: () => void;
   /** Text displayed in the popular badge. */
   badgeText?: string;
-  /** Préfixe `sr-only` annoncé devant une fonctionnalité incluse. */
+  /** `sr-only` prefix announced before an included feature. */
   includedLabel?: string;
-  /** Préfixe `sr-only` annoncé devant une fonctionnalité exclue. */
+  /** `sr-only` prefix announced before an excluded feature. */
   excludedLabel?: string;
+  /** Accessible name of the feature list. Receives the plan title. */
+  featuresLabel?: (planTitle: string) => string;
 }
 
 export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
@@ -44,15 +49,16 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
       title,
       description,
       price,
-      period = '/ mois',
+      period,
       features,
       isPopular = false,
-      buttonText = 'Commencer',
+      buttonText = 'Get started',
       buttonVariant,
       onSelect,
-      badgeText = 'Le plus populaire',
-      includedLabel = 'Inclus : ',
-      excludedLabel = 'Non inclus : ',
+      badgeText = 'Most popular',
+      includedLabel = 'Included: ',
+      excludedLabel = 'Not included: ',
+      featuresLabel = (planTitle) => `${planTitle} plan features`,
       className,
       ...props
     },
@@ -84,12 +90,12 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
         <div className="flex items-baseline mb-6">
           <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{price}</span>
-          {price !== 'Gratuit' && price !== 'Sur devis' && (
-            <span className="text-xs font-medium text-slate-500 ml-1">{period}</span>
-          )}
+          {/* Rendered only when a period is provided: no magic value to compare
+              the price against, which would tie the component to one language. */}
+          {period && <span className="text-xs font-medium text-slate-500 ml-1">{period}</span>}
         </div>
 
-        <ul className="space-y-3 mb-8 flex-1" aria-label={`Fonctionnalités du plan ${title}`}>
+        <ul className="space-y-3 mb-8 flex-1" aria-label={featuresLabel(title)}>
           {features.map((feature) => (
             <li key={feature.text} className="flex items-start text-xs">
               <span className="sr-only">{feature.included ? includedLabel : excludedLabel}</span>

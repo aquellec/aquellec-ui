@@ -11,57 +11,57 @@ import {
 <Meta title="Docs/Introduction" />
 
 {/*
-  Les blocs visuels sont importés depuis `_showcase.tsx` : le glob Tailwind
-  (tailwind.config.ts → content) ne scanne que `.{js,ts,jsx,tsx}`, donc toute
-  classe écrite directement dans ce `.mdx` ne serait jamais compilée.
+  Visual blocks are imported from `_showcase.tsx` so they can be shared with the
+  Tokens page and typed. Storybook applies its own documentation styles to MDX
+  pages, which is why every block carries the `sb-unstyled` escape hatch.
 */}
 
 <Hero />
 
-<SectionHeader kicker="Fondations" title="Les piliers du design system" id="les-piliers-du-design-system" />
+<SectionHeader kicker="Foundations" title="Design system pillars" id="design-system-pillars" />
 
 <Pillars />
 
-<SectionHeader kicker="Catalogue" title="Architecture de la librairie" id="architecture-de-la-librairie" />
+<SectionHeader kicker="Catalog" title="Library architecture" id="library-architecture" />
 
-Le catalogue est organisé en cinq familles. Chaque composant expose des stories interactives, une page Autodocs
-et — lorsque pertinent — des tests Vitest exécutés depuis Storybook.
+The catalog is organised into five families. Every component ships interactive stories, an Autodocs
+page and — where relevant — Vitest tests run from Storybook.
 
 <Families />
 
-### Patterns composables
+### Composable patterns
 
-La plupart des blocs structurels suivent un découpage compound&nbsp;:
+Most structural blocks follow a compound split:
 
 ```tsx
 <Card>
-  <Card.Header title="Recommandations ATS" />
-  <Card.Body>{/* contenu */}</Card.Body>
+  <Card.Header title="ATS recommendations" />
+  <Card.Body>{/* content */}</Card.Body>
   <Card.Footer>{/* actions */}</Card.Footer>
 </Card>
 
-<Modal isOpen={open} onClose={close} title="Rapport ATS" footer={<Button>Fermer</Button>}>
-  {/* contenu */}
+<Modal isOpen={open} onClose={close} title="ATS report" footer={<Button>Close</Button>}>
+  {/* content */}
 </Modal>
 ```
 
-Les utilitaires partagés (<code>cn</code>, <code>focusRing</code>, tokens sémantiques) sont exportés depuis le package racine.
-Référence visuelle des couleurs et viewports&nbsp;: page <TokensLink />.
+Shared utilities (<code>cn</code>, <code>focusRing</code>, semantic tokens) are exported from the package root.
+Visual reference for colors and viewports: the <TokensLink /> page.
 
-<SectionHeader kicker="Prise en main" title="Démarrage rapide" id="demarrage-rapide" />
+<SectionHeader kicker="Getting started" title="Quick start" id="quick-start" />
 
-### 1. Installer le package
+### 1. Install the package
 
 ```bash
 pnpm add @aquellec/ui lucide-react
 # ou : npm install @aquellec/ui lucide-react
 ```
 
-`react`, `react-dom` et `lucide-react` sont des **peer dependencies** — installez-les dans votre application hôte.
+`react`, `react-dom` and `lucide-react` are **peer dependencies** — install them in your host application.
 
-### 2. Configurer Tailwind CSS
+### 2. Configure Tailwind CSS
 
-Importez le preset du design system pour hériter des tokens <code>brand</code>, <code>ai</code> et <code>semantic.*</code>&nbsp;:
+Import the design system preset to inherit the <code>brand</code>, <code>ai</code> and <code>semantic.*</code> tokens:
 
 ```js
 // tailwind.config.js
@@ -75,7 +75,7 @@ module.exports = {
 };
 ```
 
-Équivalent ESM / TypeScript&nbsp;:
+ESM / TypeScript equivalent:
 
 ```ts
 // tailwind.config.ts
@@ -88,7 +88,7 @@ export default {
 } satisfies Config;
 ```
 
-### 3. Importer les composants
+### 3. Import the components
 
 ```tsx
 import { Button, Card, Dropzone, ToastProvider, useToast } from '@aquellec/ui';
@@ -97,7 +97,7 @@ export function App() {
   return (
     <ToastProvider>
       <Card className="max-w-md">
-        <Card.Header title="Importer un CV" />
+        <Card.Header title="Upload a resume" />
         <Card.Body>
           <Dropzone accept=".pdf" maxSizeMB={5} onFileSelect={(file) => console.log(file.name)} />
         </Card.Body>
@@ -107,18 +107,18 @@ export function App() {
 }
 ```
 
-### 4. Développer & documenter localement
+### 4. Develop and document locally
 
 ```bash
 pnpm install
-pnpm dev              # Storybook → http://localhost:6006
-pnpm build            # Build ESM/CJS + types
-pnpm test:storybook   # Tests d'interaction Vitest
-pnpm build-storybook  # Export statique de la doc
+pnpm dev              # Storybook -> http://localhost:6006
+pnpm build            # ESM/CJS build plus types
+pnpm test:storybook   # Vitest interaction and a11y tests
+pnpm build-storybook  # Static documentation export
 ```
 
-<SectionHeader kicker="Contrat de qualité" title="Qualité & gouvernance" id="qualite-gouvernance" />
+<SectionHeader kicker="Quality contract" title="Quality and governance" id="quality-and-governance" />
 
 <Governance />
 
-Pour toute évolution de token ou de contraste, mettre à jour `src/lib/design-tokens.ts` et la page **Tokens** afin de garder le preset et la documentation alignés.
+For any token or contrast change, update `src/lib/design-tokens.ts`: the preset and the **Tokens** page both derive from it.

@@ -1,13 +1,13 @@
 import type { en } from './en';
 
-/** Langues proposées dans la barre d'outils Storybook. */
+/** Locales offered in the Storybook toolbar. */
 export const LOCALES = ['en', 'fr'] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
 /**
- * Forme du dictionnaire, dérivée de l'anglais qui fait référence.
- * Toute traduction doit s'y conformer exactement.
+ * Shape of the dictionary, derived from English which is the reference.
+ * Every translation must match it exactly.
  */
 export type Dictionary = typeof en;
 

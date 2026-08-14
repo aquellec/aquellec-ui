@@ -26,7 +26,7 @@ export interface ModalProps {
   children: React.ReactNode;
   /** Optional footer slot, typically action buttons. */
   footer?: React.ReactNode;
-  /** Nom accessible du bouton de fermeture de l'en-tête. */
+  /** Accessible name of the header close button. */
   closeLabel?: string;
   /** Maximum width preset of the dialog panel. */
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
@@ -43,12 +43,12 @@ export interface ModalHeaderProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   onClose?: () => void;
   /** ID used to associate the title with `aria-labelledby`. */
   titleId?: string;
-  /** Nom accessible du bouton de fermeture. */
+  /** Accessible name of the close button. */
   closeLabel?: string;
 }
 
-/** Libellé par défaut du bouton de fermeture, conservé en français. */
-export const DEFAULT_MODAL_CLOSE_LABEL = 'Fermer la fenêtre';
+/** English default for the close button. */
+export const DEFAULT_MODAL_CLOSE_LABEL = 'Close dialog';
 
 export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
   (
@@ -84,8 +84,8 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
           <button
             type="button"
             onClick={onClose}
-            /* Cible du focus initial du piège : repérée par attribut et non par
-               son libellé, qui dépend de la langue. */
+            /* Initial focus target of the trap: matched by attribute rather than
+               by its label, which is language dependent. */
             data-autofocus=""
             className={cn(
               'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',

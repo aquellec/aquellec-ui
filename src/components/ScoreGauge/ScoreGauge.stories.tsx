@@ -4,11 +4,11 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { ScoreGauge } from './ScoreGauge';
 
 /**
- * Jauge circulaire pour un score sur 100 : performance, qualité, correspondance.
- * La couleur suit le seuil (≥75 vert, ≥50 ambre, sinon rose) ; `isAiTheme`
- * bascule sur la teinte générative.
+ * Circular gauge for a score out of 100: performance, quality, match rate.
+ * The color follows the tier (>=75 green, >=50 amber, red below); `isAiTheme`
+ * switches to the generative hue.
  *
- * Exposée en `role="meter"`, la valeur est donc annoncée comme telle.
+ * Exposed as `role="meter"`, so the value is announced as one.
  */
 const meta: Meta<typeof ScoreGauge> = {
   title: 'Data Display/ScoreGauge',
@@ -64,7 +64,7 @@ export const AITheme: Story = {
   args: { score: 94, size: 'lg', isAiTheme: true },
 };
 
-/** Bornes : la valeur est normalisée entre 0 et 100 avant tout rendu. */
+/** Bounds: the value is clamped between 0 and 100 before any rendering. */
 export const Bounds: Story = {
   render: () => {
     const t = useI18n();
@@ -82,12 +82,12 @@ export const Bounds: Story = {
 
     await expect(zero).toHaveAttribute('aria-valuenow', '0');
     await expect(hundred).toHaveAttribute('aria-valuenow', '100');
-    // 140 doit être ramené à 100, pas rendu tel quel.
+    // 140 must be clamped to 100, not rendered as is.
     await expect(overflow).toHaveAttribute('aria-valuenow', '100');
   },
 };
 
-/** Cas compact pour un tableau de bord : sans statut ni surface propre. */
+/** Compact dashboard case: no status badge, no surface of its own. */
 export const CompactDashboard: Story = {
   render: (args) => {
     const t = useI18n();

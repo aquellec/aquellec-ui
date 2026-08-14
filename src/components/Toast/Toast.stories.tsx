@@ -8,8 +8,8 @@ import { ToastProvider, useToast } from './ToastProvider';
 import { Button } from '../Button';
 
 /**
- * Notification temporaire : confirmation, avertissement de quota, erreur.
- * `role="alert"` pour la variante `error`, `role="status"` sinon.
+ * Transient notification: confirmation, quota warning, error.
+ * `role="alert"` for the `error` variant, `role="status"` otherwise.
  */
 const meta: Meta<typeof Toast> = {
   title: 'Feedback/Toast',
@@ -101,7 +101,7 @@ export const CloseInteraction: Story = {
   },
 };
 
-/** La variante `error` doit passer en `role="alert"`, donc annoncée sans attendre. */
+/** The `error` variant must switch to `role="alert"`, so it is announced immediately. */
 export const ErrorAlertRole: Story = {
   render: (args) => {
     const t = useI18n();

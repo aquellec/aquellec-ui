@@ -4,8 +4,8 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Badge } from './Badge';
 
 /**
- * Étiquette compacte pour un statut, une catégorie ou une valeur extraite.
- * Les variantes sémantiques (`success`, `danger`, `warning`, `ai`) facilitent le scan.
+ * Compact label for a status, a category or an extracted value.
+ * Semantic variants (`success`, `danger`, `warning`, `ai`) make scanning easier.
  */
 const meta: Meta<typeof Badge> = {
   title: 'Feedback/Badge',
@@ -61,7 +61,7 @@ export const Neutral: Story = {
   args: { variant: 'neutral', icon: 'none' },
 };
 
-/** Jeu de statuts d'un catalogue produit : le cas d'usage le plus courant. */
+/** Status set of a product catalog — the most common use case. */
 export const StatusSet: Story = {
   render: () => {
     const t = useI18n();

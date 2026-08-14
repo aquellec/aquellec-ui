@@ -1,24 +1,36 @@
 /*
-  Dictionnaire de référence des stories.
+  Reference dictionary for the stories.
 
-  `en` est la source de vérité : le type `Dictionary` en est dérivé, et chaque
-  autre langue doit s'y conformer. Une clé oubliée ou en trop dans `fr.ts` est
-  donc une erreur de compilation, pas une chaîne manquante à l'exécution.
+  `en` is the source of truth: the `Dictionary` type is derived from it and every
+  other locale must match. A missing or extra key in `fr.tsx` is therefore a
+  compile error rather than a string missing at runtime.
 
-  Les exemples sont volontairement agnostiques (catalogue produit, stockage,
-  facturation, équipe) : le design system n'est pas réservé au recrutement.
-  Seuls les templates de dashboard conservent leur contexte métier.
+  Examples are deliberately domain agnostic (product catalog, storage, billing,
+  team) — the design system is not tied to recruitment. Only the dashboard
+  templates keep a business context.
 */
-import type { DataTableLabels } from '../../src/components/DataTable/DataTable';
-import type { DropzoneLabels } from '../../src/components/Dropzone/Dropzone';
-import type { ScoreGaugeStatusLabels } from '../../src/components/ScoreGauge/ScoreGauge';
+import {
+  defaultDataTableLabels,
+  type DataTableLabels,
+} from '../../src/components/DataTable/DataTable';
+import {
+  defaultDropzoneLabels,
+  type DropzoneLabels,
+} from '../../src/components/Dropzone/Dropzone';
+import { DEFAULT_MODAL_CLOSE_LABEL } from '../../src/components/Modal/Modal';
+import {
+  defaultScoreGaugeStatusLabels,
+  type ScoreGaugeStatusLabels,
+} from '../../src/components/ScoreGauge/ScoreGauge';
+import { DEFAULT_TOAST_CLOSE_LABEL } from '../../src/components/Toast/Toast';
 
 /*
-  Textes internes aux composants, passés via leurs props `labels`.
+  Component-owned copy, passed through their `labels` props.
 
-  Le bloc est annoté — et non `satisfies` — pour que `Dictionary` porte les
-  interfaces des composants plutôt que les littéraux anglais : sans quoi la
-  traduction française, plus large, ne serait pas assignable.
+  English is the components' own default, so this locale simply re-exports those
+  defaults instead of duplicating them. The block is annotated rather than
+  `satisfies`-ed so `Dictionary` carries the component interfaces: with literal
+  types, a wider translation would not be assignable.
 */
 export interface ComponentLabels {
   dropzone: DropzoneLabels;
@@ -29,59 +41,19 @@ export interface ComponentLabels {
   toastRegion: string;
   pricingIncluded: string;
   pricingExcluded: string;
+  pricingFeatures: (planTitle: string) => string;
 }
 
 const components: ComponentLabels = {
-  dropzone: {
-      inputLabel: (multiple) =>
-        multiple
-          ? 'File drop zone. Press Enter or Space to browse your files.'
-          : 'File drop zone. Press Enter or Space to browse your file.',
-      browse: 'Click to browse',
-      dropHint: (multiple) => (multiple ? 'or drop your files here' : 'or drop your file here'),
-      constraint: (maxSizeMB, multiple) =>
-        `PDF only (max. ${maxSizeMB} MB${multiple ? ' per file' : ''})`,
-      loadingTitle: 'Processing…',
-      loadingHint: (multiple) =>
-        `Please wait while ${multiple ? 'your files are' : 'your file is'} uploaded`,
-      uploading: 'Uploading…',
-      uploadingStatus: 'Uploading',
-      remove: (multiple) => (multiple ? 'Remove files' : 'Remove file'),
-      selection: (count) => `${count} file${count > 1 ? 's' : ''} selected`,
-      totalSize: (formattedSize) => `Total size: ${formattedSize}`,
-      fileSize: (bytes) =>
-        bytes < 1024 * 1024
-          ? `${(bytes / 1024).toFixed(1)} KB`
-          : `${(bytes / (1024 * 1024)).toFixed(1)} MB`,
-      errorTooLarge: (fileName, maxSizeMB) =>
-        `"${fileName}" exceeds the ${maxSizeMB} MB limit.`,
-      errorInvalidType: (fileName) => `"${fileName}" is not a valid PDF.`,
-  },
-
-    dataTable: {
-      pagination: 'Table pagination',
-      previousPage: 'Previous page',
-      nextPage: 'Next page',
-      pageStatus: (currentPage, totalPages) => (
-        <>
-          Page <strong className="text-slate-800">{currentPage}</strong> of{' '}
-          <strong className="text-slate-800">{totalPages}</strong>
-        </>
-      ),
-  },
-
-    gaugeStatus: {
-      high: 'Excellent match',
-      medium: 'Average match',
-      low: 'Needs work',
-      ai: 'AI analysis',
-  },
-
-  modalClose: 'Close dialog',
-  toastClose: 'Dismiss notification',
+  dropzone: defaultDropzoneLabels,
+  dataTable: defaultDataTableLabels,
+  gaugeStatus: defaultScoreGaugeStatusLabels,
+  modalClose: DEFAULT_MODAL_CLOSE_LABEL,
+  toastClose: DEFAULT_TOAST_CLOSE_LABEL,
   toastRegion: 'Notifications',
   pricingIncluded: 'Included: ',
   pricingExcluded: 'Not included: ',
+  pricingFeatures: (planTitle) => `${planTitle} plan features`,
 };
 
 export const en = {
@@ -403,8 +375,8 @@ export const en = {
       title: 'My candidate space',
       analysis: {
         title: 'Run an ATS analysis',
-        subtitle: 'Upload your résumé and paste the target job description',
-        resumeLabel: 'Your résumé (PDF)',
+        subtitle: 'Upload your resume and paste the target job description',
+        resumeLabel: 'Your resume (PDF)',
         company: { label: 'Company name', placeholder: 'e.g. Vercel, Doctolib', value: 'Vercel' },
         job: {
           label: 'Job title',
@@ -432,7 +404,7 @@ export const en = {
       quota: {
         title: 'Monthly quota',
         label: 'Analyses this month',
-        unit: 'résumés',
+        unit: 'resumes',
         helper: 'Free plan',
         action: 'Upgrade plan',
       },
@@ -460,14 +432,14 @@ export const en = {
         toReview: 'To review manually',
       },
       upload: {
-        title: 'Bulk résumé import',
+        title: 'Bulk resume import',
         subtitle: 'Drop several PDFs — batch analysis through the API',
       },
       history: {
         title: 'Analysis history',
         subtitle: 'ATS ranking and match statuses',
         columns: {
-          candidate: 'Candidate / résumé',
+          candidate: 'Candidate / resume',
           job: 'Target role',
           score: 'ATS score',
           status: 'Status',

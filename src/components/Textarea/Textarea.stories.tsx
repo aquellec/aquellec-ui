@@ -4,8 +4,8 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Textarea } from './Textarea';
 
 /**
- * Saisie multi-lignes pour descriptions et notes longues.
- * Affiche un compteur de caractères dès que `maxLength` est défini.
+ * Multi-line input for descriptions and long notes.
+ * Shows a character counter as soon as `maxLength` is set.
  */
 const meta: Meta<typeof Textarea> = {
   title: 'Forms/Textarea',
@@ -92,7 +92,7 @@ export const CharacterCountInteraction: Story = {
     const t = getDictionary(globals.locale);
     const textarea = canvas.getByRole('textbox', { name: t.textarea.description.label });
 
-    // Saisie plus longue que `maxLength` : le compteur doit saturer, pas déborder.
+    // Input longer than `maxLength`: the counter must saturate, not overflow.
     await userEvent.type(textarea, 'Wireless mechanical keyboard');
     await expect(canvas.getByText(/20\s*\/\s*20/)).toBeInTheDocument();
   },

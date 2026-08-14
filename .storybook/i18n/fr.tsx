@@ -1,28 +1,70 @@
-import { defaultDataTableLabels } from '../../src/components/DataTable/DataTable';
-import { defaultDropzoneLabels } from '../../src/components/Dropzone/Dropzone';
-import { DEFAULT_MODAL_CLOSE_LABEL } from '../../src/components/Modal/Modal';
-import { defaultScoreGaugeStatusLabels } from '../../src/components/ScoreGauge/ScoreGauge';
-import { DEFAULT_TOAST_CLOSE_LABEL } from '../../src/components/Toast/Toast';
 import type { Dictionary } from './types';
 
 /*
-  Traduction française. Typée `Dictionary` (dérivé de `en`) : toute clé
-  manquante, en trop ou mal orthographiée casse `pnpm type-check`.
+  French translation, typed as `Dictionary` (derived from `en`): any missing,
+  extra or misspelled key breaks `pnpm type-check`.
+
+  This file is the single exception to the English-only rule of the repository.
 */
 export const fr: Dictionary = {
   /*
-    Les défauts des composants sont déjà en français : on les réutilise tels
-    quels plutôt que de les recopier, ce qui garantit qu'ils ne divergeront pas.
+    The only place French is allowed in this repository: the `fr` locale.
+    These entries mirror the component label interfaces one to one.
   */
   components: {
-    dropzone: defaultDropzoneLabels,
-    dataTable: defaultDataTableLabels,
-    gaugeStatus: defaultScoreGaugeStatusLabels,
-    modalClose: DEFAULT_MODAL_CLOSE_LABEL,
-    toastClose: DEFAULT_TOAST_CLOSE_LABEL,
+    dropzone: {
+      inputLabel: (multiple) =>
+        multiple
+          ? 'Zone de dépôt de fichiers. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.'
+          : 'Zone de dépôt de fichier. Appuyez sur Entrée ou Espace pour parcourir vos fichiers.',
+      browse: 'Cliquez pour parcourir',
+      dropHint: (multiple) =>
+        multiple ? 'ou glissez vos fichiers ici' : 'ou glissez votre fichier ici',
+      constraint: (maxSizeMB, multiple) =>
+        `Format PDF uniquement (max. ${maxSizeMB} Mo${multiple ? ' par fichier' : ''})`,
+      loadingTitle: 'Traitement en cours…',
+      loadingHint: (multiple) =>
+        `Veuillez patienter pendant l'envoi ${multiple ? 'de vos fichiers' : 'de votre fichier'}`,
+      uploading: 'Envoi en cours…',
+      uploadingStatus: 'Envoi en cours',
+      remove: (multiple) => (multiple ? 'Supprimer les fichiers' : 'Supprimer le fichier'),
+      selection: (count) =>
+        `${count} fichier${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`,
+      totalSize: (formattedSize) => `Volume total : ${formattedSize}`,
+      fileSize: (bytes) =>
+        bytes < 1024 * 1024
+          ? `${(bytes / 1024).toFixed(1)} Ko`
+          : `${(bytes / (1024 * 1024)).toFixed(1)} Mo`,
+      errorTooLarge: (fileName, maxSizeMB) =>
+        `« ${fileName} » dépasse la limite de ${maxSizeMB} Mo.`,
+      errorInvalidType: (fileName) => `« ${fileName} » n'est pas un PDF valide.`,
+    },
+
+    dataTable: {
+      pagination: 'Pagination du tableau',
+      previousPage: 'Page précédente',
+      nextPage: 'Page suivante',
+      pageStatus: (currentPage, totalPages) => (
+        <>
+          Page <strong className="text-slate-800">{currentPage}</strong> sur{' '}
+          <strong className="text-slate-800">{totalPages}</strong>
+        </>
+      ),
+    },
+
+    gaugeStatus: {
+      high: 'Excellente correspondance',
+      medium: 'Correspondance moyenne',
+      low: 'À améliorer',
+      ai: 'Analyse IA',
+    },
+
+    modalClose: 'Fermer la fenêtre',
+    toastClose: 'Fermer la notification',
     toastRegion: 'Notifications',
     pricingIncluded: 'Inclus : ',
     pricingExcluded: 'Non inclus : ',
+    pricingFeatures: (planTitle) => `Fonctionnalités du forfait ${planTitle}`,
   },
 
   common: {

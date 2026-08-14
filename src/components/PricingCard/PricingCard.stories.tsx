@@ -5,8 +5,8 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { PricingCard } from './PricingCard';
 
 /**
- * Carte tarifaire générique. `isPopular` met un plan en avant ; les
- * fonctionnalités incluses et exclues sont annoncées aux lecteurs d'écran.
+ * Generic pricing card. `isPopular` highlights a plan; included and excluded
+ * features are both announced to screen readers.
  */
 const meta: Meta<typeof PricingCard> = {
   title: 'Data Display/PricingCard',
@@ -29,6 +29,7 @@ export const Starter: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         {...args}
         title={t.pricing.starter.title}
         description={t.pricing.starter.description}
@@ -56,6 +57,7 @@ export const Growth: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         {...args}
         title={t.pricing.growth.title}
         description={t.pricing.growth.description}
@@ -82,6 +84,7 @@ export const FreePlan: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         title={t.pricing.free.title}
         description={t.pricing.free.description}
         price={t.pricing.free.price}
@@ -99,6 +102,7 @@ export const CustomQuote: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         title={t.pricing.enterprise.title}
         description={t.pricing.enterprise.description}
         price={t.pricing.enterprise.price}
@@ -111,7 +115,7 @@ export const CustomQuote: Story = {
   },
 };
 
-/** Une fonctionnalité exclue doit être perceptible autrement que par le style barré. */
+/** An excluded feature must be perceivable by more than the strikethrough. */
 export const ExcludedFeature: Story = {
   render: () => {
     const t = useI18n();
@@ -119,6 +123,7 @@ export const ExcludedFeature: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         title={t.pricing.free.title}
         description={t.pricing.free.description}
         price={t.pricing.free.price}
@@ -135,7 +140,7 @@ export const ExcludedFeature: Story = {
     const t = getDictionary(globals.locale);
     const excluded = canvas.getByText(t.pricing.starter.features.sso);
 
-    // Le préfixe `sr-only` inclus / non inclus est porté par l'élément de liste.
+    // The included / excluded `sr-only` prefix is carried by the list item.
     await expect(excluded.closest('li')).toHaveTextContent(t.pricing.starter.features.sso);
   },
 };
@@ -147,6 +152,7 @@ export const SelectPlanInteraction: Story = {
       <PricingCard
         includedLabel={t.components.pricingIncluded}
         excludedLabel={t.components.pricingExcluded}
+        featuresLabel={t.components.pricingFeatures}
         {...args}
         title={t.pricing.select.title}
         description={t.pricing.select.description}

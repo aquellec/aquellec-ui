@@ -10,8 +10,8 @@ import { Badge } from '../Badge';
 
 /**
  * Dialogue modal accessible : rapport, confirmation, formulaire court.
- * Fermeture par Escape, par le fond ou par le bouton ; titre relié en
- * `aria-labelledby`, focus piégé et restitué à la fermeture.
+ * Dismissed with Escape, by clicking the overlay or the close button; title
+ * wired through `aria-labelledby`, focus trapped and restored on close.
  */
 const meta: Meta<typeof Modal> = {
   title: 'Feedback/Modal',

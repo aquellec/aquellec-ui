@@ -29,8 +29,8 @@ export function useFocusTrap(
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     const focusInitialElement = () => {
-      // Cible explicite plutôt qu'un libellé en dur : `[data-autofocus]` reste
-      // valable quelle que soit la langue de l'interface.
+      // Explicit target rather than a hardcoded label: `[data-autofocus]` holds
+      // whatever language the interface is rendered in.
       const preferredTarget = container.querySelector<HTMLElement>('[data-autofocus]');
       const focusableElements = getFocusableElements(container);
       const fallbackTarget = preferredTarget ?? focusableElements[0] ?? container;

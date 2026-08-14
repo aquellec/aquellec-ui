@@ -6,8 +6,8 @@ import { getDictionary, useI18n, type Dictionary } from '../../../.storybook/i18
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
 /**
- * Groupe de segments exclusifs, générique : les options sont passées en prop.
- * Implémenté en `radiogroup` WAI-ARIA — roving tabindex, flèches, `Home` / `End`.
+ * Generic group of exclusive segments: options are passed as a prop.
+ * Implemented as a WAI-ARIA `radiogroup` — roving tabindex, arrows, `Home` / `End`.
  */
 const meta: Meta<typeof SegmentedControl> = {
   title: 'Actions/SegmentedControl',
@@ -23,8 +23,8 @@ const meta: Meta<typeof SegmentedControl> = {
 export default meta;
 type Story = StoryObj<typeof SegmentedControl>;
 
-/* Les jeux d'options dérivent du dictionnaire : les `play` reconstruisent les
-   mêmes libellés via `getDictionary`, quelle que soit la langue active. */
+/* Option sets derive from the dictionary: `play` functions rebuild the same
+   labels through `getDictionary`, whatever the active locale. */
 const periodOptions = (t: Dictionary): SegmentedControlOption[] => [
   { value: 'week', label: t.segmented.period.week },
   { value: 'month', label: t.segmented.period.month },
@@ -49,7 +49,7 @@ const workspaceOptions = (t: Dictionary): SegmentedControlOption[] => [
   },
 ];
 
-/** Segments simples, sans illustration : filtre de période d'un tableau de bord. */
+/** Plain segments, no icons: a dashboard period filter. */
 export const Default: Story = {
   render: () => {
     const t = useI18n();
@@ -65,7 +65,7 @@ export const Default: Story = {
   },
 };
 
-/** Chaque option peut porter une icône décorative : le libellé reste le nom accessible. */
+/** Each option may carry a decorative icon: the label remains the accessible name. */
 export const WithIcons: Story = {
   render: () => {
     const t = useI18n();
@@ -81,7 +81,7 @@ export const WithIcons: Story = {
   },
 };
 
-/** Cas d'usage produit : la bascule d'espace de travail, simple configuration d'options. */
+/** Product use case: the workspace switcher, now just an option configuration. */
 export const RoleSwitcherDemo: Story = {
   render: () => {
     const t = useI18n();
@@ -148,7 +148,7 @@ export const SelectionInteraction: Story = {
   },
 };
 
-/** Vérifie le roving tabindex : un seul segment est atteignable au `Tab`. */
+/** Checks the roving tabindex: a single segment is reachable with `Tab`. */
 export const KeyboardNavigation: Story = {
   render: () => {
     const t = useI18n();
@@ -179,7 +179,7 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard('{Home}');
     await expect(week).toHaveAttribute('aria-checked', 'true');
 
-    // Boucle : depuis la première option, la flèche gauche va à la dernière.
+    // Wrap-around: from the first option, the left arrow goes to the last.
     await userEvent.keyboard('{ArrowLeft}');
     await expect(quarter).toHaveAttribute('aria-checked', 'true');
   },

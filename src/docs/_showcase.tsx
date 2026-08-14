@@ -20,33 +20,32 @@ import { focusRing } from '../lib/focus-ring';
 import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
 
 /*
-  Blocs visuels de la page Docs/Introduction, également réutilisés par
-  Docs/Tokens (`_tokens.tsx`) pour que les deux pages partagent le même
-  langage visuel : mêmes surfaces, mêmes accents, mêmes en-têtes de section.
+  Visual blocks of the Docs/Introduction page, also reused by Docs/Tokens
+  (`_tokens.tsx`) so both pages share one visual language: same surfaces, same
+  accents, same section headers.
 
-  Ils vivent dans un `.tsx` plutôt qu'en classes inline dans le MDX pour être
-  partageables et typés. Le glob Tailwind couvre désormais aussi `.mdx`
-  (`tailwind.config.ts` → content), donc ce n'est plus une contrainte de
-  compilation, mais la convention reste : le style vit dans les composants.
+  They live in a `.tsx` rather than as inline classes in the MDX so they can be
+  shared and typed. The Tailwind glob now covers `.mdx` too
+  (`tailwind.config.ts` -> content), so it is no longer a compilation
+  constraint, but the convention stands: styling lives in components.
 
-  Chaque bloc porte `sb-unstyled` : Storybook applique ses styles de doc à
-  tous les éléments d'une page MDX (`.css-xxx :where(div:not(.sb-unstyled…))`,
-  idem pour p, ul, li, les titres et les tableaux), à égalité de spécificité
-  avec les utilitaires
-  Tailwind — mais injectés après, donc gagnants. Résultat sans ce marqueur :
-  `text-xs` rendait 16px et `font-mono` restait en Inter. `sb-unstyled` est
-  l'échappatoire officielle, honorée par toutes leurs règles.
+  Every block carries `sb-unstyled`. Storybook applies its documentation styles
+  to every element of an MDX page (`.css-xxx :where(div:not(.sb-unstyled…))`,
+  and likewise for p, ul, li, headings and tables) at the same specificity as
+  Tailwind utilities — but injected afterwards, so they win. Without that
+  marker, `text-xs` rendered at 16px and `font-mono` stayed in Inter.
+  `sb-unstyled` is the official escape hatch, honoured by all of their rules.
 */
 
-/** Accents dérivés exclusivement des tokens du preset (brand / ai / semantic). */
+/** Accents derived exclusively from preset tokens (brand / ai / semantic). */
 type AccentName = 'brand' | 'ai' | 'info' | 'success' | 'warning';
 
 interface Accent {
-  /** Pastille d'icône : fond teinté + anneau. */
+  /** Icon chip: tinted background plus ring. */
   tile: string;
-  /** Barre d'accent supérieure des piliers. */
+  /** Top accent bar of the pillar cards. */
   bar: string;
-  /** Bordure au survol des cartes. */
+  /** Card border on hover. */
   hover: string;
 }
 
@@ -78,10 +77,10 @@ const accents: Record<AccentName, Accent> = {
   },
 };
 
-/** Surface de carte commune : radius + élévation homogènes. */
+/** Shared card surface: consistent radius and elevation. */
 export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-card';
 
-/** Transitions neutralisées si l'utilisateur réduit les animations. */
+/** Transitions neutralised when the user asks for reduced motion. */
 export const softTransition = 'transition-colors duration-200 motion-reduce:transition-none';
 
 const linkClass = cn(
@@ -92,7 +91,7 @@ const linkClass = cn(
 );
 
 /* -------------------------------------------------------------------------- */
-/*  En-tête de section : eyebrow + titre                                       */
+/*  Section header: eyebrow + title                                            */
 /* -------------------------------------------------------------------------- */
 
 export function SectionHeader({
@@ -166,9 +165,9 @@ export function Hero() {
           </h1>
 
           <p className={cn('max-w-2xl text-base leading-relaxed md:text-lg', subtleTextClass)}>
-            Librairie de composants React typés pour applications SaaS de recrutement et d&apos;analyse
-            IA&nbsp;: parsing de CV, matching ATS, espaces Candidat / Recruteur, quotas et
-            visualisation de scores.
+            Typed React component library for recruitment and AI analysis SaaS products:
+            resume parsing, ATS matching, candidate and recruiter workspaces, quotas and
+            score visualisation.
           </p>
 
           <ul className="flex list-none flex-wrap gap-2 pt-3">
@@ -192,7 +191,7 @@ export function Hero() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Les piliers                                                                */
+/*  Pillars                                                                    */
 /* -------------------------------------------------------------------------- */
 
 interface Pillar {
@@ -206,32 +205,32 @@ const inlineCode = 'rounded bg-slate-100 px-1 py-0.5 text-xs text-slate-800';
 
 const pillars: Pillar[] = [
   {
-    title: "Accessibilité d'abord",
+    title: 'Accessibility first',
     icon: ShieldCheck,
     accent: 'brand',
     body: (
       <>
-        Composants calés sur les patterns WAI-ARIA APG&nbsp;: labels associés, live regions, rôles
-        sémantiques (<code className={inlineCode}>radiogroup</code>,{' '}
-        <code className={inlineCode}>dialog</code>). Modale avec focus trap (
-        <code className={inlineCode}>focusin</code>), restitution du focus, touche{' '}
-        <kbd className="rounded border border-slate-300 bg-slate-50 px-1 text-xs">Escape</kbd> et
-        contenu de fond <code className={inlineCode}>inert</code>. Contrastes visés WCAG 2.1 AA,
-        validés via l&apos;addon A11y Storybook.
+        Components built on WAI-ARIA APG patterns: associated labels, live regions, semantic
+        roles (<code className={inlineCode}>radiogroup</code>,{' '}
+        <code className={inlineCode}>dialog</code>). Dialog with a focus trap (
+        <code className={inlineCode}>focusin</code>), focus restoration, the{' '}
+        <kbd className="rounded border border-slate-300 bg-slate-50 px-1 text-xs">Escape</kbd> key
+        and <code className={inlineCode}>inert</code> background content. Contrast targets WCAG 2.1
+        AA, checked through the Storybook a11y addon.
       </>
     ),
   },
   {
-    title: 'Métier SaaS recrutement',
+    title: 'Recruitment SaaS domain',
     icon: Sparkles,
     accent: 'ai',
     body: (
       <>
-        Composants pensés pour les parcours réels&nbsp;: upload PDF (<strong>Dropzone</strong>),
-        bascule Candidat / Recruteur (<strong>SegmentedControl</strong>), jauge de score ATS (
-        <strong>ScoreGauge</strong>), tableaux paginés (<strong>DataTable</strong>), barres de quota
-        (<strong>ProgressBar</strong>) et cartes tarifaires. Templates dashboard disponibles dans la
-        section <strong>Templates</strong>.
+        Components designed for real journeys: PDF upload (<strong>Dropzone</strong>), candidate
+        and recruiter switch (<strong>SegmentedControl</strong>), ATS score gauge (
+        <strong>ScoreGauge</strong>), paginated tables (<strong>DataTable</strong>), quota bars
+        (<strong>ProgressBar</strong>) and pricing cards. Dashboard templates live in the{' '}
+        <strong>Templates</strong> section.
       </>
     ),
   },
@@ -241,11 +240,11 @@ const pillars: Pillar[] = [
     accent: 'info',
     body: (
       <>
-        API en <code className={inlineCode}>React.forwardRef</code>, props étendues depuis les
-        attributs HTML natifs, unions TypeScript discriminées (<strong>Dropzone</strong> single /
-        multiple). Styles via <code className={inlineCode}>cn()</code> (clsx + tailwind-merge).
-        Runtime léger&nbsp;: pas de lib UI lourde — <code className={inlineCode}>lucide-react</code>{' '}
-        en peer dependency uniquement.
+        <code className={inlineCode}>React.forwardRef</code> APIs, props extended from native HTML
+        attributes, discriminated TypeScript unions (<strong>Dropzone</strong> single / multiple).
+        Styling through <code className={inlineCode}>cn()</code> (clsx + tailwind-merge). Light
+        runtime: no heavy UI library — <code className={inlineCode}>lucide-react</code> as a peer
+        dependency only.
       </>
     ),
   },
@@ -278,7 +277,7 @@ export function Pillars() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Architecture : les familles de composants                                  */
+/*  Architecture: component families                                           */
 /* -------------------------------------------------------------------------- */
 
 interface Family {
@@ -290,11 +289,11 @@ interface Family {
 }
 
 /*
-  Liens de navigation : les pages Autodocs sont nommées « Documentation »
-  (.storybook/main.ts → docs.defaultName), leur identifiant est donc
-  `<title-kebab>--documentation` et non `--docs`.
-  Les pages MDX étant rendues dans l'iframe de preview, chaque lien utilise
-  une URL relative (`./?path=…`) + `target="_top"` pour piloter le manager.
+  Navigation links: Autodocs pages are named "Documentation"
+  (.storybook/main.ts -> docs.defaultName), so their id is
+  `<title-kebab>--documentation` and not `--docs`.
+  MDX pages render inside the preview iframe, so every link uses a relative URL
+  (`./?path=…`) plus `target="_top"` to drive the manager.
 */
 const families: Family[] = [
   {
@@ -305,7 +304,7 @@ const families: Family[] = [
       { label: 'Button', href: './?path=/docs/actions-button--documentation' },
       { label: 'SegmentedControl', href: './?path=/docs/actions-segmentedcontrol--documentation' },
     ],
-    description: 'Boutons primaires / IA, segments exclusifs avec navigation clavier.',
+    description: 'Primary and AI buttons, exclusive segments with keyboard navigation.',
   },
   {
     name: 'Forms',
@@ -316,7 +315,7 @@ const families: Family[] = [
       { label: 'Textarea', href: './?path=/docs/forms-textarea--documentation' },
       { label: 'Dropzone', href: './?path=/docs/forms-dropzone--documentation' },
     ],
-    description: 'Formulaires avec erreurs ARIA, zone de dépôt PDF native label + drag-and-drop.',
+    description: 'Forms with ARIA errors, PDF drop zone using a native label plus drag-and-drop.',
   },
   {
     name: 'Feedback',
@@ -329,7 +328,7 @@ const families: Family[] = [
       { label: 'Badge', href: './?path=/docs/feedback-badge--documentation' },
     ],
     description:
-      "Notifications live region, file d'attente via provider, dialogues modaux, statuts compacts.",
+      'Live region notifications, provider-backed queue, modal dialogs, compact statuses.',
   },
   {
     name: 'Data Display',
@@ -340,7 +339,7 @@ const families: Family[] = [
       { label: 'DataTable', href: './?path=/docs/data-display-datatable--documentation' },
       { label: 'ProgressBar', href: './?path=/docs/data-display-progressbar--documentation' },
     ],
-    description: 'Score ATS, tableaux paginés avec skeleton, quotas et consommation.',
+    description: 'ATS score, paginated tables with skeletons, quotas and consumption.',
   },
   {
     name: 'Surfaces',
@@ -350,7 +349,7 @@ const families: Family[] = [
       { label: 'Card', href: './?path=/docs/data-display-card--documentation' },
       { label: 'PricingCard', href: './?path=/docs/data-display-pricingcard--documentation' },
     ],
-    description: 'Surfaces composables Header / Body / Footer, cartes offre SaaS.',
+    description: 'Composable Header / Body / Footer surfaces, SaaS plan cards.',
   },
   {
     name: 'Templates',
@@ -366,7 +365,7 @@ const families: Family[] = [
         href: './?path=/docs/templates-recruiterdashboard--documentation',
       },
     ],
-    description: 'Pages de référence assemblant les composants en contexte produit.',
+    description: 'Reference pages assembling the components in product context.',
   },
 ];
 
@@ -415,7 +414,7 @@ export function Families() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Lien vers la page Tokens                                                   */
+/*  Link to the Tokens page                                                    */
 /* -------------------------------------------------------------------------- */
 
 export function TokensLink() {
@@ -431,7 +430,7 @@ export function TokensLink() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Qualité & gouvernance                                                      */
+/*  Quality and governance                                                     */
 /* -------------------------------------------------------------------------- */
 
 const governance: Array<{
@@ -441,12 +440,12 @@ const governance: Array<{
   practice: React.ReactNode;
 }> = [
   {
-    axis: 'Accessibilité',
+    axis: 'Accessibility',
     icon: Accessibility,
     accent: 'success',
     practice: (
       <>
-        Addon <code className={inlineCode}>@storybook/addon-a11y</code> activé sur chaque story
+        <code className={inlineCode}>@storybook/addon-a11y</code> enabled on every story
       </>
     ),
   },
@@ -456,7 +455,7 @@ const governance: Array<{
     accent: 'ai',
     practice: (
       <>
-        Tests <code className={inlineCode}>play()</code> Vitest via{' '}
+        Vitest <code className={inlineCode}>play()</code> tests through{' '}
         <code className={inlineCode}>@storybook/addon-vitest</code>
       </>
     ),
@@ -468,14 +467,13 @@ const governance: Array<{
     practice: <>Mobile 375 · Tablet 768 · Desktop 1280 · Wide 1536</>,
   },
   {
-    axis: 'Typage',
+    axis: 'Typing',
     icon: FileCode2,
     accent: 'info',
     practice: (
       <>
-        <code className={inlineCode}>strict: true</code>, déclarations{' '}
-        <code className={inlineCode}>.d.ts</code> générées dans{' '}
-        <code className={inlineCode}>dist/</code>
+        <code className={inlineCode}>strict: true</code>, <code className={inlineCode}>.d.ts</code>{' '}
+        declarations emitted to <code className={inlineCode}>dist/</code>
       </>
     ),
   },
@@ -488,10 +486,10 @@ export function Governance() {
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
             <th scope="col" className="p-3 font-semibold text-slate-900">
-              Axe
+              Axis
             </th>
             <th scope="col" className="p-3 font-semibold text-slate-900">
-              Pratique
+              Practice
             </th>
           </tr>
         </thead>

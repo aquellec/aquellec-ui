@@ -4,11 +4,11 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Button } from './Button';
 
 /**
- * Bouton d'action du design system. `primary` pour les actions principales,
- * `ai` pour les traitements génératifs, `outline` et `ghost` pour le secondaire.
+ * Action button of the design system. `primary` for main actions, `ai` for
+ * generative workflows, `outline` and `ghost` for secondary ones.
  *
- * Les libellés viennent du dictionnaire de stories : changez la langue dans la
- * barre d'outils pour voir les exemples s'adapter.
+ * Labels come from the story dictionary: switch the language in the toolbar to
+ * see the examples adapt.
  */
 const meta: Meta<typeof Button> = {
   title: 'Actions/Button',
@@ -85,7 +85,7 @@ export const Ghost: Story = {
   args: { variant: 'ghost', size: 'sm' },
 };
 
-/** Toutes les variantes côte à côte, pour comparer les niveaux d'emphase. */
+/** Every variant side by side, to compare emphasis levels. */
 export const AllVariants: Story = {
   render: () => {
     const t = useI18n();

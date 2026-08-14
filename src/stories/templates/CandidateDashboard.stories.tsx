@@ -24,8 +24,8 @@ interface CandidateAnalysis {
   status: keyof Dictionary['dashboard']['statuses'];
 }
 
-/* Les noms d'entreprise et intitulés de poste ne sont pas traduits : ce sont
-   des données, pas de l'interface. Seuls statuts et en-têtes le sont. */
+/* Company names and job titles are not translated: they are data, not
+   interface. Only statuses and column headers are. */
 const recentAnalyses: CandidateAnalysis[] = [
   { id: '1', company: 'Vercel', jobTitle: 'Front-End Engineer', score: 88, date: '2026-08-12', status: 'matched' },
   { id: '2', company: 'Doctolib', jobTitle: 'React Developer', score: 62, date: '2026-08-10', status: 'review' },
@@ -36,8 +36,8 @@ const recentAnalyses: CandidateAnalysis[] = [
 const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
 
 /**
- * Page template candidat : import de CV, fiche de poste, score ATS et historique.
- * Toute la copie suit le sélecteur de langue de la barre d'outils.
+ * Candidate page template: resume upload, job description, ATS score, history.
+ * All copy follows the language selector in the toolbar.
  */
 const meta: Meta = {
   title: 'Templates/CandidateDashboard',
@@ -47,7 +47,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composition dashboard candidat : SegmentedControl, Dropzone, fiche de poste, ScoreGauge, recommandations et historique des analyses.',
+          'Candidate dashboard composition: SegmentedControl, Dropzone, job description, ScoreGauge, recommendations and analysis history.',
       },
     },
   },
@@ -290,7 +290,7 @@ export const Default: Story = {
   render: () => <CandidateDashboardPage />,
 };
 
-/** Vue mobile — grille 1 colonne, champs entreprise/poste empilés. */
+/** Mobile view — single column grid, company and role fields stacked. */
 export const OnMobile: Story = {
   render: () => <CandidateDashboardPage />,
   globals: {
@@ -298,7 +298,7 @@ export const OnMobile: Story = {
   },
 };
 
-/** Vue tablette — transition vers la grille 2 colonnes (lg). */
+/** Tablet view — transition to the two column grid (lg). */
 export const OnTablet: Story = {
   render: () => <CandidateDashboardPage />,
   globals: {

@@ -15,31 +15,31 @@ export interface Column<T> {
   className?: string;
 }
 
-/** Textes de la pagination et de la navigation du tableau. */
+/** Pagination and navigation copy of the table. */
 export interface DataTableLabels {
-  /** Nom accessible de la zone de pagination. */
+  /** Accessible name of the pagination area. */
   pagination: string;
   previousPage: string;
   nextPage: string;
-  /** Indicateur de page courante, rendu à gauche des contrôles. */
+  /** Current page indicator, rendered to the left of the controls. */
   pageStatus: (currentPage: number, totalPages: number) => React.ReactNode;
 }
 
-/** Valeurs par défaut en français, conservées pour les intégrations existantes. */
+/** English defaults. Pass `labels` to render the table in another language. */
 export const defaultDataTableLabels: DataTableLabels = {
-  pagination: 'Pagination du tableau',
-  previousPage: 'Page précédente',
-  nextPage: 'Page suivante',
+  pagination: 'Table pagination',
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
   pageStatus: (currentPage, totalPages) => (
     <>
-      Page <strong className="text-slate-800">{currentPage}</strong> sur{' '}
+      Page <strong className="text-slate-800">{currentPage}</strong> of{' '}
       <strong className="text-slate-800">{totalPages}</strong>
     </>
   ),
 };
 
 export interface DataTableProps<T> extends React.HTMLAttributes<HTMLDivElement> {
-  /** Surcharge partielle des textes du composant, fusionnée avec les défauts. */
+  /** Partial override of the component copy, merged over the defaults. */
   labels?: Partial<DataTableLabels>;
   /** Rows to display in the table body. */
   data: T[];
@@ -65,7 +65,7 @@ function DataTableInner<T>(
     columns,
     keyExtractor,
     isLoading = false,
-    emptyMessage = 'Aucune donnée disponible',
+    emptyMessage = 'No data available',
     pagination,
     labels: labelsProp,
     className,

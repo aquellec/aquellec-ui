@@ -35,15 +35,15 @@ const aquellecViewports = {
 };
 
 /**
- * Fournit le dictionnaire aux stories et propage la langue au DOM.
+ * Provides the dictionary to the stories and propagates the locale to the DOM.
  *
- * `lang` est posé sur le conteneur de la story *et* sur `<html>` : le premier
- * porte la langue du contenu rendu, le second est ce que lisent les lecteurs
- * d'écran pour choisir leur voix, et axe pour la règle `html-has-lang`.
+ * `lang` is set on the story container *and* on `<html>`: the former carries the
+ * language of the rendered content, the latter is what screen readers read to
+ * pick a voice, and what axe checks for the `html-has-lang` rule.
  */
 /*
-  Le preview tourne dans le navigateur : `process.env` n'y existe pas, Vite
-  expose les variables préfixées `STORYBOOK_` sur `import.meta.env`.
+  The preview runs in the browser, where `process.env` does not exist: Vite
+  exposes `STORYBOOK_`-prefixed variables on `import.meta.env` instead.
 */
 const envLocale = (() => {
   const value = (import.meta as unknown as { env?: Record<string, string | undefined> }).env
@@ -76,7 +76,7 @@ const preview: Preview = {
   decorators: [withI18n],
   globalTypes: {
     locale: {
-      description: 'Langue des exemples de stories',
+      description: 'Language of the story examples',
       toolbar: {
         title: 'Locale',
         icon: 'globe',
@@ -119,10 +119,10 @@ const preview: Preview = {
   initialGlobals: {
     viewport: { value: 'desktop', isRotated: false },
     /*
-      `STORYBOOK_LOCALE` permet de rejouer toute la suite dans une autre langue
-      (`STORYBOOK_LOCALE=fr pnpm test:storybook`). Les `play` reconstruisent
-      leurs attentes depuis le dictionnaire : si une chaîne est oubliée dans une
-      traduction, le test échoue au lieu de passer en silence.
+      `STORYBOOK_LOCALE` replays the whole suite in another language
+      (`STORYBOOK_LOCALE=fr pnpm test:storybook`). `play` functions rebuild their
+      expectations from the dictionary, so a string missing from a translation
+      fails the test instead of passing silently.
     */
     locale: envLocale,
   },
