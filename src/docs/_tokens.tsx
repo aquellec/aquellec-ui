@@ -32,13 +32,13 @@ export function TokensHero() {
     >
       <HeroGrid />
 
-      <div className="relative">
-        <p className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+      <div className="relative flex flex-col items-start gap-4">
+        <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
           <Palette className="h-3.5 w-3.5" aria-hidden="true" />
           Fondations · Preset Tailwind
         </p>
 
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
           Design Tokens
         </h1>
 
@@ -70,13 +70,13 @@ function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; h
     <div className="flex flex-col">
       <div
         className={cn(
-          'h-14 w-full rounded-lg border border-slate-900/10',
+          'mb-1.5 h-14 w-full rounded-lg border border-slate-900/10',
           role && 'ring-2 ring-slate-900/10 ring-offset-1'
         )}
         style={{ backgroundColor: hex }}
         aria-hidden="true"
       />
-      <p className="mt-1.5 font-mono text-xs font-semibold text-slate-900">
+      <p className="font-mono text-xs font-semibold text-slate-900">
         {scaleName}-{shade}
       </p>
       <p className={cn('font-mono text-xs uppercase', mutedTextClass)}>{hex}</p>
@@ -129,8 +129,8 @@ export function SemanticTokens() {
   return (
     <div className="not-prose mb-4 grid gap-4 sm:grid-cols-2">
       {semanticGroups.map(({ key, label, usage, tokens }) => (
-        <section key={key} className={cn('p-5', cardSurface)}>
-          <div className="mb-1 flex items-center gap-2.5">
+        <section key={key} className={cn('flex flex-col gap-3 p-5', cardSurface)}>
+          <div className="flex items-center gap-2.5">
             <span
               className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border"
               style={{ backgroundColor: tokens.bg, color: tokens.fg, borderColor: tokens.border }}
@@ -143,7 +143,7 @@ export function SemanticTokens() {
             </div>
           </div>
 
-          <p className={cn('mb-3 text-xs', mutedTextClass)}>{usage}</p>
+          <p className={cn('text-xs', mutedTextClass)}>{usage}</p>
 
           {/* `div` plutôt que `dl/dt/dd` : les styles prose de Storybook
               mettent les `dt` en italique et cassent l'alignement visuel. */}
@@ -224,11 +224,11 @@ export function RadiusScale() {
         {Object.entries(aquellecThemeExtensions.borderRadius).map(([token, value]) => (
           <div key={token}>
             <div
-              className="h-16 w-full border border-brand-500/30 bg-brand-50"
+              className="mb-1.5 h-16 w-full border border-brand-500/30 bg-brand-50"
               style={{ borderRadius: value }}
               aria-hidden="true"
             />
-            <p className="mt-1.5 font-mono text-xs font-semibold text-slate-900">rounded-{token}</p>
+            <p className="font-mono text-xs font-semibold text-slate-900">rounded-{token}</p>
             <p className={cn('font-mono text-xs', mutedTextClass)}>{value}</p>
           </div>
         ))}
@@ -251,11 +251,11 @@ export function ElevationScale() {
         {Object.entries(aquellecThemeExtensions.boxShadow).map(([token, value]) => (
           <div key={token}>
             <div
-              className="h-16 w-full rounded-xl border border-slate-100 bg-white"
+              className="mb-2.5 h-16 w-full rounded-xl border border-slate-100 bg-white"
               style={{ boxShadow: value }}
               aria-hidden="true"
             />
-            <p className="mt-2.5 font-mono text-xs font-semibold text-slate-900">shadow-{token}</p>
+            <p className="font-mono text-xs font-semibold text-slate-900">shadow-{token}</p>
             <p className={cn('break-all font-mono text-xs', mutedTextClass)}>{value}</p>
           </div>
         ))}
@@ -329,13 +329,13 @@ export function FocusRings() {
         <p className="text-sm font-semibold text-slate-900">Anneaux de focus</p>
       </div>
 
-      <p className={cn('mb-4 text-xs', mutedTextClass)}>
+      <p className={cn('text-xs', mutedTextClass)}>
         Centralisés dans <code>src/lib/focus-ring.ts</code>. Naviguez au clavier
         (<kbd className="rounded border border-slate-300 bg-slate-50 px-1">Tab</kbd>) pour les voir —
         ils sont en <code>focus-visible</code>, donc invisibles au clic.
       </p>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-3">
         {focusVariants.map(({ name, className, label, accent }) => (
           <button
             key={name}
@@ -380,10 +380,10 @@ export function Viewports() {
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {viewports.map(({ key, name, size }) => (
-          <div key={key} className="rounded-lg border border-slate-200 bg-slate-50/60 p-3">
+          <div key={key} className="flex flex-col gap-0.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3">
             <p className="text-sm font-semibold text-slate-900">{name}</p>
             <p className={cn('font-mono text-xs', mutedTextClass)}>{key}</p>
-            <p className={cn('mt-1 font-mono text-xs', subtleTextClass)}>{size}</p>
+            <p className={cn('font-mono text-xs', subtleTextClass)}>{size}</p>
           </div>
         ))}
       </div>
