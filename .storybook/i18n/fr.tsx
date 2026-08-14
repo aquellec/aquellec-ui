@@ -50,6 +50,7 @@ export const fr: Dictionary = {
           <strong className="text-slate-800">{totalPages}</strong>
         </>
       ),
+      scrollRegion: 'Tableau, défilement horizontal',
     },
 
     gaugeStatus: {

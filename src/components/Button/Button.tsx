@@ -48,9 +48,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ),
     };
 
+    /*
+      Touch first: every size is at least 44px tall below the `sm` breakpoint,
+      the target size recommended by WCAG 2.5.5. The desktop heights are
+      restored from 640px, where the pointer is precise — so the compact look
+      of `sm` and `md` is unchanged on the screens that can use it.
+    */
     const sizes = {
-      sm: 'h-8 px-3 text-xs',
-      md: 'h-10 px-4 text-sm',
+      sm: 'h-11 px-3 text-xs sm:h-8',
+      md: 'h-11 px-4 text-sm sm:h-10',
       lg: 'h-12 px-6 text-base',
     };
 

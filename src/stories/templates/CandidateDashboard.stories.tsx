@@ -75,7 +75,7 @@ function CandidateDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-6 py-4">
+      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
@@ -92,16 +92,16 @@ function CandidateDashboardPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl space-y-6 px-6 py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-          <section className="space-y-6">
+      <main className="mx-auto w-full max-w-5xl space-y-4 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-8">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_280px]">
+          <section className="space-y-4 sm:space-y-6">
             <Card>
               <Card.Header
                 title={t.dashboard.candidate.analysis.title}
                 subtitle={t.dashboard.candidate.analysis.subtitle}
               />
-              <Card.Body className="overflow-visible pb-8">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <Card.Body className="overflow-visible">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
                   <div className="flex flex-col">
                     <p className="mb-3 text-xs font-semibold text-slate-700">
                       {t.dashboard.candidate.analysis.resumeLabel}
@@ -110,7 +110,12 @@ function CandidateDashboardPage() {
                       labels={t.components.dropzone}
                       maxSizeMB={5}
                       accept=".pdf"
-                      className="min-h-[280px] [&>div]:min-h-[240px]"
+                      /*
+                        The dashed area is the Dropzone `<label>`, not a `div`:
+                        it has to fill the column so both halves of the grid end
+                        at the same height, instead of leaving a void under it.
+                      */
+                      className="flex-1 [&>label]:h-full [&>label]:min-h-[200px]"
                     />
                   </div>
 
@@ -190,9 +195,9 @@ function CandidateDashboardPage() {
             </Card>
           </section>
 
-          <aside className="space-y-6">
+          <aside className="space-y-4 sm:space-y-6">
             <Card className="text-center">
-              <Card.Body className="flex flex-col items-center gap-2 py-8">
+              <Card.Body className="flex flex-col items-center gap-2 py-6 sm:py-8">
                 <ScoreGauge
                   score={88}
                   size="lg"
@@ -240,10 +245,19 @@ function CandidateDashboardPage() {
               labels={t.components.dataTable}
               columns={[
                 {
+                  /*
+                    The only free text column, and the longest: it opts back
+                    into wrapping so the score and the status stay on screen at
+                    375px. Wrapping a sentence is fine, wrapping a badge is not.
+                  */
                   header: t.dashboard.candidate.history.columns.position,
+                  className: 'whitespace-normal min-w-[9rem]',
                   cell: (item) => (
-                    <div className="flex items-center space-x-2 font-medium text-slate-900">
-                      <Briefcase className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                    <div className="flex items-start space-x-2 font-medium text-slate-900">
+                      <Briefcase
+                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+                        aria-hidden="true"
+                      />
                       <span>
                         {item.company} — {item.jobTitle}
                       </span>
@@ -266,7 +280,11 @@ function CandidateDashboardPage() {
                     </Badge>
                   ),
                 },
-                { header: t.dashboard.candidate.history.columns.date, accessorKey: 'date' },
+                {
+                  header: t.dashboard.candidate.history.columns.date,
+                  accessorKey: 'date',
+                  className: 'hidden sm:table-cell',
+                },
                 {
                   header: t.dashboard.candidate.history.columns.action,
                   cell: () => (
@@ -277,6 +295,7 @@ function CandidateDashboardPage() {
                   ),
                 },
               ]}
+              className="border-0 shadow-none"
               pagination={{ currentPage: 1, totalPages: 2, onPageChange: () => undefined }}
             />
           </Card.Body>
@@ -290,7 +309,13 @@ export const Default: Story = {
   render: () => <CandidateDashboardPage />,
 };
 
-/** Mobile view — single column grid, company and role fields stacked. */
+/**
+ * Mobile view — single column grid, company and role fields stacked.
+ *
+ * Open it in the **Canvas** tab: Storybook locks the viewport to Responsive on
+ * documentation pages, so the preview below renders full width. The viewport is
+ * applied for real in the Canvas and in the Vitest run.
+ */
 export const OnMobile: Story = {
   render: () => <CandidateDashboardPage />,
   globals: {
@@ -298,7 +323,12 @@ export const OnMobile: Story = {
   },
 };
 
-/** Tablet view — transition to the two column grid (lg). */
+/**
+ * Tablet view — company and role fields side by side (sm), main grid still on a
+ * single column until lg.
+ *
+ * Canvas tab as well: documentation pages ignore the story viewport.
+ */
 export const OnTablet: Story = {
   render: () => <CandidateDashboardPage />,
   globals: {

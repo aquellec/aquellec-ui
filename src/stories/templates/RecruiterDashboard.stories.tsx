@@ -69,7 +69,7 @@ function RecruiterDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-6 py-4">
+      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-ai-600">
@@ -86,10 +86,15 @@ function RecruiterDashboardPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl space-y-6 px-6 py-8">
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card>
-            <Card.Body className="flex items-center gap-4 py-6">
+      <main className="mx-auto w-full max-w-6xl space-y-4 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-8">
+        {/*
+          Two KPI columns from the smallest screen: stacked, the three cards
+          pushed the rest of the page below the fold for a single number each.
+          The gauge keeps a full row, it is the one that needs the width.
+        */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
+          <Card className="col-span-2 md:col-span-1">
+            <Card.Body className="flex items-center gap-4 py-4 sm:py-6">
               <ScoreGauge
                 score={72}
                 size="sm"
@@ -103,13 +108,13 @@ function RecruiterDashboardPage() {
             </Card.Body>
           </Card>
           <Card>
-            <Card.Body className="py-6">
+            <Card.Body className="py-4 sm:py-6">
               <p className="text-2xl font-bold text-emerald-700">18</p>
               <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.compatible}</p>
             </Card.Body>
           </Card>
           <Card>
-            <Card.Body className="py-6">
+            <Card.Body className="py-4 sm:py-6">
               <p className="text-2xl font-bold text-amber-700">6</p>
               <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.toReview}</p>
             </Card.Body>
@@ -136,6 +141,11 @@ function RecruiterDashboardPage() {
               data={mockData}
               keyExtractor={(item) => item.id}
               labels={t.components.dataTable}
+              /*
+                Column priority: below `sm` only candidate, score and status
+                stay, the columns a recruiter scans first. The rest is one
+                horizontal scroll away.
+              */
               columns={[
                 {
                   header: t.dashboard.recruiter.history.columns.candidate,
@@ -146,7 +156,11 @@ function RecruiterDashboardPage() {
                     </div>
                   ),
                 },
-                { header: t.dashboard.recruiter.history.columns.job, accessorKey: 'jobTitle' },
+                {
+                  header: t.dashboard.recruiter.history.columns.job,
+                  accessorKey: 'jobTitle',
+                  className: 'hidden sm:table-cell',
+                },
                 {
                   header: t.dashboard.recruiter.history.columns.score,
                   cell: (item) => (
@@ -163,7 +177,11 @@ function RecruiterDashboardPage() {
                     </Badge>
                   ),
                 },
-                { header: t.dashboard.recruiter.history.columns.date, accessorKey: 'date' },
+                {
+                  header: t.dashboard.recruiter.history.columns.date,
+                  accessorKey: 'date',
+                  className: 'hidden sm:table-cell',
+                },
                 {
                   header: t.dashboard.recruiter.history.columns.action,
                   cell: () => (
@@ -174,6 +192,7 @@ function RecruiterDashboardPage() {
                   ),
                 },
               ]}
+              className="border-0 shadow-none"
               pagination={{ currentPage: 1, totalPages: 3, onPageChange: () => undefined }}
             />
           </Card.Body>
@@ -187,6 +206,13 @@ export const Default: Story = {
   render: () => <RecruiterDashboardPage />,
 };
 
+/**
+ * Mobile view — single column grid, header title and actions stacked.
+ *
+ * Open it in the **Canvas** tab: Storybook locks the viewport to Responsive on
+ * documentation pages, so the preview below renders full width. The viewport is
+ * applied for real in the Canvas and in the Vitest run.
+ */
 export const OnMobile: Story = {
   render: () => <RecruiterDashboardPage />,
   globals: {
@@ -194,6 +220,11 @@ export const OnMobile: Story = {
   },
 };
 
+/**
+ * Tablet view — the three column grid is already in place (md).
+ *
+ * Canvas tab as well: documentation pages ignore the story viewport.
+ */
 export const OnTablet: Story = {
   render: () => <RecruiterDashboardPage />,
   globals: {

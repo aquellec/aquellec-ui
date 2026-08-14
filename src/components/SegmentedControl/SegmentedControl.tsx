@@ -112,7 +112,14 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onChange(option.value)}
               className={cn(
-                'flex items-center gap-2 rounded-lg font-semibold transition-all duration-200',
+                /*
+                  `grow` + `justify-center`: the root is `inline-flex`, so it
+                  shrink-wraps and these have no effect in normal use. But a
+                  flex item is blockified — dropped into a `flex-col` header the
+                  control stretches to the full width, and without this the
+                  segments stay on the left with dead space beside them.
+                */
+                'flex grow items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200',
                 'motion-reduce:transition-none',
                 sizes[size],
                 focusRing,

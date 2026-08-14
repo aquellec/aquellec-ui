@@ -59,7 +59,11 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={cn(
-          'inline-flex items-center font-medium rounded-full transition-colors',
+          /*
+            `whitespace-nowrap`: a status badge is a label, never a paragraph.
+            In a narrow table cell it would otherwise wrap and get clipped.
+          */
+          'inline-flex items-center font-medium rounded-full transition-colors whitespace-nowrap',
           variants[variant],
           sizes[size],
           className

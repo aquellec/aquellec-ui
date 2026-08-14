@@ -23,6 +23,14 @@ export interface DataTableLabels {
   nextPage: string;
   /** Current page indicator, rendered to the left of the controls. */
   pageStatus: (currentPage: number, totalPages: number) => React.ReactNode;
+  /**
+   * Accessible name of the horizontal scroll area wrapping the table.
+   *
+   * Below the width of its columns the table scrolls sideways. The area is
+   * focusable so it can be scrolled with the keyboard, which means it needs a
+   * name to be announced.
+   */
+  scrollRegion: string;
 }
 
 /** English defaults. Pass `labels` to render the table in another language. */
@@ -36,6 +44,28 @@ export const defaultDataTableLabels: DataTableLabels = {
       <strong className="text-slate-800">{totalPages}</strong>
     </>
   ),
+  scrollRegion: 'Table, scrollable horizontally',
+};
+
+/**
+ * Edge shadows revealing that the table scrolls sideways.
+ *
+ * The two white layers are attached to the content (`local`) and the two
+ * shadows to the container (`scroll`): a shadow is therefore covered while the
+ * matching edge is reached, and appears as soon as content is hidden on that
+ * side. Pure CSS, no scroll listener.
+ */
+const scrollShadows: React.CSSProperties = {
+  backgroundImage: [
+    'linear-gradient(to right, #fff 30%, rgba(255, 255, 255, 0))',
+    'linear-gradient(to left, #fff 30%, rgba(255, 255, 255, 0))',
+    'radial-gradient(farthest-side at 0 50%, rgba(15, 23, 42, 0.14), rgba(15, 23, 42, 0))',
+    'radial-gradient(farthest-side at 100% 50%, rgba(15, 23, 42, 0.14), rgba(15, 23, 42, 0))',
+  ].join(', '),
+  backgroundPosition: 'left center, right center, left center, right center',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: '40px 100%, 40px 100%, 14px 100%, 14px 100%',
+  backgroundAttachment: 'local, local, scroll, scroll',
 };
 
 export interface DataTableProps<T> extends React.HTMLAttributes<HTMLDivElement> {
@@ -84,12 +114,33 @@ function DataTableInner<T>(
       )}
       {...props}
     >
-      <div className="overflow-x-auto">
+      {/*
+        `tabIndex` makes the scroll area reachable with the keyboard, which is
+        the only way to reach the hidden columns without a pointer. A focusable
+        element needs a role and a name, hence the labelled region.
+      */}
+      <div
+        /*
+          `overscroll-x-contain` keeps a horizontal swipe inside the table:
+          without it, reaching the last column hands the gesture to the browser,
+          which triggers back-navigation on iOS and Chrome Android.
+        */
+        className={cn('overflow-x-auto overscroll-x-contain', focusRing)}
+        style={scrollShadows}
+        tabIndex={0}
+        role="region"
+        aria-label={labels.scrollRegion}
+      >
         <table className="w-full text-left text-sm border-collapse" aria-busy={isLoading || undefined}>
           <thead>
             <tr className="bg-slate-50/80 border-b border-slate-200/80 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              {/*
+                Headers wrap, cells do not: a header is a label that can take
+                two lines, and keeping `CANDIDATE / RESUME` on one line alone
+                costs 230px of the 375px viewport.
+              */}
               {columns.map((col) => (
-                <th key={col.header} scope="col" className={cn('py-3.5 px-4', col.className)}>
+                <th key={col.header} scope="col" className={cn('py-3.5 px-3 sm:px-4', col.className)}>
                   {col.header}
                 </th>
               ))}
@@ -100,7 +151,7 @@ function DataTableInner<T>(
               Array.from({ length: 4 }).map((_, rowIdx) => (
                 <tr key={`skeleton-${rowIdx}`} className="animate-pulse">
                   {columns.map((col) => (
-                    <td key={`${col.header}-skeleton-${rowIdx}`} className="py-4 px-4">
+                    <td key={`${col.header}-skeleton-${rowIdx}`} className="py-4 px-3 sm:px-4">
                       <div className="h-4 bg-slate-200/60 rounded-md w-3/4" />
                     </td>
                   ))}
@@ -118,8 +169,16 @@ function DataTableInner<T>(
             ) : (
               data.map((item) => (
                 <tr key={keyExtractor(item)} className="hover:bg-slate-50/60 transition-colors">
+                  {/*
+                    Cells do not wrap: at 375px a wrapped cell turns a badge
+                    into two clipped lines. The table scrolls instead, and a
+                    column can opt back in with `className: 'whitespace-normal'`.
+                  */}
                   {columns.map((col) => (
-                    <td key={`${keyExtractor(item)}-${col.header}`} className={cn('py-3.5 px-4 text-slate-700', col.className)}>
+                    <td
+                      key={`${keyExtractor(item)}-${col.header}`}
+                      className={cn('py-3.5 px-3 sm:px-4 text-slate-700 whitespace-nowrap', col.className)}
+                    >
                       {col.cell
                         ? col.cell(item)
                         : col.accessorKey != null
@@ -137,16 +196,20 @@ function DataTableInner<T>(
       {pagination && !isLoading && data.length > 0 && (
         <nav
           aria-label={labels.pagination}
-          className="flex items-center justify-between px-4 py-3 bg-slate-50/50 border-t border-slate-100 text-xs text-slate-500"
+          className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-slate-50/50 border-t border-slate-100 text-xs text-slate-500"
         >
           <span>{labels.pageStatus(pagination.currentPage, pagination.totalPages)}</span>
-          <div className="flex items-center space-x-1">
+          {/*
+            44px targets on touch screens, back to a compact 32px from `sm`
+            where the pointer is precise.
+          */}
+          <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
               disabled={pagination.currentPage <= 1}
               className={cn(
-                'p-1 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
+                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
                 focusRing
               )}
               aria-label={labels.previousPage}
@@ -158,7 +221,7 @@ function DataTableInner<T>(
               onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage >= pagination.totalPages}
               className={cn(
-                'p-1 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
+                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
                 focusRing
               )}
               aria-label={labels.nextPage}

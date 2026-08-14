@@ -102,7 +102,12 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const ariaLabelledBy = labelledBy ?? headerTitleId;
 
     const variants = {
-      default: 'bg-white border border-slate-200/80 shadow-card hover:shadow-md',
+      /*
+        Solid border rather than 80% alpha: on the `slate-50` page background of
+        the dashboards, a translucent border almost disappears at 375px, where
+        the card outline is the only thing separating two sections.
+      */
+      default: 'bg-white border border-slate-200 shadow-card hover:shadow-md',
       outline: 'bg-transparent border border-slate-300',
       ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-card',
       ghost: 'bg-slate-50/80 border border-transparent',
@@ -113,7 +118,15 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         <div
           ref={ref}
           aria-labelledby={ariaLabelledBy}
-          className={cn('rounded-2xl p-5 transition-all duration-200', variants[variant], className)}
+          /*
+            Tighter padding below `sm`: at 375px, 20px on each side eats 11% of
+            the screen. Desktop spacing is unchanged.
+          */
+          className={cn(
+            'rounded-2xl p-4 sm:p-5 transition-all duration-200',
+            variants[variant],
+            className
+          )}
           {...props}
         >
           {children}
