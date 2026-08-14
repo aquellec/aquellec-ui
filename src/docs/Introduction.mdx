@@ -1,96 +1,33 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import {
+  Families,
+  Governance,
+  Hero,
+  Pillars,
+  SectionHeader,
+  TokensLink,
+} from './_showcase';
 
 <Meta title="Docs/Introduction" />
 
-<div className="not-prose mb-12 overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-brand-50 via-white to-ai-50 p-8 shadow-card md:p-10">
-  <p className="mb-3 inline-flex items-center rounded-full border border-brand-200 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
-    Design System · React 19 · Tailwind CSS
-  </p>
-  <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-    @aquellec/ui
-  </h1>
-  <p className="max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">
-    Librairie de composants React typés pour applications SaaS de recrutement et d&apos;analyse IA&nbsp;:
-    parsing de CV, matching ATS, espaces Candidat / Recruteur, quotas et visualisation de scores.
-  </p>
-  <div className="mt-6 flex flex-wrap gap-2 text-xs text-slate-500">
-    <span className="rounded-lg bg-white/70 px-2.5 py-1 ring-1 ring-slate-200">TypeScript strict</span>
-    <span className="rounded-lg bg-white/70 px-2.5 py-1 ring-1 ring-slate-200">WCAG 2.1 AA</span>
-    <span className="rounded-lg bg-white/70 px-2.5 py-1 ring-1 ring-slate-200">Preset Tailwind exportable</span>
-    <span className="rounded-lg bg-white/70 px-2.5 py-1 ring-1 ring-slate-200">Storybook 10 + Vitest</span>
-  </div>
-</div>
+{/*
+  Les blocs visuels sont importés depuis `_showcase.tsx` : le glob Tailwind
+  (tailwind.config.ts → content) ne scanne que `.{js,ts,jsx,tsx}`, donc toute
+  classe écrite directement dans ce `.mdx` ne serait jamais compilée.
+*/}
 
-## Les piliers du design system
+<Hero />
 
-<div className="not-prose mb-10 grid gap-4 md:grid-cols-3">
-  <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-    <p className="mb-2 text-sm font-semibold text-brand-700">Accessibilité d&apos;abord</p>
-    <p className="text-sm leading-relaxed text-slate-600">
-      Composants calés sur les patterns WAI-ARIA APG&nbsp;: labels associés, live regions, rôles sémantiques
-      (<code className="text-xs">radiogroup</code>, <code className="text-xs">dialog</code>).
-      Modale avec focus trap (<code className="text-xs">focusin</code>), restitution du focus, touche{' '}
-      <kbd className="rounded border border-slate-300 bg-slate-50 px-1 text-xs">Escape</kbd> et contenu de fond{' '}
-      <code className="text-xs">inert</code>. Contrastes visés WCAG 2.1 AA, validés via l&apos;addon A11y Storybook.
-    </p>
-  </div>
-  <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-    <p className="mb-2 text-sm font-semibold text-ai-700">Métier SaaS recrutement</p>
-    <p className="text-sm leading-relaxed text-slate-600">
-      Composants pensés pour les parcours réels&nbsp;: upload PDF (<strong>Dropzone</strong>), bascule{' '}
-      <strong>RoleToggle</strong> Candidat / Recruteur, jauge de score ATS (<strong>ScoreGauge</strong>),
-      tableaux paginés (<strong>DataTable</strong>), barres de quota (<strong>UsageBar</strong>) et cartes tarifaires.
-      Templates dashboard disponibles dans la section <strong>Templates</strong>.
-    </p>
-  </div>
-  <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-    <p className="mb-2 text-sm font-semibold text-slate-800">Developer Experience</p>
-    <p className="text-sm leading-relaxed text-slate-600">
-      API en <code className="text-xs">React.forwardRef</code>, props étendues depuis les attributs HTML natifs,
-      unions TypeScript discriminées (<strong>Dropzone</strong> single / multiple).
-      Styles via <code className="text-xs">cn()</code> (clsx + tailwind-merge). Runtime léger&nbsp;: pas de lib UI
-      lourde — <code className="text-xs">lucide-react</code> en peer dependency uniquement.
-    </p>
-  </div>
-</div>
+<SectionHeader kicker="Fondations" title="Les piliers du design system" id="les-piliers-du-design-system" />
 
-## Architecture de la librairie
+<Pillars />
+
+<SectionHeader kicker="Catalogue" title="Architecture de la librairie" id="architecture-de-la-librairie" />
 
 Le catalogue est organisé en cinq familles. Chaque composant expose des stories interactives, une page Autodocs
 et — lorsque pertinent — des tests Vitest exécutés depuis Storybook.
 
-<div className="not-prose mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-  <a href="/?path=/docs/components-button--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Actions</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">Button · RoleToggle</p>
-    <p className="text-xs leading-relaxed text-slate-500">Boutons primaires / IA, segmented control accessible avec navigation clavier.</p>
-  </a>
-  <a href="/?path=/docs/components-input--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Inputs</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">Input · Textarea · Dropzone</p>
-    <p className="text-xs leading-relaxed text-slate-500">Formulaires avec erreurs ARIA, zone de dépôt PDF native label + drag-and-drop.</p>
-  </a>
-  <a href="/?path=/docs/components-toast--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Feedback</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">Toast · ToastProvider · Modal · Badge</p>
-    <p className="text-xs leading-relaxed text-slate-500">Notifications live region, file d&apos;attente via provider, dialogues modaux, statuts compacts.</p>
-  </a>
-  <a href="/?path=/docs/components-scoregauge--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Data & DataViz</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">ScoreGauge · DataTable · UsageBar</p>
-    <p className="text-xs leading-relaxed text-slate-500">Score ATS, tableaux paginés avec skeleton, consommation de crédits.</p>
-  </a>
-  <a href="/?path=/docs/components-card--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Layout</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">Card · PricingCard</p>
-    <p className="text-xs leading-relaxed text-slate-500">Surfaces composables Header / Body / Footer, cartes offre SaaS.</p>
-  </a>
-  <a href="/?path=/docs/templates-candidate-dashboard--docs" className="group rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm transition hover:border-brand-300 hover:shadow-md">
-    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-brand-600">Templates</p>
-    <p className="mb-2 text-sm font-semibold text-slate-800">Candidate · Recruiter Dashboard</p>
-    <p className="text-xs leading-relaxed text-slate-500">Pages de référence assemblant les composants en contexte produit.</p>
-  </a>
-</div>
+<Families />
 
 ### Patterns composables
 
@@ -109,11 +46,9 @@ La plupart des blocs structurels suivent un découpage compound&nbsp;:
 ```
 
 Les utilitaires partagés (<code>cn</code>, <code>focusRing</code>, tokens sémantiques) sont exportés depuis le package racine.
-Référence visuelle des couleurs et viewports&nbsp;: page **[Tokens](./?path=/docs/docs-tokens--docs)**.
+Référence visuelle des couleurs et viewports&nbsp;: page <TokensLink />.
 
----
-
-## Démarrage rapide
+<SectionHeader kicker="Prise en main" title="Démarrage rapide" id="demarrage-rapide" />
 
 ### 1. Installer le package
 
@@ -182,15 +117,8 @@ pnpm test:storybook   # Tests d'interaction Vitest
 pnpm build-storybook  # Export statique de la doc
 ```
 
----
+<SectionHeader kicker="Contrat de qualité" title="Qualité & gouvernance" id="qualite-gouvernance" />
 
-## Qualité & gouvernance
-
-| Axe | Pratique |
-| --- | -------- |
-| Accessibilité | Addon `@storybook/addon-a11y` activé sur chaque story |
-| Interactions | Tests `play()` Vitest via `@storybook/addon-vitest` |
-| Viewports | Mobile 375 · Tablet 768 · Desktop 1280 · Wide 1536 |
-| Typage | `strict: true`, déclarations `.d.ts` générées dans `dist/` |
+<Governance />
 
 Pour toute évolution de token ou de contraste, mettre à jour `src/lib/design-tokens.ts` et la page **Tokens** afin de garder le preset et la documentation alignés.

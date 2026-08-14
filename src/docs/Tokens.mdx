@@ -1,144 +1,69 @@
-import { Meta, ColorPalette, ColorItem, Typeset } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SectionHeader } from './_showcase';
+import {
+  ColorScale,
+  ElevationScale,
+  FocusRings,
+  NeutralText,
+  RadiusScale,
+  SemanticTokens,
+  TokensHero,
+  TypeScale,
+  Viewports,
+} from './_tokens';
 
 <Meta title="Docs/Tokens" />
 
-# Design Tokens
+{/*
+  Comme pour Introduction, les blocs visuels vivent dans `_tokens.tsx`.
+  Ils sont générés depuis `src/lib/design-tokens.ts` : aucune valeur n'est
+  recopiée ici, la page ne peut donc pas se désynchroniser du preset.
+*/}
 
-Référence visuelle des fondations @aquellec/ui. Les valeurs sont définies dans `tailwind.config.js` et consommées via les classes utilitaires Tailwind.
+<TokensHero />
 
-## Couleurs — Brand
+<SectionHeader kicker="Palettes" title="Couleurs de marque" id="couleurs-de-marque" />
 
-Palette principale pour les actions, liens et éléments de navigation.
+Deux échelles complètes de dix paliers, exportées par le preset sous les noms `brand` et `ai`.
+Les paliers 500 / 600 / 700 portent les rôles documentés — accent, action, texte conforme AA sur fond blanc.
 
-<ColorPalette>
-  <ColorItem
-    title="brand.50"
-    subtitle="#f0f7ff"
-    colors={['#f0f7ff']}
-  />
-  <ColorItem
-    title="brand.100"
-    subtitle="#e0effe"
-    colors={['#e0effe']}
-  />
-  <ColorItem
-    title="brand.500"
-    subtitle="#0066ff — Primary"
-    colors={['#0066ff']}
-  />
-  <ColorItem
-    title="brand.600"
-    subtitle="#0052cc"
-    colors={['#0052cc']}
-  />
-  <ColorItem
-    title="brand.700"
-    subtitle="#003d99"
-    colors={['#003d99']}
-  />
-</ColorPalette>
+<ColorScale name="brand" usage="Actions, liens, navigation" />
 
-## Couleurs — AI
+<ColorScale name="ai" usage="Fonctionnalités IA : scoring, synthèses, boutons génératifs" />
 
-Réservée aux fonctionnalités IA : scoring, synthèses, boutons génératifs.
+<SectionHeader kicker="Palettes" title="Tokens sémantiques" id="tokens-semantiques" />
 
-<ColorPalette>
-  <ColorItem
-    title="ai.50"
-    subtitle="#f5f3ff"
-    colors={['#f5f3ff']}
-  />
-  <ColorItem
-    title="ai.500"
-    subtitle="#8b5cf6 — Accent IA"
-    colors={['#8b5cf6']}
-  />
-  <ColorItem
-    title="ai.600"
-    subtitle="#7c3aed"
-    colors={['#7c3aed']}
-  />
-  <ColorItem
-    title="ai.700"
-    subtitle="#6d28d9"
-    colors={['#6d28d9']}
-  />
-</ColorPalette>
+Consommés par `Badge`, `Toast`, `Dropzone` et `Input` via les helpers de `src/lib/semantic-colors.ts`,
+jamais en couleurs brutes. Chaque famille expose quatre rôles&nbsp;: `fg` (texte et icône),
+`bg` (fond de pastille), `border` et `surface` (fond de bannière).
 
-## Couleurs — Status
+<SemanticTokens />
 
-Couleurs sémantiques Tailwind utilisées par `Badge`, `Toast`, `ScoreGauge` et `DataTable`.
+`bg` et `surface` partagent aujourd'hui la même valeur dans les quatre familles&nbsp;: la distinction
+est là pour permettre de les dissocier plus tard sans toucher aux composants.
 
-<ColorPalette>
-  <ColorItem
-    title="Success"
-    subtitle="emerald-600 — Match / Validé"
-    colors={['#059669']}
-  />
-  <ColorItem
-    title="Warning"
-    subtitle="amber-600 — À revoir / Quota"
-    colors={['#d97706']}
-  />
-  <ColorItem
-    title="Danger"
-    subtitle="rose-600 — Rejet / Erreur"
-    colors={['#e11d48']}
-  />
-  <ColorItem
-    title="Neutral"
-    subtitle="slate-500 — Informations secondaires"
-    colors={['#64748b']}
-  />
-</ColorPalette>
+<NeutralText />
 
-## Typographie
+<SectionHeader kicker="Fondations" title="Rayons & élévations" id="rayons-elevations" />
 
-Échelle basée sur les utilitaires Tailwind `text-*` et `font-*`. Police système par défaut (`font-sans`).
+<RadiusScale />
 
-<Typeset
-  fontSizes={[
-    '0.75rem',
-    '0.875rem',
-    '1rem',
-    '1.125rem',
-    '1.25rem',
-    '1.5rem',
-    '1.875rem',
-  ]}
-  fontWeight={400}
-  sampleText="Optimisez votre CV pour les ATS"
-  fontFamily="Inter, system-ui, sans-serif"
-/>
+<ElevationScale />
 
-| Token Tailwind | Taille | Usage typique |
-| -------------- | ------ | ------------- |
-| `text-xs` | 12px | Labels, badges, métadonnées |
-| `text-sm` | 14px | Corps de texte, tableaux, formulaires |
-| `text-base` | 16px | Titres de modale, contenu principal |
-| `text-lg` | 18px | Titres de section |
-| `text-xl` | 20px | En-têtes de page template |
-| `text-2xl` | 24px | KPI dashboard |
-| `text-3xl` | 30px | Hero pricing |
+<SectionHeader kicker="Fondations" title="Typographie" id="typographie" />
 
-## Focus & accessibilité
+<TypeScale />
 
-Les anneaux de focus sont centralisés dans `src/lib/focus-ring.ts` :
+<SectionHeader kicker="Accessibilité" title="Focus" id="focus" />
 
-- `focusRing` — contrôles interactifs standard
-- `focusRingDanger` — actions destructives
-- `focusRingGhost` — boutons discrets (fermeture modale, icônes)
+<FocusRings />
 
-## Viewports Storybook
+Les trois anneaux sont en `focus-visible` uniquement&nbsp;: ils apparaissent au clavier, jamais au clic.
+Ils s'appliquent sur un `outline-none`, d'où l'importance de ne pas les retirer via `className`.
 
-Breakpoints configurés dans `.storybook/preview.ts` :
+<SectionHeader kicker="Responsive" title="Viewports" id="viewports" />
 
-| Clé | Nom | Dimensions |
-| --- | --- | ---------- |
-| `mobile` | Mobile | 375 × 812 |
-| `tablet` | Tablet | 768 × 1024 |
-| `desktop` | Desktop | 1280 × 800 |
-| `wide` | Wide | 1536 × 900 |
+<Viewports />
 
 ### Forcer un viewport sur une story
 
@@ -151,10 +76,42 @@ export const OnMobile: Story = {
 };
 ```
 
-Quand un viewport est défini via `globals`, il est appliqué automatiquement et ne peut plus être changé depuis la toolbar — utile pour figer un cas de test.
+Quand un viewport est défini via `globals`, il est appliqué automatiquement et ne peut plus être changé
+depuis la toolbar — utile pour figer un cas de test.
 
-### Raccourcis clavier
+**Raccourcis clavier**&nbsp;: viewport suivant `Alt + V` · précédent `Alt + Shift + V` · réinitialiser `Alt + Ctrl + V`.
 
-- Viewport suivant : `Alt + V`
-- Viewport précédent : `Alt + Shift + V`
-- Réinitialiser : `Alt + Ctrl + V`
+<SectionHeader kicker="Consommation" title="Utiliser les tokens" id="utiliser-les-tokens" />
+
+### Via le preset Tailwind
+
+Les tokens arrivent dans une application hôte par le preset — aucune feuille de style à importer&nbsp;:
+
+```ts
+// tailwind.config.ts
+import aquellecPreset from '@aquellec/ui/tailwind-preset';
+
+export default {
+  presets: [aquellecPreset],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@aquellec/ui/dist/**/*.{js,mjs}',
+  ],
+};
+```
+
+Le preset embarque aussi la neutralisation des animations sous `prefers-reduced-motion`.
+
+### En dehors de Tailwind
+
+Les objets bruts restent accessibles pour les usages hors classes utilitaires (graphiques, e-mails, canvas)&nbsp;:
+
+```ts
+import { aquellecColors, aquellecThemeExtensions } from '@aquellec/ui';
+
+aquellecColors.brand[600];              // '#0052cc'
+aquellecThemeExtensions.boxShadow.card; // ombre des surfaces Card
+```
+
+Toute évolution passe par `src/lib/design-tokens.ts`&nbsp;: le preset, les composants et cette page
+en découlent automatiquement.
