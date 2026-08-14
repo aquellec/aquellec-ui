@@ -1,101 +1,116 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
+import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Badge } from './Badge';
 
 /**
- * Étiquette compacte pour afficher un statut, une compétence ou un extrait IA.
- * Les variantes sémantiques (`success`, `danger`, `warning`, `ai`) facilitent le scan visuel.
+ * Étiquette compacte pour un statut, une catégorie ou une valeur extraite.
+ * Les variantes sémantiques (`success`, `danger`, `warning`, `ai`) facilitent le scan.
  */
 const meta: Meta<typeof Badge> = {
   title: 'Feedback/Badge',
   component: Badge,
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['success', 'danger', 'warning', 'neutral', 'ai'],
-    },
-    size: {
-      control: 'radio',
-      options: ['sm', 'md'],
-    },
-    icon: {
-      control: 'select',
-      options: ['none', 'check', 'cross', 'warning', 'ai'],
-    },
+    variant: { control: 'select', options: ['success', 'danger', 'warning', 'neutral', 'ai'] },
+    size: { control: 'radio', options: ['sm', 'md'] },
+    icon: { control: 'select', options: ['none', 'check', 'cross', 'warning', 'ai'] },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Badge>;
 
-export const SkillMatched: Story = {
-  args: {
-    children: 'TypeScript',
-    variant: 'success',
-    icon: 'check',
+export const Success: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return <Badge {...args}>{t.badge.inStock}</Badge>;
   },
+  args: { variant: 'success', icon: 'check' },
 };
 
-export const SkillMissing: Story = {
-  args: {
-    children: 'Vitest / Jest',
-    variant: 'danger',
-    icon: 'cross',
+export const Danger: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return <Badge {...args}>{t.badge.outOfStock}</Badge>;
   },
+  args: { variant: 'danger', icon: 'cross' },
 };
 
-export const SkillRecommended: Story = {
-  args: {
-    children: 'Docker',
-    variant: 'warning',
-    icon: 'warning',
+export const Warning: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return <Badge {...args}>{t.badge.lowStock}</Badge>;
   },
+  args: { variant: 'warning', icon: 'warning' },
 };
 
-export const AIExtracted: Story = {
-  args: {
-    children: 'React 19 / Next.js',
-    variant: 'ai',
-    icon: 'ai',
+export const AISuggested: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return <Badge {...args}>{t.badge.aiSuggested}</Badge>;
   },
+  args: { variant: 'ai', icon: 'ai' },
 };
 
 export const Neutral: Story = {
-  args: {
-    children: 'CDI — Temps plein',
-    variant: 'neutral',
-    icon: 'none',
+  render: (args) => {
+    const t = useI18n();
+    return <Badge {...args}>{t.badge.draft}</Badge>;
+  },
+  args: { variant: 'neutral', icon: 'none' },
+};
+
+/** Jeu de statuts d'un catalogue produit : le cas d'usage le plus courant. */
+export const StatusSet: Story = {
+  render: () => {
+    const t = useI18n();
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="success" icon="check">
+          {t.badge.inStock}
+        </Badge>
+        <Badge variant="warning" icon="warning">
+          {t.badge.lowStock}
+        </Badge>
+        <Badge variant="danger" icon="cross">
+          {t.badge.outOfStock}
+        </Badge>
+        <Badge variant="neutral">{t.badge.draft}</Badge>
+      </div>
+    );
   },
 };
 
 export const AllVariants: Story = {
-  render: () => (
-    <div className="flex flex-wrap gap-2">
-      <Badge variant="success" icon="check" size="sm">
-        OK
-      </Badge>
-      <Badge variant="danger" icon="cross">
-        KO
-      </Badge>
-      <Badge variant="warning" icon="warning">
-        Attention
-      </Badge>
-      <Badge variant="neutral" icon="none">
-        Neutre
-      </Badge>
-      <Badge variant="ai" icon="ai">
-        IA
-      </Badge>
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
+  render: () => {
+    const t = useI18n();
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="success" icon="check" size="sm">
+          {t.badge.ok}
+        </Badge>
+        <Badge variant="danger" icon="cross">
+          {t.badge.error}
+        </Badge>
+        <Badge variant="warning" icon="warning">
+          {t.badge.warning}
+        </Badge>
+        <Badge variant="neutral" icon="none">
+          {t.badge.neutral}
+        </Badge>
+        <Badge variant="ai" icon="ai">
+          {t.badge.ai}
+        </Badge>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const t = getDictionary(globals.locale);
 
-    await expect(canvas.getByText('OK')).toBeInTheDocument();
-    await expect(canvas.getByText('KO')).toBeInTheDocument();
-    await expect(canvas.getByText('Attention')).toBeInTheDocument();
-    await expect(canvas.getByText('Neutre')).toBeInTheDocument();
-    await expect(canvas.getByText('IA')).toBeInTheDocument();
+    for (const label of [t.badge.ok, t.badge.error, t.badge.warning, t.badge.neutral, t.badge.ai]) {
+      await expect(canvas.getByText(label)).toBeInTheDocument();
+    }
   },
 };

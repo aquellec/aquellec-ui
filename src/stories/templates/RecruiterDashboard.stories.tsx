@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { Briefcase, ExternalLink, FileText, User } from 'lucide-react';
+import { useI18n, type Dictionary } from '../../../.storybook/i18n';
 import { Dropzone } from '../../components/Dropzone';
 import { SegmentedControl } from '../../components/SegmentedControl';
 import { DataTable } from '../../components/DataTable';
@@ -9,7 +11,6 @@ import { Badge } from '../../components/Badge';
 import { ScoreGauge } from '../../components/ScoreGauge';
 import { getScoreTextClass } from '../../lib/score-tier';
 import { cn } from '../../lib/cn';
-import { FileText, ExternalLink, User, Briefcase } from 'lucide-react';
 
 interface AnalysisHistory {
   id: string;
@@ -17,17 +18,20 @@ interface AnalysisHistory {
   jobTitle: string;
   score: number;
   date: string;
-  status: 'matched' | 'review' | 'rejected';
+  status: keyof Dictionary['dashboard']['statuses'];
 }
 
 const mockData: AnalysisHistory[] = [
-  { id: '1', candidateName: 'Amandine Q.', jobTitle: 'Front-End Engineer', score: 88, date: '12 Août 2026', status: 'matched' },
-  { id: '2', candidateName: 'Alexandre M.', jobTitle: 'Full-Stack Developer', score: 64, date: '10 Août 2026', status: 'review' },
-  { id: '3', candidateName: 'Sophie L.', jobTitle: 'UI/UX Designer', score: 42, date: '08 Août 2026', status: 'rejected' },
+  { id: '1', candidateName: 'Amandine Q.', jobTitle: 'Front-End Engineer', score: 88, date: '2026-08-12', status: 'matched' },
+  { id: '2', candidateName: 'Alexandre M.', jobTitle: 'Full-Stack Developer', score: 64, date: '2026-08-10', status: 'review' },
+  { id: '3', candidateName: 'Sophie L.', jobTitle: 'UI/UX Designer', score: 42, date: '2026-08-08', status: 'rejected' },
 ];
 
+const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
+
 /**
- * Page template recruteur : import de CVs, KPIs et historique des analyses.
+ * Page template recruteur : import massif de CV, KPI et historique des analyses.
+ * Toute la copie suit le sélecteur de langue de la barre d'outils.
  */
 const meta: Meta = {
   title: 'Templates/RecruiterDashboard',
@@ -37,7 +41,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composition dashboard recruteur : upload multiple, KPIs et DataTable des candidatures analysées.',
+          'Composition dashboard recruteur : upload multiple, KPI et DataTable des candidatures analysées.',
       },
     },
   },
@@ -46,27 +50,38 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const roleOptions = [
-  { value: 'candidate', label: 'Espace Candidat', icon: <User className="h-3.5 w-3.5 text-brand-600" /> },
-  { value: 'recruiter', label: 'Espace Recruteur', icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" /> },
-];
-
 function RecruiterDashboardPage() {
-  const [role, setRole] = useState('recruiter');
+  const t = useI18n();
+  const [workspace, setWorkspace] = useState('recruiter');
+
+  const workspaceOptions = [
+    {
+      value: 'candidate',
+      label: t.segmented.workspace.candidate,
+      icon: <User className="h-3.5 w-3.5 text-brand-600" />,
+    },
+    {
+      value: 'recruiter',
+      label: t.segmented.workspace.recruiter,
+      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600">aquellec RH</p>
-            <h1 className="text-xl font-bold text-slate-900">Pipeline de recrutement</h1>
+            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600">
+              {t.dashboard.recruiter.brand}
+            </p>
+            <h1 className="text-xl font-bold text-slate-900">{t.dashboard.recruiter.title}</h1>
           </div>
           <SegmentedControl
-            options={roleOptions}
-            value={role}
-            onChange={setRole}
-            ariaLabel="Choisir l'espace utilisateur"
+            options={workspaceOptions}
+            value={workspace}
+            onChange={setWorkspace}
+            ariaLabel={t.dashboard.workspaceLabel}
           />
         </div>
       </header>
@@ -78,32 +93,32 @@ function RecruiterDashboardPage() {
               <ScoreGauge
                 score={72}
                 size="sm"
-                label="Match moyen"
+                label={t.dashboard.recruiter.kpi.matchLabel}
                 isAiTheme
                 showStatus={false}
-                className="border-0 shadow-none p-0 bg-transparent"
+                className="border-0 bg-transparent p-0 shadow-none"
               />
-              <p className="text-xs text-slate-500">Sur 24 candidatures</p>
+              <p className="text-xs text-slate-500">{t.dashboard.recruiter.kpi.matchCaption}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-6">
               <p className="text-2xl font-bold text-emerald-700">18</p>
-              <p className="text-sm text-slate-600">Profils compatibles</p>
+              <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.compatible}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-6">
               <p className="text-2xl font-bold text-amber-700">6</p>
-              <p className="text-sm text-slate-600">À revoir manuellement</p>
+              <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.toReview}</p>
             </Card.Body>
           </Card>
         </div>
 
         <Card>
           <Card.Header
-            title="Import massif de CVs"
-            subtitle="Glissez plusieurs PDFs — analyse batch via l'API Python"
+            title={t.dashboard.recruiter.upload.title}
+            subtitle={t.dashboard.recruiter.upload.subtitle}
           />
           <Card.Body>
             <Dropzone multiple maxSizeMB={5} accept=".pdf" />
@@ -112,8 +127,8 @@ function RecruiterDashboardPage() {
 
         <Card>
           <Card.Header
-            title="Historique des analyses"
-            subtitle="Tri ATS et statuts de matching"
+            title={t.dashboard.recruiter.history.title}
+            subtitle={t.dashboard.recruiter.history.subtitle}
           />
           <Card.Body className="p-0">
             <DataTable
@@ -121,17 +136,17 @@ function RecruiterDashboardPage() {
               keyExtractor={(item) => item.id}
               columns={[
                 {
-                  header: 'Candidat / CV',
+                  header: t.dashboard.recruiter.history.columns.candidate,
                   cell: (item) => (
                     <div className="flex items-center space-x-2 font-medium text-slate-900">
-                      <FileText className="h-4 w-4 text-brand-600" />
+                      <FileText className="h-4 w-4 text-brand-600" aria-hidden="true" />
                       <span>{item.candidateName}</span>
                     </div>
                   ),
                 },
-                { header: 'Poste visé', accessorKey: 'jobTitle' },
+                { header: t.dashboard.recruiter.history.columns.job, accessorKey: 'jobTitle' },
                 {
-                  header: 'Score ATS',
+                  header: t.dashboard.recruiter.history.columns.score,
                   cell: (item) => (
                     <span className={cn('font-bold', getScoreTextClass(item.score))}>
                       {item.score}%
@@ -139,37 +154,25 @@ function RecruiterDashboardPage() {
                   ),
                 },
                 {
-                  header: 'Statut',
+                  header: t.dashboard.recruiter.history.columns.status,
                   cell: (item) => (
-                    <Badge
-                      variant={
-                        item.status === 'matched'
-                          ? 'success'
-                          : item.status === 'review'
-                          ? 'warning'
-                          : 'danger'
-                      }
-                      size="sm"
-                    >
-                      {item.status === 'matched' ? 'Compatible' : item.status === 'review' ? 'À revoir' : 'Faible'}
+                    <Badge variant={statusVariant[item.status]} size="sm">
+                      {t.dashboard.statuses[item.status]}
                     </Badge>
                   ),
                 },
-                { header: 'Date', accessorKey: 'date' },
+                { header: t.dashboard.recruiter.history.columns.date, accessorKey: 'date' },
                 {
-                  header: 'Action',
+                  header: t.dashboard.recruiter.history.columns.action,
                   cell: () => (
                     <Button variant="ghost" size="sm">
-                      Rapport <ExternalLink className="ml-1 h-3 w-3" />
+                      {t.dashboard.recruiter.history.action}
+                      <ExternalLink className="ml-1 h-3 w-3" aria-hidden="true" />
                     </Button>
                   ),
                 },
               ]}
-              pagination={{
-                currentPage: 1,
-                totalPages: 3,
-                onPageChange: () => undefined,
-              }}
+              pagination={{ currentPage: 1, totalPages: 3, onPageChange: () => undefined }}
             />
           </Card.Body>
         </Card>

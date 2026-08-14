@@ -1,79 +1,113 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
+import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Textarea } from './Textarea';
 
 /**
- * Zone de saisie multi-lignes pour fiches de poste ou descriptions longues.
- * Affiche un compteur de caractères lorsque `maxLength` est défini.
+ * Saisie multi-lignes pour descriptions et notes longues.
+ * Affiche un compteur de caractères dès que `maxLength` est défini.
  */
 const meta: Meta<typeof Textarea> = {
   title: 'Forms/Textarea',
   component: Textarea,
   tags: ['autodocs'],
+  argTypes: {
+    rows: { control: { type: 'number', min: 2, max: 12 } },
+    maxLength: { control: { type: 'number', min: 0 } },
+    disabled: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof Textarea>;
 
 export const Default: Story = {
-  args: {
-    id: 'job-description',
-    label: 'Fiche de poste',
-    placeholder: 'Collez ici la description du poste visé...',
-    helperText: 'Plus la description est détaillée, plus le score ATS sera précis.',
-    maxLength: 2000,
-    rows: 5,
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <Textarea
+        {...args}
+        label={t.textarea.description.label}
+        placeholder={t.textarea.description.placeholder}
+        helperText={t.textarea.description.helper}
+      />
+    );
   },
+  args: { id: 'product-description', maxLength: 2000, rows: 5 },
 };
 
 export const WithError: Story = {
-  args: {
-    id: 'job-description-error',
-    label: 'Fiche de poste',
-    error: 'La description doit contenir au moins 50 caractères.',
-    defaultValue: 'Développeur React',
-    maxLength: 2000,
-    rows: 4,
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <Textarea
+        {...args}
+        label={t.textarea.description.label}
+        error={t.textarea.description.error}
+        defaultValue={t.textarea.description.value}
+      />
+    );
+  },
+  args: { id: 'product-description-error', maxLength: 2000, rows: 4 },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    const t = getDictionary(globals.locale);
+
+    await expect(canvas.getByRole('textbox', { name: t.textarea.description.label })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
+    await expect(canvas.getByRole('alert')).toHaveTextContent(t.textarea.description.error);
   },
 };
 
 export const Disabled: Story = {
-  args: {
-    id: 'job-description-disabled',
-    label: 'Fiche de poste',
-    defaultValue: 'Champ non modifiable.',
-    disabled: true,
-    rows: 4,
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <Textarea
+        {...args}
+        label={t.textarea.description.label}
+        defaultValue={t.textarea.description.value}
+      />
+    );
   },
+  args: { id: 'product-description-disabled', disabled: true, rows: 4 },
 };
 
 export const CharacterCountInteraction: Story = {
-  args: {
-    id: 'job-description-count',
-    label: 'Fiche de poste',
-    placeholder: 'Décrivez le poste...',
-    maxLength: 20,
-    rows: 3,
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <Textarea
+        {...args}
+        label={t.textarea.description.label}
+        placeholder={t.textarea.description.placeholder}
+      />
+    );
   },
-  play: async ({ canvasElement }) => {
+  args: { id: 'product-description-count', maxLength: 20, rows: 3 },
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByRole('textbox', { name: /Fiche de poste/i });
+    const t = getDictionary(globals.locale);
+    const textarea = canvas.getByRole('textbox', { name: t.textarea.description.label });
 
-    await userEvent.type(textarea, 'Développeur React senior');
+    // Saisie plus longue que `maxLength` : le compteur doit saturer, pas déborder.
+    await userEvent.type(textarea, 'Wireless mechanical keyboard');
     await expect(canvas.getByText(/20\s*\/\s*20/)).toBeInTheDocument();
   },
 };
 
 export const HelperTextOnly: Story = {
-  args: {
-    id: 'job-description-helper',
-    label: 'Fiche de poste',
-    helperText: 'Minimum 50 caractères recommandés.',
-    rows: 3,
+  render: (args) => {
+    const t = useI18n();
+    return <Textarea {...args} label={t.textarea.note.label} helperText={t.textarea.note.helper} />;
   },
-  play: async ({ canvasElement }) => {
+  args: { id: 'internal-note', rows: 3 },
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const t = getDictionary(globals.locale);
 
-    await expect(canvas.getByText('Minimum 50 caractères recommandés.')).toBeInTheDocument();
+    await expect(canvas.getByText(t.textarea.note.helper)).toBeInTheDocument();
   },
 };

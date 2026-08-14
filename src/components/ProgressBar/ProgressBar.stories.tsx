@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { HardDrive, Zap } from 'lucide-react';
+import { HardDrive, Users, Zap } from 'lucide-react';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Button } from '../Button';
 import { ProgressBar } from './ProgressBar';
 
@@ -16,8 +17,6 @@ const meta: Meta<typeof ProgressBar> = {
   argTypes: {
     value: { control: { type: 'number', min: 0 } },
     max: { control: { type: 'number', min: 0 } },
-    label: { control: 'text' },
-    helperText: { control: 'text' },
   },
 };
 
@@ -25,56 +24,81 @@ export default meta;
 type Story = StoryObj<typeof ProgressBar>;
 
 export const Default: Story = {
-  args: {
-    value: 3,
-    max: 10,
-    label: 'Analyses du mois',
+  render: (args) => {
+    const t = useI18n();
+    return <ProgressBar {...args} label={t.progress.credits.label} />;
   },
+  args: { value: 3, max: 10 },
 };
 
 /** Au-delà de 75 %, la barre passe en ambre. */
 export const WarningLevel: Story = {
-  args: {
-    value: 8,
-    max: 10,
-    label: 'Analyses du mois',
+  render: (args) => {
+    const t = useI18n();
+    return <ProgressBar {...args} label={t.progress.credits.label} />;
   },
+  args: { value: 8, max: 10 },
 };
 
 /** Au-delà de 90 %, elle passe en rouge. */
 export const NearLimit: Story = {
-  args: {
-    value: 9.5,
-    max: 10,
-    label: 'Analyses du mois',
+  render: (args) => {
+    const t = useI18n();
+    return <ProgressBar {...args} label={t.progress.credits.label} />;
   },
+  args: { value: 9.5, max: 10 },
 };
 
 /** Le compteur accepte un rendu personnalisé via `formatValue`. */
 export const CustomFormat: Story = {
-  args: {
-    value: 42,
-    max: 50,
-    label: 'Stockage des CV',
-    icon: <HardDrive className="h-4 w-4 text-brand-600" />,
-    formatValue: (value, max) => `${value} Go sur ${max}`,
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <ProgressBar
+        {...args}
+        label={t.progress.storage.label}
+        icon={<HardDrive className="h-4 w-4 text-brand-600" />}
+        formatValue={(value, max) => `${value} ${t.progress.storage.unit} ${max}`}
+      />
+    );
   },
+  args: { value: 42, max: 50 },
 };
 
-/** `helperText` et `action` remplacent l'ancien bloc « Passer à la version Pro » codé en dur. */
-export const WithAction: Story = {
-  args: {
-    value: 9,
-    max: 10,
-    label: 'Crédits consommés',
-    icon: <Zap className="h-4 w-4 fill-brand-600/20 text-brand-600" />,
-    helperText: 'Quota presque atteint',
-    action: (
-      <Button variant="ghost" size="sm">
-        Passer à la version Pro
-      </Button>
-    ),
+/** Sièges d'une équipe : même composant, tout autre domaine. */
+export const TeamSeats: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <ProgressBar
+        {...args}
+        label={t.progress.seats.label}
+        icon={<Users className="h-4 w-4 text-brand-600" />}
+      />
+    );
   },
+  args: { value: 4, max: 5 },
+};
+
+/** `helperText` et `action` remplacent tout bloc de conversion codé en dur. */
+export const WithAction: Story = {
+  render: (args) => {
+    const t = useI18n();
+    return (
+      <ProgressBar
+        {...args}
+        label={t.progress.credits.label}
+        icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600" />}
+        helperText={t.progress.credits.helperNearLimit}
+        action={
+          <Button variant="ghost" size="sm">
+            {t.progress.credits.action}
+          </Button>
+        }
+      />
+    );
+  },
+  args: { value: 9, max: 10 },
 };
 
 /**
@@ -83,20 +107,20 @@ export const WithAction: Story = {
  * violation axe (`aria-progressbar-name`), vérifiée par la suite de tests.
  */
 export const BarOnly: Story = {
-  args: {
-    value: 30,
-    max: 100,
-    ariaLabel: 'Progression du traitement',
+  render: (args) => {
+    const t = useI18n();
+    return <ProgressBar {...args} ariaLabel={t.progress.processing} />;
   },
+  args: { value: 30, max: 100 },
 };
 
 /** `max` à zéro ne doit produire ni division par zéro ni `aria-valuenow` invalide. */
 export const ZeroMax: Story = {
-  args: {
-    value: 0,
-    max: 0,
-    label: 'Quota non défini',
+  render: (args) => {
+    const t = useI18n();
+    return <ProgressBar {...args} label={t.progress.undefined.label} />;
   },
+  args: { value: 0, max: 0 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const bar = canvas.getByRole('progressbar');
@@ -107,33 +131,31 @@ export const ZeroMax: Story = {
 };
 
 export const ActionInteraction: Story = {
-  args: {
-    value: 3,
-    max: 10,
-    label: 'Analyses du mois',
-    helperText: 'Plan Gratuit',
-    action: undefined,
-  },
   render: (args) => {
+    const t = useI18n();
     const onUpgrade = fn();
     return (
       <ProgressBar
         {...args}
+        label={t.progress.credits.label}
+        helperText={t.progress.credits.helper}
         action={
           <Button variant="ghost" size="sm" onClick={onUpgrade}>
-            Passer à la version Pro
+            {t.progress.credits.action}
           </Button>
         }
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  args: { value: 3, max: 10 },
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    const bar = canvas.getByRole('progressbar', { name: 'Analyses du mois' });
+    const t = getDictionary(globals.locale);
+    const bar = canvas.getByRole('progressbar', { name: t.progress.credits.label });
 
     await expect(bar).toHaveAttribute('aria-valuenow', '3');
     await expect(bar).toHaveAttribute('aria-valuemax', '10');
 
-    await userEvent.click(canvas.getByRole('button', { name: /Passer à la version Pro/i }));
+    await userEvent.click(canvas.getByRole('button', { name: t.progress.credits.action }));
   },
 };

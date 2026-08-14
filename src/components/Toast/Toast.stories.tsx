@@ -2,13 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withPageTitle } from '../../../.storybook/story-shell';
+import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { Toast } from './Toast';
 import { ToastProvider, useToast } from './ToastProvider';
 import { Button } from '../Button';
 
 /**
- * Notification temporaire pour confirmer une action, signaler une erreur ou un quota.
- * Utilise `role="alert"` ou `role="status"` selon la variante pour l'accessibilité.
+ * Notification temporaire : confirmation, avertissement de quota, erreur.
+ * `role="alert"` pour la variante `error`, `role="status"` sinon.
  */
 const meta: Meta<typeof Toast> = {
   title: 'Feedback/Toast',
@@ -16,10 +17,7 @@ const meta: Meta<typeof Toast> = {
   tags: ['autodocs'],
   decorators: [withPageTitle('Toast')],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['success', 'error', 'warning', 'info', 'ai'],
-    },
+    variant: { control: 'select', options: ['success', 'error', 'warning', 'info', 'ai'] },
   },
 };
 
@@ -27,86 +25,89 @@ export default meta;
 type Story = StoryObj<typeof Toast>;
 
 export const Success: Story = {
-  args: {
-    variant: 'success',
-    title: 'CV importé avec succès',
-    description: 'Le fichier Amandine_Quellec_CV.pdf a été analysé par le serveur.',
-    onClose: () => console.log('Close clicked'),
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.success.title} description={t.toast.success.description} />;
   },
+  args: { variant: 'success', onClose: fn() },
 };
 
 export const AIProcessing: Story = {
-  args: {
-    variant: 'ai',
-    title: 'Analyse ATS terminée',
-    description: '12 mots-clés correspondants trouvés. Votre score de match est de 88%.',
-    onClose: () => console.log('Close clicked'),
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.ai.title} description={t.toast.ai.description} />;
   },
+  args: { variant: 'ai', onClose: fn() },
 };
 
 export const WarningLimit: Story = {
-  args: {
-    variant: 'warning',
-    title: 'Quota bientôt atteint',
-    description: 'Il ne vous reste plus que 1 crédit d\u2019analyse pour ce mois-ci.',
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.warning.title} description={t.toast.warning.description} />;
   },
+  args: { variant: 'warning' },
 };
 
 export const ErrorState: Story = {
-  args: {
-    variant: 'error',
-    title: 'Erreur lors du parsing',
-    description: 'Le format du fichier fourni n\u2019est pas un PDF valide ou est corrompu.',
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.error.title} description={t.toast.error.description} />;
   },
+  args: { variant: 'error' },
 };
 
 export const Info: Story = {
-  args: {
-    variant: 'info',
-    title: 'Nouvelle fonctionnalité',
-    description: 'Export PDF disponible sur le plan Pro.',
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.info.title} description={t.toast.info.description} />;
   },
+  args: { variant: 'info' },
 };
 
 export const TitleOnly: Story = {
-  args: {
-    variant: 'success',
-    title: 'Analyse lancée',
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.titleOnly.title} />;
   },
+  args: { variant: 'success' },
 };
 
 export const CloseInteraction: Story = {
   render: () => {
+    const t = useI18n();
     const [visible, setVisible] = useState(true);
 
     if (!visible) {
-      return <p>Notification fermée.</p>;
+      return <p>{t.toast.dismissed}</p>;
     }
 
     return (
       <Toast
         variant="warning"
-        title="Quota bientôt atteint"
-        description="Il ne reste qu'un crédit."
+        title={t.toast.warning.title}
+        description={t.toast.warning.description}
         onClose={() => setVisible(false)}
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    const t = getDictionary(globals.locale);
 
     await expect(canvas.getByRole('status')).toBeInTheDocument();
+    // Le libellé du bouton vient du composant : il reste en français.
     await userEvent.click(canvas.getByRole('button', { name: 'Fermer la notification' }));
-    await expect(canvas.getByText('Notification fermée.')).toBeInTheDocument();
+    await expect(canvas.getByText(t.toast.dismissed)).toBeInTheDocument();
   },
 };
 
+/** La variante `error` doit passer en `role="alert"`, donc annoncée sans attendre. */
 export const ErrorAlertRole: Story = {
-  args: {
-    variant: 'error',
-    title: 'Échec de l\u2019analyse',
-    onClose: fn(),
+  render: (args) => {
+    const t = useI18n();
+    return <Toast {...args} title={t.toast.error.title} />;
   },
+  args: { variant: 'error', onClose: fn() },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
@@ -117,6 +118,7 @@ export const ErrorAlertRole: Story = {
 };
 
 function ToastQueueDemo() {
+  const t = useI18n();
   const { push } = useToast();
 
   return (
@@ -125,12 +127,12 @@ function ToastQueueDemo() {
       onClick={() =>
         push({
           variant: 'success',
-          title: 'CV importé',
-          description: 'Analyse ATS terminée avec succès.',
+          title: t.toast.queue.title,
+          description: t.toast.queue.description,
         })
       }
     >
-      Afficher une notification
+      {t.toast.queue.trigger}
     </Button>
   );
 }
@@ -141,12 +143,13 @@ export const ProviderQueue: Story = {
       <ToastQueueDemo />
     </ToastProvider>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    const t = getDictionary(globals.locale);
 
-    await userEvent.click(canvas.getByRole('button', { name: /Afficher une notification/i }));
+    await userEvent.click(canvas.getByRole('button', { name: t.toast.queue.trigger }));
     await expect(body.getByRole('region', { name: 'Notifications' })).toBeInTheDocument();
-    await expect(body.getByText('CV importé')).toBeInTheDocument();
+    await expect(body.getByText(t.toast.queue.title)).toBeInTheDocument();
   },
 };

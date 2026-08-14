@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Briefcase, LayoutGrid, List, User } from 'lucide-react';
 import { expect, userEvent, within } from 'storybook/test';
+import { getDictionary, useI18n, type Dictionary } from '../../../.storybook/i18n';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
 /**
@@ -22,40 +23,43 @@ const meta: Meta<typeof SegmentedControl> = {
 export default meta;
 type Story = StoryObj<typeof SegmentedControl>;
 
-const periodOptions: SegmentedControlOption[] = [
-  { value: 'week', label: 'Semaine' },
-  { value: 'month', label: 'Mois' },
-  { value: 'year', label: 'Année' },
+/* Les jeux d'options dérivent du dictionnaire : les `play` reconstruisent les
+   mêmes libellés via `getDictionary`, quelle que soit la langue active. */
+const periodOptions = (t: Dictionary): SegmentedControlOption[] => [
+  { value: 'week', label: t.segmented.period.week },
+  { value: 'month', label: t.segmented.period.month },
+  { value: 'quarter', label: t.segmented.period.quarter },
 ];
 
-const viewOptions: SegmentedControlOption[] = [
-  { value: 'grid', label: 'Grille', icon: <LayoutGrid className="h-3.5 w-3.5" /> },
-  { value: 'list', label: 'Liste', icon: <List className="h-3.5 w-3.5" /> },
+const viewOptions = (t: Dictionary): SegmentedControlOption[] => [
+  { value: 'grid', label: t.segmented.view.grid, icon: <LayoutGrid className="h-3.5 w-3.5" /> },
+  { value: 'list', label: t.segmented.view.list, icon: <List className="h-3.5 w-3.5" /> },
 ];
 
-const roleOptions: SegmentedControlOption[] = [
+const workspaceOptions = (t: Dictionary): SegmentedControlOption[] => [
   {
     value: 'candidate',
-    label: 'Espace Candidat',
+    label: t.segmented.workspace.candidate,
     icon: <User className="h-3.5 w-3.5 text-brand-600" />,
   },
   {
     value: 'recruiter',
-    label: 'Espace Recruteur',
+    label: t.segmented.workspace.recruiter,
     icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" />,
   },
 ];
 
-/** Segments simples, sans illustration. */
+/** Segments simples, sans illustration : filtre de période d'un tableau de bord. */
 export const Default: Story = {
   render: () => {
+    const t = useI18n();
     const [value, setValue] = useState('month');
     return (
       <SegmentedControl
-        options={periodOptions}
+        options={periodOptions(t)}
         value={value}
         onChange={setValue}
-        ariaLabel="Période affichée"
+        ariaLabel={t.segmented.period.label}
       />
     );
   },
@@ -64,32 +68,35 @@ export const Default: Story = {
 /** Chaque option peut porter une icône décorative : le libellé reste le nom accessible. */
 export const WithIcons: Story = {
   render: () => {
+    const t = useI18n();
     const [value, setValue] = useState('grid');
     return (
       <SegmentedControl
-        options={viewOptions}
+        options={viewOptions(t)}
         value={value}
         onChange={setValue}
-        ariaLabel="Mode d'affichage"
+        ariaLabel={t.segmented.view.label}
       />
     );
   },
 };
 
-/** Cas d'usage produit : la bascule Candidat / Recruteur, désormais une simple configuration. */
+/** Cas d'usage produit : la bascule d'espace de travail, simple configuration d'options. */
 export const RoleSwitcherDemo: Story = {
   render: () => {
-    const [role, setRole] = useState('candidate');
+    const t = useI18n();
+    const [workspace, setWorkspace] = useState('candidate');
     return (
       <div className="flex flex-col items-start gap-3">
         <SegmentedControl
-          options={roleOptions}
-          value={role}
-          onChange={setRole}
-          ariaLabel="Choisir l'espace utilisateur"
+          options={workspaceOptions(t)}
+          value={workspace}
+          onChange={setWorkspace}
+          ariaLabel={t.segmented.workspace.label}
         />
         <p className="text-xs text-slate-500">
-          Espace actif : <strong className="text-slate-800">{role}</strong>
+          {t.segmented.workspace.active}{' '}
+          <strong className="text-slate-800">{workspace}</strong>
         </p>
       </div>
     );
@@ -98,14 +105,15 @@ export const RoleSwitcherDemo: Story = {
 
 export const SmallSize: Story = {
   render: () => {
+    const t = useI18n();
     const [value, setValue] = useState('week');
     return (
       <SegmentedControl
-        options={periodOptions}
+        options={periodOptions(t)}
         value={value}
         onChange={setValue}
         size="sm"
-        ariaLabel="Période affichée"
+        ariaLabel={t.segmented.period.label}
       />
     );
   },
@@ -113,20 +121,22 @@ export const SmallSize: Story = {
 
 export const SelectionInteraction: Story = {
   render: () => {
-    const [role, setRole] = useState('candidate');
+    const t = useI18n();
+    const [workspace, setWorkspace] = useState('candidate');
     return (
       <SegmentedControl
-        options={roleOptions}
-        value={role}
-        onChange={setRole}
-        ariaLabel="Choisir l'espace utilisateur"
+        options={workspaceOptions(t)}
+        value={workspace}
+        onChange={setWorkspace}
+        ariaLabel={t.segmented.workspace.label}
       />
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    const candidate = canvas.getByRole('radio', { name: 'Espace Candidat' });
-    const recruiter = canvas.getByRole('radio', { name: 'Espace Recruteur' });
+    const t = getDictionary(globals.locale);
+    const candidate = canvas.getByRole('radio', { name: t.segmented.workspace.candidate });
+    const recruiter = canvas.getByRole('radio', { name: t.segmented.workspace.recruiter });
 
     await expect(candidate).toHaveAttribute('aria-checked', 'true');
     await expect(recruiter).toHaveAttribute('aria-checked', 'false');
@@ -141,19 +151,20 @@ export const SelectionInteraction: Story = {
 /** Vérifie le roving tabindex : un seul segment est atteignable au `Tab`. */
 export const KeyboardNavigation: Story = {
   render: () => {
+    const t = useI18n();
     const [value, setValue] = useState('week');
     return (
       <SegmentedControl
-        options={periodOptions}
+        options={periodOptions(t)}
         value={value}
         onChange={setValue}
-        ariaLabel="Période affichée"
+        ariaLabel={t.segmented.period.label}
       />
     );
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const [week, month, year] = canvas.getAllByRole('radio');
+    const [week, month, quarter] = canvas.getAllByRole('radio');
 
     await expect(week).toHaveAttribute('tabindex', '0');
     await expect(month).toHaveAttribute('tabindex', '-1');
@@ -163,13 +174,13 @@ export const KeyboardNavigation: Story = {
     await expect(month).toHaveAttribute('aria-checked', 'true');
 
     await userEvent.keyboard('{End}');
-    await expect(year).toHaveAttribute('aria-checked', 'true');
+    await expect(quarter).toHaveAttribute('aria-checked', 'true');
 
     await userEvent.keyboard('{Home}');
     await expect(week).toHaveAttribute('aria-checked', 'true');
 
     // Boucle : depuis la première option, la flèche gauche va à la dernière.
     await userEvent.keyboard('{ArrowLeft}');
-    await expect(year).toHaveAttribute('aria-checked', 'true');
+    await expect(quarter).toHaveAttribute('aria-checked', 'true');
   },
 };

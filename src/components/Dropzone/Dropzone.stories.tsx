@@ -44,8 +44,13 @@ function dropOnDropzone(dropzone: HTMLElement, files: File[]) {
 }
 
 /**
- * Zone de dépôt drag-and-drop pour CVs PDF. Supporte le mode simple et multiple,
- * avec validation de taille, états loading/disabled et activation via label natif.
+ * Zone de dépôt drag-and-drop. Modes simple et multiple, validation de taille
+ * et de type, états chargement / désactivé, activation par label natif.
+ *
+ * Seul composant dont **aucune chaîne ne suit le sélecteur de langue** : ses
+ * textes (instructions, messages d'erreur, libellés de boutons) sont codés en
+ * dur dans le composant et non passés par les stories. Les localiser suppose
+ * d'ouvrir son API, ce qui dépasse le cadre de l'i18n des stories.
  */
 const meta: Meta<typeof Dropzone> = {
   title: 'Forms/Dropzone',
