@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /*
+    Les pages MDX héritent des styles typographiques de Storybook : marges de
+    16px sur p/ul/li/h*, retrait de 30px sur les listes. Ces règles sont plus
+    spécifiques que les utilitaires Tailwind, qui sont donc tous ignorés à
+    l'intérieur de nos blocs de doc (un `mb-2` y rendait 16px).
+
+    `not-prose` ne peut rien y faire : la classe vient du plugin typography,
+    absent du projet, et n'existe que comme marqueur. On s'en sert ici comme
+    point d'accroche pour neutraliser l'héritage — l'espacement de ces blocs
+    est piloté par `gap` sur les conteneurs.
+
+    Cette feuille n'est pas publiée : le correctif ne concerne que Storybook.
+  */
+  .sbdocs .not-prose :is(p, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+  }
+
+  /* Le retrait de liste ne concerne que les listes : le remettre à zéro sur
+     les `li` écraserait leur padding interne (chips du hero, par exemple). */
+  .sbdocs .not-prose :is(ul, ol) {
+    padding-left: 0;
+  }
+}

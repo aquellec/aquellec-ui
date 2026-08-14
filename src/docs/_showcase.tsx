@@ -97,8 +97,8 @@ export function SectionHeader({
   id: string;
 }) {
   return (
-    <header className="not-prose mb-6 mt-14">
-      <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700">
+    <header className="not-prose mb-6 mt-14 flex flex-col gap-2">
+      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700">
         <span className="h-px w-6 bg-brand-500/40" aria-hidden="true" />
         {kicker}
       </p>
@@ -166,13 +166,13 @@ export function Hero() {
       <HeroGrid />
 
       <div className="relative">
-        <div>
-          <p className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+        <div className="flex flex-col items-start gap-4">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             Design System · React 19 · Tailwind CSS
           </p>
 
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
             @aquellec/ui
           </h1>
 
@@ -182,7 +182,7 @@ export function Hero() {
             visualisation de scores.
           </p>
 
-          <ul className="mt-7 flex list-none flex-wrap gap-2 p-0">
+          <ul className="flex list-none flex-wrap gap-2 pt-3">
             {heroChips.map(({ label, icon: Icon, className }) => (
               <li
                 key={label}
@@ -268,8 +268,8 @@ export function Pillars() {
       {pillars.map(({ title, icon: Icon, accent, body }) => (
         <div key={title} className={cn(cardSurface, 'overflow-hidden')}>
           <div className={cn('h-1 w-full', accents[accent].bar)} aria-hidden="true" />
-          <div className="p-5">
-            <div className="mb-3 flex items-center gap-2.5">
+          <div className="flex flex-col gap-3 p-5">
+            <div className="flex items-center gap-2.5">
               <span
                 className={cn(
                   'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
@@ -387,9 +387,9 @@ export function Families() {
       {families.map(({ name, icon: Icon, accent, links, description }) => (
         <div
           key={name}
-          className={cn(cardSurface, 'p-4', softTransition, accents[accent].hover)}
+          className={cn(cardSurface, 'flex flex-col gap-2 p-4', softTransition, accents[accent].hover)}
         >
-          <div className="mb-2.5 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <span
               className={cn(
                 'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
@@ -403,7 +403,7 @@ export function Families() {
             </p>
           </div>
 
-          <p className="mb-2 flex flex-wrap items-center gap-x-1.5 text-sm font-semibold">
+          <p className="flex flex-wrap items-center gap-x-1.5 text-sm font-semibold">
             {links.map(({ label, href }, index) => (
               <React.Fragment key={label}>
                 {index > 0 && (
