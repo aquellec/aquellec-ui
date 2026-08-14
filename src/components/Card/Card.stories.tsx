@@ -16,6 +16,11 @@ const meta: Meta<typeof Card> = {
   component: Card,
   tags: ['autodocs'],
   decorators: [withPageTitle('Card')],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { variant: 'default' },
   argTypes: {
     variant: { control: 'select', options: ['default', 'outline', 'ai', 'ghost'] },
   },

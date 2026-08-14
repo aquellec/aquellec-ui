@@ -12,6 +12,11 @@ const meta: Meta<typeof Input> = {
   title: 'Forms/Input',
   component: Input,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { type: 'text' },
   argTypes: {
     type: { control: 'select', options: ['text', 'email', 'password', 'search'] },
     disabled: { control: 'boolean' },

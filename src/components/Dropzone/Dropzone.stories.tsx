@@ -62,6 +62,11 @@ const meta: Meta<typeof Dropzone> = {
     const t = useI18n();
     return <Dropzone {...args} labels={t.components.dropzone} />;
   },
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { maxSizeMB: 5, isDisabled: false, isLoading: false },
   argTypes: {
     maxSizeMB: { control: 'number' },
     isDisabled: { control: 'boolean' },

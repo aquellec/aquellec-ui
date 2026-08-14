@@ -13,6 +13,11 @@ const meta: Meta<typeof SegmentedControl> = {
   title: 'Actions/SegmentedControl',
   component: SegmentedControl,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { size: 'md' },
   argTypes: {
     size: { control: 'inline-radio', options: ['sm', 'md'] },
     options: { control: 'object' },

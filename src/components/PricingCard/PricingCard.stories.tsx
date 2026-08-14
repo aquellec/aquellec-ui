@@ -13,6 +13,11 @@ const meta: Meta<typeof PricingCard> = {
   component: PricingCard,
   tags: ['autodocs'],
   decorators: [withPageTitle('Pricing', 'h2')],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { isPopular: false },
   argTypes: {
     isPopular: { control: 'boolean' },
     buttonVariant: { control: 'select', options: ['primary', 'ai', 'outline'] },

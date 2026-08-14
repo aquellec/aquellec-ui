@@ -16,6 +16,11 @@ const meta: Meta<typeof Toast> = {
   component: Toast,
   tags: ['autodocs'],
   decorators: [withPageTitle('Toast')],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { variant: 'info' },
   argTypes: {
     variant: { control: 'select', options: ['success', 'error', 'warning', 'info', 'ai'] },
   },

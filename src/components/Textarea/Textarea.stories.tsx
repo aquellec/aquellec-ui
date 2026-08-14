@@ -11,6 +11,11 @@ const meta: Meta<typeof Textarea> = {
   title: 'Forms/Textarea',
   component: Textarea,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { rows: 4 },
   argTypes: {
     rows: { control: { type: 'number', min: 2, max: 12 } },
     maxLength: { control: { type: 'number', min: 0 } },

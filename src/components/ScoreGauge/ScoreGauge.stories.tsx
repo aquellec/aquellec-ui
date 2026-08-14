@@ -14,6 +14,11 @@ const meta: Meta<typeof ScoreGauge> = {
   title: 'Data Display/ScoreGauge',
   component: ScoreGauge,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { size: 'md', isAiTheme: false, showStatus: true },
   argTypes: {
     score: { control: { type: 'range', min: 0, max: 100, step: 1 } },
     size: { control: 'radio', options: ['sm', 'md', 'lg'] },

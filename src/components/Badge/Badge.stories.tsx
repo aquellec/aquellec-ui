@@ -11,6 +11,11 @@ const meta: Meta<typeof Badge> = {
   title: 'Feedback/Badge',
   component: Badge,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { variant: 'neutral', size: 'md', icon: 'none' },
   argTypes: {
     variant: { control: 'select', options: ['success', 'danger', 'warning', 'neutral', 'ai'] },
     size: { control: 'radio', options: ['sm', 'md'] },
