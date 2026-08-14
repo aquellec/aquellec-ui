@@ -4,7 +4,7 @@ import { cn } from '../lib/cn';
 import { aquellecColors, aquellecThemeExtensions } from '../lib/design-tokens';
 import { focusRing, focusRingDanger, focusRingGhost } from '../lib/focus-ring';
 import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
-import { cardSurface, softTransition } from './_showcase';
+import { anchorSlug, cardSurface, softTransition } from './_showcase';
 
 /*
   Visual blocks of the Docs/Tokens page.
@@ -442,11 +442,14 @@ export function TokensText({ id }: { id: TokensTextKey }) {
   return <p className={cn('sb-unstyled my-4 text-sm leading-relaxed', subtleTextClass)}>{t[id]}</p>;
 }
 
-/** Sub-heading of the Tokens page (h3 level). */
+/** Sub-heading of the Tokens page (h3 level), anchored for the table of contents. */
 export function TokensHeading({ id }: { id: TokensHeadingKey }) {
   const t = useI18n().docs.tokens;
   return (
-    <h3 className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900">
+    <h3
+      id={anchorSlug(id)}
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900"
+    >
       {t[id]}
     </h3>
   );

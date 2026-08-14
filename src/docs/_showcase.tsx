@@ -465,12 +465,34 @@ export function IntroText({ id }: { id: IntroTextKey }) {
   return <p className={cn('sb-unstyled my-4 text-sm leading-relaxed', subtleTextClass)}>{t[id]}</p>;
 }
 
-/** Sub-heading of the Introduction page (h3 level). */
+/**
+ * Turns a dictionary key into an anchor slug: `pinViewport` -> `pin-viewport`.
+ *
+ * The anchor is built from the key and never from the translated text, so the
+ * links of the table of contents survive a change of locale.
+ */
+export function anchorSlug(key: string): string {
+  return key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+/**
+ * Sub-heading of the Introduction page (h3 level).
+ *
+ * The `id` is what makes the table of contents work: tocbot builds its links
+ * from the heading id, and Storybook's own click handler calls `preventDefault`
+ * then bails out when the fragment is empty — so an id-less heading yields a
+ * `href="#"` that silently does nothing.
+ */
 export function IntroHeading({ id }: { id: IntroHeadingKey }) {
   const t = useI18n().docs.introduction;
   const text = id === 'composablePatterns' ? t.composablePatterns : t.steps[id];
   return (
-    <h3 className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900">{text}</h3>
+    <h3
+      id={anchorSlug(id)}
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900"
+    >
+      {text}
+    </h3>
   );
 }
 
