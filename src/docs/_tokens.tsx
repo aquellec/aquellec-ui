@@ -26,7 +26,7 @@ export function TokensHero() {
   return (
     <div
       className={cn(
-        'not-prose relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
+        'sb-unstyled relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
         'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
       )}
     >
@@ -95,7 +95,7 @@ export function ColorScale({
   const scale = aquellecColors[name];
 
   return (
-    <section className={cn('not-prose mb-8 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-8 p-5', cardSurface)}>
       {/* Libellé de carte, volontairement pas un `h3` : le sommaire Storybook
           cible les `h3` et remonterait « brand » / « ai » comme sections. */}
       <div className="mb-4 flex items-baseline justify-between gap-4">
@@ -127,7 +127,7 @@ const semanticRoles = ['fg', 'bg', 'border', 'surface'] as const;
 
 export function SemanticTokens() {
   return (
-    <div className="not-prose mb-4 grid gap-4 sm:grid-cols-2">
+    <div className="sb-unstyled mb-4 grid gap-4 sm:grid-cols-2">
       {semanticGroups.map(({ key, label, usage, tokens }) => (
         <section key={key} className={cn('flex flex-col gap-3 p-5', cardSurface)}>
           <div className="flex items-center gap-2.5">
@@ -174,7 +174,7 @@ export function NeutralText() {
   ];
 
   return (
-    <div className={cn('not-prose mb-4 overflow-x-auto', cardSurface)}>
+    <div className={cn('sb-unstyled mb-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
@@ -212,7 +212,7 @@ export function NeutralText() {
 
 export function RadiusScale() {
   return (
-    <section className={cn('not-prose mb-4 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-500/20">
           <Ruler className="h-4 w-4" aria-hidden="true" />
@@ -239,7 +239,7 @@ export function RadiusScale() {
 
 export function ElevationScale() {
   return (
-    <section className={cn('not-prose mb-4 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ai-50 text-ai-700 ring-1 ring-ai-500/20">
           <Layers className="h-4 w-4" aria-hidden="true" />
@@ -280,7 +280,7 @@ const typeScale = [
 
 export function TypeScale() {
   return (
-    <section className={cn('not-prose mb-4 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border">
           <Type className="h-4 w-4" aria-hidden="true" />
@@ -321,7 +321,7 @@ const focusVariants = [
 
 export function FocusRings() {
   return (
-    <section className={cn('not-prose mb-4 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-1 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border">
           <Focus className="h-4 w-4" aria-hidden="true" />
@@ -370,7 +370,7 @@ const viewports = [
 
 export function Viewports() {
   return (
-    <section className={cn('not-prose mb-4 p-5', cardSurface)}>
+    <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border">
           <MonitorSmartphone className="h-4 w-4" aria-hidden="true" />

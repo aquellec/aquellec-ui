@@ -28,6 +28,14 @@ import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
   partageables et typés. Le glob Tailwind couvre désormais aussi `.mdx`
   (`tailwind.config.ts` → content), donc ce n'est plus une contrainte de
   compilation, mais la convention reste : le style vit dans les composants.
+
+  Chaque bloc porte `sb-unstyled` : Storybook applique ses styles de doc à
+  tous les éléments d'une page MDX (`.css-xxx :where(div:not(.sb-unstyled…))`,
+  idem pour p, ul, li, les titres et les tableaux), à égalité de spécificité
+  avec les utilitaires
+  Tailwind — mais injectés après, donc gagnants. Résultat sans ce marqueur :
+  `text-xs` rendait 16px et `font-mono` restait en Inter. `sb-unstyled` est
+  l'échappatoire officielle, honorée par toutes leurs règles.
 */
 
 /** Accents dérivés exclusivement des tokens du preset (brand / ai / semantic). */
@@ -97,7 +105,7 @@ export function SectionHeader({
   id: string;
 }) {
   return (
-    <header className="not-prose mb-6 mt-14 flex flex-col gap-2">
+    <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2">
       <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700">
         <span className="h-px w-6 bg-brand-500/40" aria-hidden="true" />
         {kicker}
@@ -159,7 +167,7 @@ export function Hero() {
   return (
     <div
       className={cn(
-        'not-prose relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
+        'sb-unstyled relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
         'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
       )}
     >
@@ -264,7 +272,7 @@ const pillars: Pillar[] = [
 
 export function Pillars() {
   return (
-    <div className="not-prose mb-4 grid gap-4 md:grid-cols-3">
+    <div className="sb-unstyled mb-4 grid gap-4 md:grid-cols-3">
       {pillars.map(({ title, icon: Icon, accent, body }) => (
         <div key={title} className={cn(cardSurface, 'overflow-hidden')}>
           <div className={cn('h-1 w-full', accents[accent].bar)} aria-hidden="true" />
@@ -383,7 +391,7 @@ const families: Family[] = [
 
 export function Families() {
   return (
-    <div className="not-prose mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="sb-unstyled mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {families.map(({ name, icon: Icon, accent, links, description }) => (
         <div
           key={name}
@@ -494,7 +502,7 @@ const governance: Array<{
 
 export function Governance() {
   return (
-    <div className={cn('not-prose my-4 overflow-x-auto', cardSurface)}>
+    <div className={cn('sb-unstyled my-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
