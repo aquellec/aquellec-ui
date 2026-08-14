@@ -11,7 +11,7 @@ import { Button } from '../Button';
  * Utilise `role="alert"` ou `role="status"` selon la variante pour l'accessibilité.
  */
 const meta: Meta<typeof Toast> = {
-  title: 'Components/Toast',
+  title: 'Feedback/Toast',
   component: Toast,
   tags: ['autodocs'],
   decorators: [withPageTitle('Toast')],

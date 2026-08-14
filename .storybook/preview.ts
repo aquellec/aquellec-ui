@@ -49,7 +49,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Docs', 'Templates', 'Components', '*'],
+        order: ['Docs', 'Templates', 'Actions', 'Forms', 'Feedback', 'Data Display', '*'],
       },
     },
   },

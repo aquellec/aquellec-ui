@@ -28,7 +28,7 @@ const mockData: AnalysisHistory[] = [
  * Idéal pour lister candidatures, historiques d'analyse ou quotas API.
  */
 const meta: Meta<typeof DataTable<AnalysisHistory>> = {
-  title: 'Components/DataTable',
+  title: 'Data Display/DataTable',
   component: DataTable,
   tags: ['autodocs'],
 };

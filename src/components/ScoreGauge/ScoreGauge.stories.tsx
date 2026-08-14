@@ -6,7 +6,7 @@ import { ScoreGauge } from './ScoreGauge';
  * (≥75 vert, ≥50 ambre, sinon rose) ; activez `isAiTheme` pour les métriques génératives.
  */
 const meta: Meta<typeof ScoreGauge> = {
-  title: 'Components/ScoreGauge',
+  title: 'Data Display/ScoreGauge',
   component: ScoreGauge,
   tags: ['autodocs'],
   argTypes: {

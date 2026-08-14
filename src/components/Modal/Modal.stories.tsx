@@ -12,7 +12,7 @@ import { Sparkles } from 'lucide-react';
  * Fermeture via Escape, overlay ou bouton ; titre relié via `aria-labelledby`.
  */
 const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
+  title: 'Feedback/Modal',
   component: Modal,
   tags: ['autodocs'],
   decorators: [withPageTitle('Modal')],

@@ -8,7 +8,7 @@ import { PricingCard } from './PricingCard';
  * recommandé via `isPopular` et liste les fonctionnalités incluses / exclues.
  */
 const meta: Meta<typeof PricingCard> = {
-  title: 'Components/PricingCard',
+  title: 'Data Display/PricingCard',
   component: PricingCard,
   tags: ['autodocs'],
   decorators: [withPageTitle('Tarifs', 'h2')],

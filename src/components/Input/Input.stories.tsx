@@ -7,7 +7,7 @@ import { Input } from './Input';
  * Associe label, messages d'erreur et texte d'aide avec les attributs ARIA correspondants.
  */
 const meta: Meta<typeof Input> = {
-  title: 'Components/Input',
+  title: 'Forms/Input',
   component: Input,
   tags: ['autodocs'],
 };

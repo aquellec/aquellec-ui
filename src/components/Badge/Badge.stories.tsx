@@ -7,7 +7,7 @@ import { Badge } from './Badge';
  * Les variantes sémantiques (`success`, `danger`, `warning`, `ai`) facilitent le scan visuel.
  */
 const meta: Meta<typeof Badge> = {
-  title: 'Components/Badge',
+  title: 'Feedback/Badge',
   component: Badge,
   tags: ['autodocs'],
   argTypes: {

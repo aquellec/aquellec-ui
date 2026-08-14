@@ -7,7 +7,7 @@ import { Button } from './Button';
  * standards, `ai` pour les workflows génératifs et `outline`/`ghost` pour les actions secondaires.
  */
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: 'Actions/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {

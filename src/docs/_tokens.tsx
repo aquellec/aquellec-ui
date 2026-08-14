@@ -3,7 +3,7 @@ import { cn } from '../lib/cn';
 import { aquellecColors, aquellecThemeExtensions } from '../lib/design-tokens';
 import { focusRing, focusRingDanger, focusRingGhost } from '../lib/focus-ring';
 import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
-import { HeroGrid, cardSurface, softTransition } from './_showcase';
+import { cardSurface, softTransition } from './_showcase';
 
 /*
   Blocs visuels de la page Docs/Tokens.
@@ -26,13 +26,11 @@ export function TokensHero() {
   return (
     <div
       className={cn(
-        'sb-unstyled relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
+        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
         'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
       )}
     >
-      <HeroGrid />
-
-      <div className="relative flex flex-col items-start gap-4">
+      <div className="flex flex-col items-start gap-4">
         <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
           <Palette className="h-3.5 w-3.5" aria-hidden="true" />
           Fondations · Preset Tailwind

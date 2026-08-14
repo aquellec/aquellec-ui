@@ -48,7 +48,7 @@ function dropOnDropzone(dropzone: HTMLElement, files: File[]) {
  * avec validation de taille, états loading/disabled et activation via label natif.
  */
 const meta: Meta<typeof Dropzone> = {
-  title: 'Components/Dropzone',
+  title: 'Forms/Dropzone',
   component: Dropzone,
   tags: ['autodocs'],
   argTypes: {

@@ -7,7 +7,7 @@ import { Textarea } from './Textarea';
  * Affiche un compteur de caractères lorsque `maxLength` est défini.
  */
 const meta: Meta<typeof Textarea> = {
-  title: 'Components/Textarea',
+  title: 'Forms/Textarea',
   component: Textarea,
   tags: ['autodocs'],
 };

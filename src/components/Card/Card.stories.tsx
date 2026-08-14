@@ -11,7 +11,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
  * Compose `Card.Header`, `Card.Body` et `Card.Footer` pour des blocs dashboard cohérents.
  */
 const meta: Meta<typeof Card> = {
-  title: 'Components/Card',
+  title: 'Data Display/Card',
   component: Card,
   tags: ['autodocs'],
   decorators: [withPageTitle('Card')],

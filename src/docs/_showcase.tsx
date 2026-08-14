@@ -146,34 +146,15 @@ const heroChips: Array<{ label: string; icon: LucideIcon; className: string }> =
   },
 ];
 
-/** Grille décorative du hero : couleur héritée d'un token via `currentColor`. */
-export function HeroGrid() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full text-brand-500/10"
-    >
-      <defs>
-        <pattern id="aq-hero-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-          <path d="M32 0H0V32" fill="none" stroke="currentColor" strokeWidth="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#aq-hero-grid)" />
-    </svg>
-  );
-}
-
 export function Hero() {
   return (
     <div
       className={cn(
-        'sb-unstyled relative mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
+        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
         'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
       )}
     >
-      <HeroGrid />
-
-      <div className="relative">
+      <div>
         <div className="flex flex-col items-start gap-4">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
@@ -247,9 +228,9 @@ const pillars: Pillar[] = [
     body: (
       <>
         Composants pensés pour les parcours réels&nbsp;: upload PDF (<strong>Dropzone</strong>),
-        bascule <strong>RoleToggle</strong> Candidat / Recruteur, jauge de score ATS (
+        bascule Candidat / Recruteur (<strong>SegmentedControl</strong>), jauge de score ATS (
         <strong>ScoreGauge</strong>), tableaux paginés (<strong>DataTable</strong>), barres de quota
-        (<strong>UsageBar</strong>) et cartes tarifaires. Templates dashboard disponibles dans la
+        (<strong>ProgressBar</strong>) et cartes tarifaires. Templates dashboard disponibles dans la
         section <strong>Templates</strong>.
       </>
     ),
@@ -321,19 +302,19 @@ const families: Family[] = [
     icon: MousePointerClick,
     accent: 'brand',
     links: [
-      { label: 'Button', href: './?path=/docs/components-button--documentation' },
-      { label: 'RoleToggle', href: './?path=/docs/components-roletoggle--documentation' },
+      { label: 'Button', href: './?path=/docs/actions-button--documentation' },
+      { label: 'SegmentedControl', href: './?path=/docs/actions-segmentedcontrol--documentation' },
     ],
-    description: 'Boutons primaires / IA, segmented control accessible avec navigation clavier.',
+    description: 'Boutons primaires / IA, segments exclusifs avec navigation clavier.',
   },
   {
-    name: 'Inputs',
+    name: 'Forms',
     icon: FileUp,
     accent: 'info',
     links: [
-      { label: 'Input', href: './?path=/docs/components-input--documentation' },
-      { label: 'Textarea', href: './?path=/docs/components-textarea--documentation' },
-      { label: 'Dropzone', href: './?path=/docs/components-dropzone--documentation' },
+      { label: 'Input', href: './?path=/docs/forms-input--documentation' },
+      { label: 'Textarea', href: './?path=/docs/forms-textarea--documentation' },
+      { label: 'Dropzone', href: './?path=/docs/forms-dropzone--documentation' },
     ],
     description: 'Formulaires avec erreurs ARIA, zone de dépôt PDF native label + drag-and-drop.',
   },
@@ -342,32 +323,32 @@ const families: Family[] = [
     icon: Bell,
     accent: 'warning',
     links: [
-      { label: 'Toast', href: './?path=/docs/components-toast--documentation' },
-      { label: 'ToastProvider', href: './?path=/story/components-toast--provider-queue' },
-      { label: 'Modal', href: './?path=/docs/components-modal--documentation' },
-      { label: 'Badge', href: './?path=/docs/components-badge--documentation' },
+      { label: 'Toast', href: './?path=/docs/feedback-toast--documentation' },
+      { label: 'ToastProvider', href: './?path=/story/feedback-toast--provider-queue' },
+      { label: 'Modal', href: './?path=/docs/feedback-modal--documentation' },
+      { label: 'Badge', href: './?path=/docs/feedback-badge--documentation' },
     ],
     description:
       "Notifications live region, file d'attente via provider, dialogues modaux, statuts compacts.",
   },
   {
-    name: 'Data & DataViz',
+    name: 'Data Display',
     icon: BarChart3,
     accent: 'ai',
     links: [
-      { label: 'ScoreGauge', href: './?path=/docs/components-scoregauge--documentation' },
-      { label: 'DataTable', href: './?path=/docs/components-datatable--documentation' },
-      { label: 'UsageBar', href: './?path=/docs/components-usagebar--documentation' },
+      { label: 'ScoreGauge', href: './?path=/docs/data-display-scoregauge--documentation' },
+      { label: 'DataTable', href: './?path=/docs/data-display-datatable--documentation' },
+      { label: 'ProgressBar', href: './?path=/docs/data-display-progressbar--documentation' },
     ],
-    description: 'Score ATS, tableaux paginés avec skeleton, consommation de crédits.',
+    description: 'Score ATS, tableaux paginés avec skeleton, quotas et consommation.',
   },
   {
-    name: 'Layout',
+    name: 'Surfaces',
     icon: LayoutGrid,
     accent: 'success',
     links: [
-      { label: 'Card', href: './?path=/docs/components-card--documentation' },
-      { label: 'PricingCard', href: './?path=/docs/components-pricingcard--documentation' },
+      { label: 'Card', href: './?path=/docs/data-display-card--documentation' },
+      { label: 'PricingCard', href: './?path=/docs/data-display-pricingcard--documentation' },
     ],
     description: 'Surfaces composables Header / Body / Footer, cartes offre SaaS.',
   },
@@ -378,11 +359,11 @@ const families: Family[] = [
     links: [
       {
         label: 'Candidate Dashboard',
-        href: './?path=/docs/templates-candidate-dashboard--documentation',
+        href: './?path=/docs/templates-candidatedashboard--documentation',
       },
       {
         label: 'Recruiter Dashboard',
-        href: './?path=/docs/templates-recruiter-dashboard--documentation',
+        href: './?path=/docs/templates-recruiterdashboard--documentation',
       },
     ],
     description: 'Pages de référence assemblant les composants en contexte produit.',
