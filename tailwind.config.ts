@@ -3,7 +3,7 @@ import aquellecPreset from './src/tailwind-preset';
 
 const config: Config = {
   presets: [aquellecPreset],
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './.storybook/**/*.{ts,tsx}'],
 };
 
 export default config;
