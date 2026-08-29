@@ -20,13 +20,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Reads `packageManager` from package.json, so the pinned pnpm version is
-      # the one CI uses.
-      - uses: pnpm/action-setup@v4
+      # the one CI uses. v6 is the release that added pnpm 11 support, which is
+      # the major this repository pins.
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -37,7 +38,7 @@ jobs:
       # Downloading it dominates the run, hence the cache; the key follows the
       # lockfile so a Playwright bump fetches a matching browser.
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
