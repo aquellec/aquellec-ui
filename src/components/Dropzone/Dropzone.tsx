@@ -252,11 +252,11 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
       focusRing,
       isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
       isDragActive
-        ? 'border-brand-500 bg-brand-50/50 scale-[0.99]'
-        : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50',
+        ? 'border-brand-500 bg-brand-50/50 scale-[0.99] dark:border-brand-400 dark:bg-brand-500/10'
+        : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 dark:border-slate-600 dark:hover:border-slate-500 dark:bg-slate-800/40 dark:hover:bg-slate-800/70',
       error && 'border-red-400 bg-red-50/30',
-      isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait',
-      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200'
+      isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait dark:border-brand-400 dark:bg-brand-500/10',
+      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200 dark:border-slate-700'
     );
 
     return (
@@ -277,27 +277,43 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900"
             aria-describedby={error ? errorId : undefined}
           >
             <div className="flex min-w-0 items-center space-x-3 truncate">
-              <div className="rounded-lg bg-brand-50 p-2 text-brand-600">
+              <div className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                 <FileText className="h-6 w-6" aria-hidden="true" />
               </div>
               <div className="truncate text-left">
                 {multiple ? (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800">
+                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
                       {labels.selection(displayedFiles.length)}
                     </p>
-                    <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                    <p
+                      className={cn(
+                        'text-xs',
+                        isLoading
+                          ? 'text-brand-600 dark:text-brand-300'
+                          : 'text-slate-500 dark:text-slate-400'
+                      )}
+                    >
                       {isLoading ? labels.uploading : labels.totalSize(formatFileSize(totalSize))}
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800">{displayedFile!.name}</p>
-                    <p className={cn('text-xs', isLoading ? 'text-brand-600' : 'text-slate-500')}>
+                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                      {displayedFile!.name}
+                    </p>
+                    <p
+                      className={cn(
+                        'text-xs',
+                        isLoading
+                          ? 'text-brand-600 dark:text-brand-300'
+                          : 'text-slate-500 dark:text-slate-400'
+                      )}
+                    >
                       {isLoading ? labels.uploading : formatFileSize(displayedFile!.size)}
                     </p>
                   </>
@@ -306,7 +322,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
             </div>
             {isLoading ? (
               <Loader2
-                className="h-5 w-5 flex-shrink-0 animate-spin text-brand-600"
+                className="h-5 w-5 flex-shrink-0 animate-spin text-brand-600 dark:text-brand-300"
                 aria-label={labels.uploadingStatus}
               />
             ) : (
@@ -315,7 +331,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 onClick={clearSelection}
                 disabled={isDisabled}
                 className={cn(
-                  'rounded-md p-1 transition-colors hover:bg-slate-100',
+                  'rounded-md p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800',
                   subtleTextClass,
                   focusRingGhost
                 )}
@@ -336,27 +352,37 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
           >
             {isLoading ? (
               <div className="flex flex-col items-center text-center" role="status" aria-live="polite">
-                <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600">
+                <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                   <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700">{labels.loadingTitle}</p>
-                <p className="text-xs text-slate-500">{labels.loadingHint(multiple)}</p>
+                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {labels.loadingTitle}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {labels.loadingHint(multiple)}
+                </p>
               </div>
             ) : (
               <div className="flex flex-col items-center text-center">
                 <div
                   className={cn(
                     'mb-3 rounded-full p-3 transition-colors',
-                    isDragActive ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-500'
+                    isDragActive
+                      ? 'bg-brand-100 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300'
+                      : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                   )}
                 >
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700">
-                  <span className="text-brand-600 underline underline-offset-2">{labels.browse}</span>{' '}
+                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span className="text-brand-600 dark:text-brand-300 underline underline-offset-2">
+                    {labels.browse}
+                  </span>{' '}
                   {labels.dropHint(multiple)}
                 </p>
-                <p className="text-xs text-slate-500">{labels.constraint(maxSizeMB, multiple)}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {labels.constraint(maxSizeMB, multiple)}
+                </p>
               </div>
             )}
           </label>

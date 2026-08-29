@@ -73,7 +73,11 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           <button
             type="button"
             onClick={onClose}
-            className={cn('p-1 rounded-md hover:bg-black/5 transition-colors', subtleTextClass, focusRingGhost)}
+            className={cn(
+              'p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors',
+              subtleTextClass,
+              focusRingGhost
+            )}
             aria-label={closeLabel}
           >
             <X className="w-4 h-4" aria-hidden="true" />

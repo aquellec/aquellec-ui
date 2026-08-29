@@ -39,7 +39,7 @@ import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
 */
 
 /** Accents derived exclusively from preset tokens (brand / ai / semantic). */
-type AccentName = 'brand' | 'ai' | 'info' | 'success' | 'warning';
+export type AccentName = 'brand' | 'ai' | 'info' | 'success' | 'warning';
 
 interface Accent {
   /** Icon chip: tinted background plus ring. */
@@ -50,42 +50,66 @@ interface Accent {
   hover: string;
 }
 
+/**
+ * Colours of the icon tiles, shared by both documentation pages.
+ *
+ * Every accent carries a ring on both sides of the theme. In light mode the
+ * semantic `*-border` tokens are pastels that sit at the same weight as the
+ * `brand` and `ai` rings; on a dark surface those same pastels stay opaque and
+ * read as a hard outline, while a mid-tone hue at 20% disappears entirely —
+ * which is why three tiles looked bordered and two did not. The dark ring is
+ * therefore stated for all five at one opacity.
+ *
+ * The record is exported so `_tokens.tsx` composes the same strings instead of
+ * repeating them: the drift above came from having two copies.
+ */
+export const accentTileClass: Record<AccentName, string> = {
+  brand:
+    'bg-brand-50 text-brand-700 ring-1 ring-brand-500/20 dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-400/30',
+  ai: 'bg-ai-50 text-ai-700 ring-1 ring-ai-500/20 dark:bg-ai-500/15 dark:text-ai-300 dark:ring-ai-400/30',
+  info: 'bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-400/30',
+  success:
+    'bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-400/30',
+  warning:
+    'bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/30',
+};
+
 const accents: Record<AccentName, Accent> = {
   brand: {
-    tile: 'bg-brand-50 text-brand-700 ring-1 ring-brand-500/20',
+    tile: accentTileClass.brand,
     bar: 'bg-brand-500',
-    hover: 'hover:border-brand-500/40',
+    hover: 'hover:border-brand-500/40 dark:hover:border-brand-400/40',
   },
   ai: {
-    tile: 'bg-ai-50 text-ai-700 ring-1 ring-ai-500/20',
+    tile: accentTileClass.ai,
     bar: 'bg-ai-500',
-    hover: 'hover:border-ai-500/40',
+    hover: 'hover:border-ai-500/40 dark:hover:border-ai-400/40',
   },
   info: {
-    tile: 'bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border',
+    tile: accentTileClass.info,
     bar: 'bg-semantic-info-fg',
-    hover: 'hover:border-semantic-info-fg/40',
+    hover: 'hover:border-semantic-info-fg/40 dark:hover:border-blue-400/40',
   },
   success: {
-    tile: 'bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border',
+    tile: accentTileClass.success,
     bar: 'bg-semantic-success-fg',
-    hover: 'hover:border-semantic-success-fg/40',
+    hover: 'hover:border-semantic-success-fg/40 dark:hover:border-emerald-400/40',
   },
   warning: {
-    tile: 'bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border',
+    tile: accentTileClass.warning,
     bar: 'bg-semantic-warning-fg',
-    hover: 'hover:border-semantic-warning-fg/40',
+    hover: 'hover:border-semantic-warning-fg/40 dark:hover:border-amber-400/40',
   },
 };
 
 /** Shared card surface: consistent radius and elevation. */
-export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-card';
+export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900';
 
 /** Transitions neutralised when the user asks for reduced motion. */
 export const softTransition = 'transition-colors duration-200 motion-reduce:transition-none';
 
 const linkClass = cn(
-  'rounded-sm text-brand-700 underline decoration-brand-500/40 underline-offset-2',
+  'rounded-sm text-brand-700 underline decoration-brand-500/40 underline-offset-2 dark:text-brand-300',
   'hover:decoration-brand-500',
   softTransition,
   focusRing
@@ -106,11 +130,11 @@ export function SectionHeader({
 
   return (
     <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2">
-      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700">
+      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700 dark:text-brand-300">
         <span className="h-px w-6 bg-brand-500/40" aria-hidden="true" />
         {kicker}
       </p>
-      <h2 id={id} className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+      <h2 id={id} className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 md:text-3xl">
         {title}
       </h2>
     </header>
@@ -127,22 +151,26 @@ const heroChips: Array<{ key: ChipKey; icon: LucideIcon; className: string }> = 
   {
     key: 'typescript',
     icon: FileCode2,
-    className: 'border-semantic-info-border bg-semantic-info-bg text-semantic-info-fg',
+    className:
+      'border-semantic-info-border bg-semantic-info-bg text-semantic-info-fg dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300',
   },
   {
     key: 'wcag',
     icon: Accessibility,
-    className: 'border-semantic-success-border bg-semantic-success-bg text-semantic-success-fg',
+    className:
+      'border-semantic-success-border bg-semantic-success-bg text-semantic-success-fg dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-300',
   },
   {
     key: 'preset',
     icon: Palette,
-    className: 'border-brand-500/30 bg-brand-50 text-brand-700',
+    className:
+      'border-brand-500/30 bg-brand-50 text-brand-700 dark:border-brand-400/30 dark:bg-brand-500/15 dark:text-brand-300',
   },
   {
     key: 'storybook',
     icon: FlaskConical,
-    className: 'border-ai-500/30 bg-ai-50 text-ai-700',
+    className:
+      'border-ai-500/30 bg-ai-50 text-ai-700 dark:border-ai-400/30 dark:bg-ai-500/15 dark:text-ai-300',
   },
 ];
 
@@ -152,18 +180,19 @@ export function Hero() {
   return (
     <div
       className={cn(
-        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
-        'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
+        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20 dark:border-brand-400/20',
+        'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10',
+        'dark:from-brand-500/20 dark:via-slate-900 dark:to-ai-500/20'
       )}
     >
       <div>
         <div className="flex flex-col items-start gap-4">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:border-brand-400/30 dark:bg-slate-900/70 dark:text-brand-300">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             {t.heroKicker}
           </p>
 
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 md:text-5xl">
             @aquellec/ui
           </h1>
 
@@ -227,7 +256,7 @@ export function Pillars() {
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
-              <p className="text-sm font-semibold text-slate-900">{t[key].title}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t[key].title}</p>
             </div>
             <p className={cn('text-sm leading-relaxed', subtleTextClass)}>{t[key].body}</p>
           </div>
@@ -359,7 +388,7 @@ export function Families() {
             {links.map(({ label, href }, index) => (
               <React.Fragment key={label}>
                 {index > 0 && (
-                  <span className="text-slate-300" aria-hidden="true">
+                  <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
                     ·
                   </span>
                 )}
@@ -417,20 +446,20 @@ export function Governance() {
   return (
     <div className={cn('sb-unstyled my-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-slate-200 bg-slate-50">
+        <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
           <tr>
-            <th scope="col" className="p-3 font-semibold text-slate-900">
+            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
               {t.axis}
             </th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">
+            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
               {t.practice}
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
           {governance.map(({ axis, icon: Icon, accent, practice }) => (
             <tr key={axis}>
-              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-slate-900">
+              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-slate-900 dark:text-slate-100">
                 <span className="flex items-center gap-2">
                   <span
                     className={cn(
@@ -489,7 +518,7 @@ export function IntroHeading({ id }: { id: IntroHeadingKey }) {
   return (
     <h3
       id={anchorSlug(id)}
-      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900"
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50"
     >
       {text}
     </h3>

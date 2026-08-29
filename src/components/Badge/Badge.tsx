@@ -25,12 +25,21 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     },
     ref
   ) => {
+    /*
+      Dark variants are a wash of the hue over the surface — `500/15` on the
+      background, `500/30` on the border — rather than the `50` tint, which
+      turns into a near-white block on a dark card.
+    */
     const variants = {
-      success: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
-      danger: 'bg-rose-50 text-rose-700 border border-rose-200/60',
-      warning: 'bg-amber-50 text-amber-700 border border-amber-200/60',
-      neutral: 'bg-slate-100 text-slate-700 border border-slate-200/60',
-      ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-sm',
+      success:
+        'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
+      danger:
+        'bg-rose-50 text-rose-700 border border-rose-200/60 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
+      warning:
+        'bg-amber-50 text-amber-700 border border-amber-200/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
+      neutral:
+        'bg-slate-100 text-slate-700 border border-slate-200/60 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700',
+      ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-sm dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
     };
 
     const sizes = {

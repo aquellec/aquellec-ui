@@ -58,24 +58,24 @@ function RecruiterDashboardPage() {
     {
       value: 'candidate',
       label: t.segmented.workspace.candidate,
-      icon: <User className="h-3.5 w-3.5 text-brand-600" />,
+      icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
     },
     {
       value: 'recruiter',
       label: t.segmented.workspace.recruiter,
-      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" />,
+      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6 dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600 dark:text-ai-300">
               {t.dashboard.recruiter.brand}
             </p>
-            <h1 className="text-xl font-bold text-slate-900">{t.dashboard.recruiter.title}</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t.dashboard.recruiter.title}</h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -104,19 +104,19 @@ function RecruiterDashboardPage() {
                 showStatus={false}
                 className="border-0 bg-transparent p-0 shadow-none"
               />
-              <p className="text-xs text-slate-500">{t.dashboard.recruiter.kpi.matchCaption}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t.dashboard.recruiter.kpi.matchCaption}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-emerald-700">18</p>
-              <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.compatible}</p>
+              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">18</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.recruiter.kpi.compatible}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-amber-700">6</p>
-              <p className="text-sm text-slate-600">{t.dashboard.recruiter.kpi.toReview}</p>
+              <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">6</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.recruiter.kpi.toReview}</p>
             </Card.Body>
           </Card>
         </div>
@@ -150,8 +150,8 @@ function RecruiterDashboardPage() {
                 {
                   header: t.dashboard.recruiter.history.columns.candidate,
                   cell: (item) => (
-                    <div className="flex items-center space-x-2 font-medium text-slate-900">
-                      <FileText className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                    <div className="flex items-center space-x-2 font-medium text-slate-900 dark:text-slate-100">
+                      <FileText className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                       <span>{item.candidateName}</span>
                     </div>
                   ),

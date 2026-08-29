@@ -39,6 +39,48 @@ export default {
 
 Le preset apporte les palettes `brand`, `ai` et `semantic.*`, les rayons et élévations partagés, et neutralise les animations sous `prefers-reduced-motion`.
 
+### Dark mode
+
+The preset enables Tailwind's `class` strategy, so every component ships light
+and dark styles and follows whichever the host application asks for. Add the
+`dark` class on `<html>` — or on any ancestor — and the subtree switches:
+
+```ts
+document.documentElement.classList.toggle('dark', isDark);
+```
+
+Nothing else is required: the preset also pins `color-scheme`, so scrollbars and
+native form chrome follow the theme.
+
+To follow the operating system instead of an explicit toggle:
+
+```ts
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+const apply = () => document.documentElement.classList.toggle('dark', media.matches);
+apply();
+media.addEventListener('change', apply);
+```
+
+Surfaces and copy tones are exported so an application can build matching
+screens around the components, each constant carrying both sides of the theme:
+
+```ts
+import {
+  pageSurfaceClass,    // page canvas
+  raisedSurfaceClass,  // cards, dialogs
+  sunkenSurfaceClass,  // table headers, footers
+  surfaceBorderClass,
+  dividerBorderClass,
+  controlBorderClass,
+  strongTextClass,
+  bodyTextClass,
+  mutedTextClass,
+  subtleTextClass,
+  brandAccentClass,
+  aiAccentClass,
+} from '@aquellec/ui';
+```
+
 ### Utiliser un composant
 
 ```tsx
@@ -104,6 +146,15 @@ pnpm type-check           # tsc --noEmit
 pnpm build                # Build ESM/CJS + types dans dist/
 pnpm test:storybook       # Tests d'interaction et a11y (Vitest browser mode)
 pnpm build-storybook      # Export statique de la doc
+```
+
+The Storybook toolbar carries a **Theme** switch (Light / Dark) driving the
+stories and the documentation pages alike. The whole suite can be replayed in
+dark mode, where the blocking a11y addon checks contrast against the dark
+palette rather than assuming it:
+
+```bash
+STORYBOOK_THEME=dark pnpm test:storybook
 ```
 
 Les blocs visuels des pages MDX vivent dans `src/docs/_showcase.tsx` et `src/docs/_tokens.tsx`, et portent la classe `sb-unstyled` : sans elle, les styles de doc de Storybook écrasent les utilitaires Tailwind.

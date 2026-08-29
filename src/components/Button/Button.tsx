@@ -28,20 +28,43 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isDisabled = disabled || isLoading;
 
+    /*
+      `primary` and `ai` keep their saturated fill in dark mode — they are the
+      page's call to action and have to stay the brightest thing on it. Only
+      the neutral variants flip, since they are defined by the surface they
+      sit on.
+    */
     const variants = {
       primary: cn(
         'bg-brand-600 text-white hover:bg-brand-700',
+        /*
+          `brand-400` with near-black copy, measured at 6.33:1. `brand-500`
+          under the same copy only reaches 4.17:1 and fails AA — the dark
+          replay of the suite caught it.
+        */
+        'dark:bg-brand-400 dark:hover:bg-brand-300 dark:text-slate-950',
         focusRing
       ),
       secondary: cn(
         'bg-slate-100 text-slate-900 hover:bg-slate-200',
+        'dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
         focusRing
       ),
       outline: cn(
         'border border-slate-300 bg-transparent hover:bg-slate-50 text-slate-700',
+        'dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800',
         focusRing
       ),
-      ghost: cn('bg-transparent hover:bg-slate-100 text-slate-700', focusRingGhost),
+      ghost: cn(
+        'bg-transparent hover:bg-slate-100 text-slate-700',
+        'dark:text-slate-200 dark:hover:bg-slate-800',
+        focusRingGhost
+      ),
+      /*
+        The gradient keeps its light-mode stops: brightening it to the `500`
+        steps drops white copy to 4.23:1 over `ai-500`. It already reads as the
+        brightest element on a dark page.
+      */
       ai: cn(
         'bg-gradient-to-r from-ai-600 to-brand-600 text-white hover:opacity-95 shadow-sm',
         focusRing

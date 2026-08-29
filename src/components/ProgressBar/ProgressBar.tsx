@@ -56,23 +56,27 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
 
     const progressColor =
       percentage >= thresholds.danger
-        ? 'bg-rose-500'
+        ? 'bg-rose-500 dark:bg-rose-400'
         : percentage >= thresholds.warning
-          ? 'bg-amber-500'
-          : 'bg-brand-600';
+          ? 'bg-amber-500 dark:bg-amber-400'
+          : 'bg-brand-600 dark:bg-brand-400';
 
     const counter = formatValue ? (
       formatValue(value, max)
     ) : (
       <>
-        <strong className="font-bold text-slate-800">{value}</strong> / {max}
+        <strong className="font-bold text-slate-800 dark:text-slate-100">{value}</strong> / {max}
       </>
     );
 
     return (
       <div
         ref={ref}
-        className={cn('rounded-xl border border-slate-200/80 bg-slate-50 p-4', className)}
+        className={cn(
+          'rounded-xl border border-slate-200/80 bg-slate-50 p-4',
+          'dark:border-slate-700 dark:bg-slate-800/50',
+          className
+        )}
         {...props}
       >
         {(label || icon || formatValue) && (
@@ -84,7 +88,9 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
                 </span>
               )}
               {label && (
-                <span className="truncate text-xs font-semibold text-slate-700">{label}</span>
+                <span className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  {label}
+                </span>
               )}
             </div>
             <span className={cn('shrink-0 text-xs font-medium', mutedTextClass)}>{counter}</span>
@@ -98,7 +104,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           aria-valuenow={value}
           aria-valuetext={`${percentage}%`}
           aria-label={ariaLabel ?? label}
-          className="h-2 w-full overflow-hidden rounded-full bg-slate-200"
+          className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
         >
           <div
             className={cn(
@@ -110,7 +116,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
         </div>
 
         {(helperText || action) && (
-          <div className="mt-3 flex items-center justify-between gap-3 border-t border-slate-200/60 pt-2">
+          <div className="mt-3 flex items-center justify-between gap-3 border-t border-slate-200/60 dark:border-slate-700/60 pt-2">
             {helperText ? (
               <span className={cn('text-xs', mutedTextClass)}>{helperText}</span>
             ) : (

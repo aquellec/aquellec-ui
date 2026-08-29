@@ -69,12 +69,15 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center justify-between px-6 py-4 border-b border-slate-100', className)}
+        className={cn(
+          'flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800',
+          className
+        )}
         {...props}
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <TitleElement id={titleId} className="text-base font-bold text-slate-800">
+            <TitleElement id={titleId} className="text-base font-bold text-slate-800 dark:text-slate-100">
               {title}
             </TitleElement>
           )}
@@ -89,6 +92,7 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
             data-autofocus=""
             className={cn(
               'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
+              'dark:hover:bg-slate-800',
               subtleTextClass,
               focusRingGhost
             )}
@@ -107,7 +111,11 @@ ModalHeader.displayName = 'ModalHeader';
 export const ModalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn('px-6 py-5 overflow-y-auto text-sm text-slate-600', className)} {...props}>
+      <div
+        ref={ref}
+        className={cn('px-6 py-5 overflow-y-auto text-sm text-slate-600 dark:text-slate-300', className)}
+        {...props}
+      >
         {children}
       </div>
     );
@@ -123,6 +131,7 @@ export const ModalFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes
         ref={ref}
         className={cn(
           'flex items-center justify-end gap-3 px-6 py-4 bg-slate-50/80 border-t border-slate-100',
+          'dark:bg-slate-800/50 dark:border-slate-800',
           className
         )}
         {...props}
@@ -203,7 +212,12 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     return createPortal(
       <div ref={portalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+          /*
+            The scrim is deepened in dark mode: a 40% slate veil over an
+            already dark page no longer separates the dialog from its
+            background.
+          */
+          className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/70 backdrop-blur-sm transition-opacity"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -217,6 +231,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           aria-describedby={describedBy}
           className={cn(
             'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
+            'dark:bg-slate-900 dark:border-slate-700',
             maxWidths[maxWidth],
             className
           )}

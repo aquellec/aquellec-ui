@@ -18,10 +18,20 @@ export { focusRing, focusRingDanger, focusRingGhost } from './lib/focus-ring';
 export { getScoreTextClass } from './lib/score-tier';
 export { resolveSectionHeading, type SectionHeadingElement } from './lib/heading';
 export {
+  aiAccentClass,
+  bodyTextClass,
+  brandAccentClass,
+  controlBorderClass,
+  dividerBorderClass,
   errorTextClass,
   mutedTextClass,
+  pageSurfaceClass,
   placeholderClass,
+  raisedSurfaceClass,
   semanticIconClass,
   semanticSurfaceClass,
+  strongTextClass,
   subtleTextClass,
+  sunkenSurfaceClass,
+  surfaceBorderClass,
 } from './lib/semantic-colors';
