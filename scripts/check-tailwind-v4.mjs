@@ -55,7 +55,14 @@ const shared = [
 function install(work) {
   execFileSync(
     'npm',
-    ['install', '--silent', '--no-audit', '--no-fund', '--prefix', work,
+    /*
+      `--ignore-scripts`: this is the one place in CI that fetches an unpinned
+      package from the network, and the version range is open on purpose — the
+      canary has to meet whatever 4.x is current. Running that download's
+      install hooks is not part of the intent, and the CLI compiles without
+      them.
+    */
+    ['install', '--silent', '--no-audit', '--no-fund', '--ignore-scripts', '--prefix', work,
      'tailwindcss@^4', '@tailwindcss/cli@^4'],
     { cwd: work, stdio: 'pipe' }
   );
