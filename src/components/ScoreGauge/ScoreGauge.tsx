@@ -112,7 +112,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       <div
         ref={ref}
         className={cn(
-          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm',
+          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-xs',
           'dark:bg-slate-900 dark:border-slate-700',
           className
         )}

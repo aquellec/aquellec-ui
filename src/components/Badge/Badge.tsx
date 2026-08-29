@@ -39,7 +39,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         'bg-amber-50 text-amber-700 border border-amber-200/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
       neutral:
         'bg-slate-100 text-slate-700 border border-slate-200/60 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700',
-      ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-sm dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
+      ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-xs dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
     };
 
     const sizes = {

@@ -123,7 +123,7 @@ function DataTableInner<T>(
     <div
       ref={ref}
       className={cn(
-        'w-full border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm',
+        'w-full border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-xs',
         'dark:border-slate-700 dark:bg-slate-900',
         className
       )}

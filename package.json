@@ -29,7 +29,9 @@
     "type-check": "tsc --noEmit",
     "test:storybook": "vitest run --project storybook",
     "playwright:install": "playwright install chromium",
-    "check:tailwind-v4": "node scripts/check-tailwind-v4.mjs"
+    "check:tailwind-v4": "node scripts/check-tailwind-v4.mjs",
+    "check:package": "node scripts/check-package-entries.mjs",
+    "check:utilities": "node --no-warnings scripts/check-version-stable-utilities.mjs"
   },
   "keywords": [
     "react",

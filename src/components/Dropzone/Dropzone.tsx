@@ -277,7 +277,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs dark:border-slate-700 dark:bg-slate-900"
             aria-describedby={error ? errorId : undefined}
           >
             <div className="flex min-w-0 items-center space-x-3 truncate">

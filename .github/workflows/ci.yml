@@ -48,12 +48,21 @@ jobs:
 
       - run: pnpm type-check
 
+      # Instant and independent of the build, so it fails before anything long.
+      - name: Check for version-dependent Tailwind utilities
+        run: pnpm check:utilities
+
       - name: Build the package
         run: pnpm build
 
       # The package advertises `tailwindcss: ^3.4.0 || ^4.0.0`. The v3 half is
       # covered by everything else in this job; this is the v4 half, which
       # nothing verified before.
+      # Loads the published entry points the way a consumer does, which is how
+      # everything in this repository never does.
+      - name: Check the published entry points
+        run: pnpm check:package
+
       - name: Verify the Tailwind 4 peer claim
         run: pnpm check:tailwind-v4
 

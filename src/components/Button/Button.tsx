@@ -66,7 +66,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         brightest element on a dark page.
       */
       ai: cn(
-        'bg-gradient-to-r from-ai-600 to-brand-600 text-white hover:opacity-95 shadow-sm',
+        'bg-gradient-to-r from-ai-600 to-brand-600 text-white hover:opacity-95 shadow-xs',
         focusRing
       ),
     };

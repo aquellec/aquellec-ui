@@ -19,12 +19,14 @@ export default defineConfig([
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options, context) {
-      if (context.format === 'cjs') {
-        options.footer = {
-          js: 'module.exports = module.exports.default;',
-        };
-      }
-    },
+    /*
+      No CJS footer here. `module.exports = module.exports.default` was appended
+      before esbuild emitted the export assignments, so it read an undefined
+      `default`, replaced `module.exports` with `undefined`, and the later
+      `exports.default = …` wrote to a detached object. `require()` returned
+      `undefined`, and the documented `require('@aquellec/ui/tailwind-preset')
+      .default` threw. Without the footer the interop is esbuild's own and the
+      documented form works.
+    */
   },
 ]);

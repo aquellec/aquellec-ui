@@ -211,7 +211,7 @@ export const fr: Dictionary = {
       focusIntro:
         "Centralisés dans src/lib/focus-ring.ts. Naviguez au clavier (Tab) pour les voir — ils sont en focus-visible uniquement, donc invisibles au clic.",
       focusNote:
-        "Les trois anneaux sont en focus-visible uniquement : ils apparaissent au clavier, jamais au clic. Ils s'appliquent par-dessus un outline-none, donc les retirer via className ne laisse aucun indicateur de focus.",
+        "Les trois anneaux sont en focus-visible uniquement : ils apparaissent au clavier, jamais au clic. Ils s'appliquent par-dessus un contour transparent, qui garde le focus visible en contrastes forcés — donc les retirer via className ne laisse aucun indicateur de focus.",
       focusVariants: {
         standard: 'Contrôle standard',
         destructive: 'Action destructive',

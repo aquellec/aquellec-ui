@@ -217,7 +217,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
             already dark page no longer separates the dialog from its
             background.
           */
-          className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/70 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/70 backdrop-blur-[4px] transition-opacity"
           onClick={onClose}
           aria-hidden="true"
         />

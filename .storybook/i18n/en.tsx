@@ -212,7 +212,7 @@ export const en = {
       focusIntro:
         'Centralised in src/lib/focus-ring.ts. Navigate with the keyboard (Tab) to see them — they are focus-visible only, so invisible on click.',
       focusNote:
-        'All three rings are focus-visible only: they appear on keyboard navigation, never on click. They sit on top of an outline-none, so removing them through className leaves no focus indicator.',
+        'All three rings are focus-visible only: they appear on keyboard navigation, never on click. They sit on top of a transparent outline, which keeps focus visible in forced-colors mode — so removing them through className leaves no focus indicator.',
       focusVariants: {
         standard: 'Standard control',
         destructive: 'Destructive action',
