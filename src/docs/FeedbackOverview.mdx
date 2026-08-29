@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Feedback/Overview" />
+
+<div className="sb-unstyled">
+
+<p className="text-overline uppercase text-brand-700 dark:text-brand-300">Family</p>
+
+<h1 className="mt-1 text-display font-bold text-neutral-900 dark:text-neutral-50">Feedback</h1>
+
+<p className="mt-3 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  What the interface says back: the outcome of an analysis, a state on an application,
+  a decision that needs confirming before it is taken. Feedback about people's
+  applications has to be unambiguous, so these components are announced to assistive
+  technology rather than merely shown.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Components</h2>
+
+<div className="mt-4 overflow-x-auto rounded-card border border-neutral-200 dark:border-neutral-700">
+  <table className="w-full text-left text-label">
+    <thead className="bg-neutral-50 text-neutral-500 dark:bg-neutral-800/60 dark:text-neutral-400">
+      <tr>
+        <th scope="col" className="p-3 font-semibold">Component</th>
+        <th scope="col" className="p-3 font-semibold">Use it for</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Badge</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">A state that persists: Shortlisted, To review, Not retained, AI extracted.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Toast</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Something that just happened and does not block: an analysis finished, a quota is close.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Modal</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">A decision that must be taken before anything else: rejecting an application, moving a candidate forward.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">When to use, and when not</h2>
+
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>reserve the <code>error</code> toast for something the recruiter must act on — it takes <code>role="alert"</code> and interrupts a screen reader;</li>
+      <li>say what a confirmation will and will not do: “Nothing is sent to them until you send the rejection yourself.”;</li>
+      <li>pair a badge's colour with its word, so the state survives a greyscale print of the pipeline;</li>
+      <li>give a modal a title, or an <code>ariaLabel</code> when the design has no visible one.</li>
+    </ul>
+  </div>
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do not</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>put an action a recruiter needs inside a toast — it disappears;</li>
+      <li>use a modal for information; if there is nothing to decide, it is a panel;</li>
+      <li>stack modals. The <code>inert</code> and scroll-lock handling covers one dialog at a time, by design;</li>
+      <li>mark a state <code>ai</code> unless a model produced it. That badge is a provenance claim.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Anatomy</h2>
+
+<ul className="mt-4 max-w-2xl space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Toast</strong> — a live region: <code>role="alert"</code> for errors, <code>role="status"</code> otherwise, so the rest is announced without cutting off the current sentence.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Modal</strong> — a portal, focus trapped and restored on close, Escape and overlay dismiss, the page behind marked <code>inert</code>.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Badge</strong> — never wraps: a status is one atom, and a wrapped badge clips in a table cell.</li>
+</ul>
+
+</div>

@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Actions/Overview" />
+
+<div className="sb-unstyled">
+
+<p className="text-overline uppercase text-brand-700 dark:text-brand-300">Family</p>
+
+<h1 className="mt-1 text-display font-bold text-neutral-900 dark:text-neutral-50">Actions</h1>
+
+<p className="mt-3 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Controls that commit a recruiter to something: running an analysis, shortlisting a
+  candidate, switching workspace. Everything in this family changes state, so every
+  element here is keyboard reachable, announces itself, and shows a focus ring.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Components</h2>
+
+<div className="mt-4 overflow-x-auto rounded-card border border-neutral-200 dark:border-neutral-700">
+  <table className="w-full text-left text-label">
+    <thead className="bg-neutral-50 text-neutral-500 dark:bg-neutral-800/60 dark:text-neutral-400">
+      <tr>
+        <th scope="col" className="p-3 font-semibold">Component</th>
+        <th scope="col" className="p-3 font-semibold">Use it for</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Button</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">A single committed action. Five variants, of which <code>ai</code> is reserved for generative work.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">SegmentedControl</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Choosing one option among two to five, when all of them are worth showing.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">When to use, and when not</h2>
+
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Reach for a Button when</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>the action writes something: run the analysis, shortlist, send the rejection;</li>
+      <li>there is one obvious next step on the screen — make that one <code>primary</code>, the rest <code>outline</code> or <code>ghost</code>;</li>
+      <li>a model produced the outcome and the recruiter is accepting it — that is what <code>ai</code> marks.</li>
+    </ul>
+  </div>
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do not</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>use a Button to navigate — a link that looks like a button breaks the back button and middle-click;</li>
+      <li>put two <code>primary</code> buttons in the same view; the second one cancels the meaning of the first;</li>
+      <li>use <code>ai</code> as decoration. A violet button claims a machine produced the result, and a recruiter will believe it;</li>
+      <li>use SegmentedControl past five options, or when the options are not exclusive — that is a filter, not a segment.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Anatomy</h2>
+
+<ul className="mt-4 max-w-2xl space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Label</strong> — a verb and its object: “Run the ATS analysis”, not “Submit”. Never a bare “OK”.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Icon</strong> — optional and always decorative, marked <code>aria-hidden</code>; the label carries the meaning.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Loading state</strong> — <code>isLoading</code> disables the control and sets <code>aria-busy</code>, so a second click cannot start a second analysis.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Focus ring</strong> — centralised in <code>focusRing</code>. Keyboard only, and it sits on a transparent outline so it survives forced-colors mode.</li>
+</ul>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Touch targets</h2>
+
+<p className="mt-4 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Every size is at least 44px tall below the <code>sm</code> breakpoint, the target
+  recommended by WCAG 2.5.5, and returns to its compact height from 640px where the
+  pointer is precise. A recruiter triaging applications on a phone is the case that
+  sets the floor.
+</p>
+
+</div>

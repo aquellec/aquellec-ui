@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Templates/Overview" />
+
+<div className="sb-unstyled">
+
+<p className="text-overline uppercase text-brand-700 dark:text-brand-300">Family</p>
+
+<h1 className="mt-1 text-display font-bold text-neutral-900 dark:text-neutral-50">Templates</h1>
+
+<p className="mt-3 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Two assembled pages, kept in the library for one reason: a component looks finished in
+  isolation and reveals itself in composition. These are where spacing rhythm, density
+  and the dark theme are actually judged.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">The two pages</h2>
+
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Candidate workspace</p>
+    <p className="mt-2 text-label text-neutral-600 dark:text-neutral-300">
+      One person, one application. Upload a resume, paste the job description, read the
+      ATS score and the suggestions. Dropzone, Input, Textarea, ScoreGauge, Card,
+      ProgressBar and DataTable in one page.
+    </p>
+  </div>
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Recruiter workspace</p>
+    <p className="mt-2 text-label text-neutral-600 dark:text-neutral-300">
+      Many people, one role. Bulk resume import, three KPIs, and the analysis pipeline as
+      a table. The same components at a different density.
+    </p>
+  </div>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">What they are for</h2>
+
+<ul className="mt-4 max-w-2xl space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Judging spacing</strong> — a card looks right alone and crowded in a column of five. The rhythm is set here.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Judging density</strong> — a recruiter reads the pipeline all day; the templates are where that load is visible.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Judging the dark theme</strong> — surfaces stack in a real page, and that is where a wrong elevation shows.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Judging the small screen</strong> — both pages are exercised at 375px, where column priority and touch targets stop being theoretical.</li>
+</ul>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">What they are not</h2>
+
+<p className="mt-4 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  They are not exported and not meant to be copied into an application. They compose
+  published components with local layout; the layout is an example, the components are
+  the contract. Copying a template means inheriting decisions that were made for a
+  screenshot.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Viewports</h2>
+
+<p className="mt-4 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  The mobile and tablet stories only apply their viewport in the Canvas tab: on a
+  documentation page Storybook locks it back to Responsive, so the preview there renders
+  full width. The viewport does apply in the Vitest run, which is what keeps the small
+  screen honest.
+</p>
+
+</div>
