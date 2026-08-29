@@ -39,6 +39,27 @@ export default {
 
 Le preset apporte les palettes `brand`, `ai` et `semantic.*`, les rayons et élévations partagés, et neutralise les animations sous `prefers-reduced-motion`.
 
+#### Tailwind 4
+
+The package supports both major lines, but they are wired differently. Tailwind 4
+reads a CSS-first configuration and does **not** pick up `tailwind.config.js` on
+its own — the style sheet has to point at it:
+
+```css
+@import "tailwindcss";
+@config "./tailwind.config.js";
+```
+
+That single line is what makes the preset apply. Without it the build still
+succeeds and reports nothing, but the result is silently broken: none of the
+`brand`, `ai` or `semantic` tokens are generated, the shared shadows are absent,
+and `dark:` falls back to `prefers-color-scheme` instead of the `class` strategy
+the components rely on.
+
+`pnpm check:tailwind-v4` compiles the built preset against the current Tailwind 4
+and asserts all of the above; it runs in CI, so the peer range and the behaviour
+cannot drift apart.
+
 ### Dark mode
 
 The preset enables Tailwind's `class` strategy, so every component ships light

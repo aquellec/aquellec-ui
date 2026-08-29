@@ -51,6 +51,12 @@ jobs:
       - name: Build the package
         run: pnpm build
 
+      # The package advertises `tailwindcss: ^3.4.0 || ^4.0.0`. The v3 half is
+      # covered by everything else in this job; this is the v4 half, which
+      # nothing verified before.
+      - name: Verify the Tailwind 4 peer claim
+        run: pnpm check:tailwind-v4
+
       - name: Build the static documentation
         run: pnpm build-storybook
 

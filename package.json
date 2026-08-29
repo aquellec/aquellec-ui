@@ -27,7 +27,8 @@
     "build": "tsup && tsc -p tsconfig.build.json",
     "type-check": "tsc --noEmit",
     "test:storybook": "vitest run --project storybook",
-    "playwright:install": "playwright install chromium"
+    "playwright:install": "playwright install chromium",
+    "check:tailwind-v4": "node scripts/check-tailwind-v4.mjs"
   },
   "keywords": [
     "react",
