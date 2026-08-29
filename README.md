@@ -41,66 +41,36 @@ Le preset apporte les palettes `brand`, `ai` et `semantic.*`, les rayons et él�
 
 #### Tailwind 4
 
-The package supports both major lines, but they are wired differently. Tailwind 4
-reads a CSS-first configuration and does **not** pick up `tailwind.config.js` on
-its own — the style sheet has to point at it:
+Tailwind 4 reads a CSS-first configuration. Import the published style sheet from
+your own, and skip the JavaScript config entirely:
+
+```css
+@import "tailwindcss";
+@import "@aquellec/ui/theme.css";
+```
+
+That single import carries the palettes, the shared radii and elevations, the
+`dark` variant on the `class` strategy, and the base layers. It also registers
+this package's own bundles as a content source, so — unlike v3 — there is nothing
+to add to `content` for the components to be styled.
+
+An application already on a v3-style config can keep it, reaching it from the
+style sheet instead:
 
 ```css
 @import "tailwindcss";
 @config "./tailwind.config.js";
 ```
 
-That single line is what makes the preset apply. Without it the build still
-succeeds and reports nothing, but the result is silently broken: none of the
-`brand`, `ai` or `semantic` tokens are generated, the shared shadows are absent,
-and `dark:` falls back to `prefers-color-scheme` instead of the `class` strategy
-the components rely on.
+**One of those two lines is required.** Without either, a v4 build still succeeds
+and reports nothing, but silently produces a style sheet with none of the tokens,
+none of the shared shadows, and `dark:` bound to `prefers-color-scheme` instead
+of the `class` strategy the components rely on.
 
-`pnpm check:tailwind-v4` compiles the built preset against the current Tailwind 4
-and asserts all of the above; it runs in CI, so the peer range and the behaviour
-cannot drift apart.
-
-### Dark mode
-
-The preset enables Tailwind's `class` strategy, so every component ships light
-and dark styles and follows whichever the host application asks for. Add the
-`dark` class on `<html>` — or on any ancestor — and the subtree switches:
-
-```ts
-document.documentElement.classList.toggle('dark', isDark);
-```
-
-Nothing else is required: the preset also pins `color-scheme`, so scrollbars and
-native form chrome follow the theme.
-
-To follow the operating system instead of an explicit toggle:
-
-```ts
-const media = window.matchMedia('(prefers-color-scheme: dark)');
-const apply = () => document.documentElement.classList.toggle('dark', media.matches);
-apply();
-media.addEventListener('change', apply);
-```
-
-Surfaces and copy tones are exported so an application can build matching
-screens around the components, each constant carrying both sides of the theme:
-
-```ts
-import {
-  pageSurfaceClass,    // page canvas
-  raisedSurfaceClass,  // cards, dialogs
-  sunkenSurfaceClass,  // table headers, footers
-  surfaceBorderClass,
-  dividerBorderClass,
-  controlBorderClass,
-  strongTextClass,
-  bodyTextClass,
-  mutedTextClass,
-  subtleTextClass,
-  brandAccentClass,
-  aiAccentClass,
-} from '@aquellec/ui';
-```
+`dist/theme.css` is generated from `src/lib/design-tokens.ts` at build time, so
+the preset and the style sheet are two renderings of one source and cannot drift.
+`pnpm check:tailwind-v4` compiles both paths against the current Tailwind 4 and
+asserts all of the above; it runs in CI.
 
 ### Utiliser un composant
 

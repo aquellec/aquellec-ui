@@ -11,6 +11,7 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./theme.css": "./dist/theme.css",
     "./tailwind-preset": {
       "types": "./dist/tailwind-preset.d.ts",
       "import": "./dist/tailwind-preset.mjs",
@@ -24,7 +25,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "tsup && tsc -p tsconfig.build.json",
+    "build": "tsup && node --experimental-strip-types --no-warnings scripts/generate-theme-css.mjs && tsc -p tsconfig.build.json",
     "type-check": "tsc --noEmit",
     "test:storybook": "vitest run --project storybook",
     "playwright:install": "playwright install chromium",
