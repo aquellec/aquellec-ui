@@ -1,16 +1,16 @@
 # @aquellec/ui
 
-Composants UI React pour applications SaaS de recrutement (analyse de CV, matching ATS, espaces candidat et recruteur).
+React UI components for recruitment SaaS products: resume parsing, ATS matching, candidate and recruiter workspaces.
 
-**📖 [Documentation interactive](https://27473af902f42be3efeb0973435f662f.share.chromatic.com)** — Storybook publié : composants, pages Tokens et Introduction, templates de dashboard.
+**📖 [Interactive documentation](https://27473af902f42be3efeb0973435f662f.share.chromatic.com)** — the published Storybook: components, the Tokens and Introduction pages, dashboard templates.
 
-## Pourquoi ce projet ?
+## Why this project
 
-Une librairie créée pour alimenter mes projets perso (Dashboard Next.js & API Python d'analyse de CV). L'objectif était de construire des composants propres, accessibles et directement réutilisables pour des interfaces SaaS.
+A library built to serve my own side projects — a Next.js dashboard and a Python resume-analysis API. The goal was clean, accessible components, directly reusable across SaaS interfaces.
 
-**Stack :** React 19, TypeScript, Tailwind CSS, Lucide Icons.
+**Stack:** React 19, TypeScript, Tailwind CSS, Lucide Icons.
 
-**Documentation & tests :** Storybook 10 (a11y, viewports, tests d'interaction Vitest).
+**Documentation and tests:** Storybook 10 — accessibility, viewports, Vitest interaction tests.
 
 ## Installation
 
@@ -18,11 +18,11 @@ Une librairie créée pour alimenter mes projets perso (Dashboard Next.js & API 
 pnpm add @aquellec/ui lucide-react
 ```
 
-`react`, `react-dom` et `lucide-react` sont des **peer dependencies** — à installer dans l'application hôte. `tailwindcss` est une peer dependency optionnelle, nécessaire uniquement pour utiliser le preset.
+`react`, `react-dom` and `lucide-react` are **peer dependencies**, to be installed by the host application. `tailwindcss` is an optional peer dependency, needed only to use the preset.
 
-### Configurer Tailwind
+### Configuring Tailwind
 
-Le package ne publie aucune feuille de style : les tokens arrivent par le preset.
+The package publishes no style sheet: the tokens arrive through the preset.
 
 ```ts
 // tailwind.config.ts
@@ -37,7 +37,7 @@ export default {
 };
 ```
 
-Le preset apporte les palettes `brand`, `ai` et `semantic.*`, les rayons et élévations partagés, et neutralise les animations sous `prefers-reduced-motion`.
+The preset carries the `brand`, `ai` and `semantic.*` palettes, the shared radii and elevations, and neutralises animations under `prefers-reduced-motion`.
 
 #### Tailwind 4
 
@@ -72,7 +72,49 @@ the preset and the style sheet are two renderings of one source and cannot drift
 `pnpm check:tailwind-v4` compiles both paths against the current Tailwind 4 and
 asserts all of the above; it runs in CI.
 
-### Utiliser un composant
+### Dark mode
+
+The preset enables Tailwind's `class` strategy, so every component ships light
+and dark styles and follows whichever the host application asks for. Add the
+`dark` class on `<html>` — or on any ancestor — and the subtree switches:
+
+```ts
+document.documentElement.classList.toggle('dark', isDark);
+```
+
+Nothing else is required: the preset also pins `color-scheme`, so scrollbars and
+native form chrome follow the theme.
+
+To follow the operating system instead of an explicit toggle:
+
+```ts
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+const apply = () => document.documentElement.classList.toggle('dark', media.matches);
+apply();
+media.addEventListener('change', apply);
+```
+
+Surfaces and copy tones are exported so an application can build matching
+screens around the components, each constant carrying both sides of the theme:
+
+```ts
+import {
+  pageSurfaceClass,    // page canvas
+  raisedSurfaceClass,  // cards, dialogs
+  sunkenSurfaceClass,  // table headers, footers
+  surfaceBorderClass,
+  dividerBorderClass,
+  controlBorderClass,
+  strongTextClass,
+  bodyTextClass,
+  mutedTextClass,
+  subtleTextClass,
+  brandAccentClass,
+  aiAccentClass,
+} from '@aquellec/ui';
+```
+
+### Using a component
 
 ```tsx
 import { Button, Card, Dropzone, ToastProvider, useToast } from '@aquellec/ui';
@@ -81,7 +123,7 @@ export function App() {
   return (
     <ToastProvider>
       <Card className="max-w-md">
-        <Card.Header title="Importer un CV" />
+        <Card.Header title="Upload a resume" />
         <Card.Body>
           <Dropzone accept=".pdf" maxSizeMB={5} onFileSelect={(file) => console.log(file.name)} />
         </Card.Body>
@@ -91,52 +133,63 @@ export function App() {
 }
 ```
 
-## Composants inclus
+## Components
 
-Les composants sont génériques : aucun texte métier n'est codé en dur, tout passe par les props.
+The components are generic: no business copy is hard-coded, everything comes through props.
 
-| Famille | Composants |
+| Family | Components |
 | --- | --- |
-| **Actions** | `Button` (5 variantes dont IA), `SegmentedControl` (segments exclusifs, options en prop) |
-| **Forms** | `Input`, `Textarea` (compteur de caractères), `Dropzone` (upload PDF, mono ou multi-fichiers) |
+| **Actions** | `Button` (5 variants including AI), `SegmentedControl` (exclusive segments, options as a prop) |
+| **Forms** | `Input`, `Textarea` (character counter), `Dropzone` (PDF upload, single or multiple) |
 | **Feedback** | `Toast` + `ToastProvider` / `useToast`, `Modal` (focus trap, `inert`), `Badge` |
-| **Data Display** | `ScoreGauge` (score 0–100), `DataTable` (pagination, skeleton), `ProgressBar` (quota, seuils configurables), `Card` (+ `Header` / `Body` / `Footer`), `PricingCard` |
+| **Data Display** | `ScoreGauge` (0–100 score), `DataTable` (pagination, skeleton), `ProgressBar` (quota, configurable thresholds), `Card` (+ `Header` / `Body` / `Footer`), `PricingCard` |
 
-**Templates** — dashboards Candidat et Recruteur complets, assemblés dans Storybook.
+**Templates** — complete Candidate and Recruiter dashboards, assembled in Storybook.
 
-### Utilitaires exportés
+### Exported helpers
 
 ```ts
 import {
   cn,                          // clsx + tailwind-merge
-  aquellecColors,              // tokens bruts, hors Tailwind
-  aquellecThemeExtensions,     // rayons et élévations
+  aquellecColors,              // raw tokens, outside Tailwind
+  aquellecThemeExtensions,     // radii and elevations
   focusRing,                   // + focusRingDanger, focusRingGhost
-  getScoreTextClass,           // couleur de texte selon le palier de score
+  getScoreTextClass,           // text colour for a score tier
 } from '@aquellec/ui';
 ```
 
-## Choix techniques
+The surface and copy constants listed under [Dark mode](#dark-mode) are exported too.
 
-- **Composables** — sous-composants (`Card.Header`, `Modal.Footer`) pour garder de la flexibilité.
-- **Accessibilité** — patterns WAI-ARIA APG, navigation clavier, `:focus-visible` centralisé, `prefers-reduced-motion`. L'addon a11y tourne en mode bloquant (`test: 'error'`) : une violation axe fait échouer la CI.
-- **Styles** — `tailwind-merge` + `clsx` pour surcharger les classes sans conflit.
-- **Typage** — `strict: true`, unions discriminées (`Dropzone` single / multiple), déclarations `.d.ts` générées.
-- **Localisation** — aucun texte n'est figé : `Dropzone` et `DataTable` acceptent une prop `labels`, `Modal` et `Toast` un `closeLabel`, `ScoreGauge` des `statusLabels`. Les valeurs par défaut sont en français ; les défauts sont exportés (`defaultDropzoneLabels`, etc.) pour servir de base à une traduction.
-- **Distribution** — dual ESM / CJS, `sideEffects: false` pour le tree-shaking.
-- **Primitives headless** — réservées aux futurs widgets flottants ou composites (`Select`, `Combobox`, `Popover`, `Tooltip`, `Menu`) ; les patterns APG simples restent maison. Voir [ADR 0001](docs/adr/0001-primitives-headless.md).
+## Design decisions
 
-## Développement local
+- **Composable** — sub-components (`Card.Header`, `Modal.Footer`) to keep the layout flexible.
+- **Accessibility** — WAI-ARIA APG patterns, keyboard navigation, a centralised `:focus-visible`, `prefers-reduced-motion`. The a11y addon runs in blocking mode (`test: 'error'`): an axe violation fails CI.
+- **Styling** — `tailwind-merge` + `clsx`, so classes can be overridden without conflict.
+- **Typing** — `strict: true`, discriminated unions (`Dropzone` single / multiple), generated `.d.ts` declarations.
+- **Localisation** — no copy is frozen: `Dropzone` and `DataTable` take a `labels` prop, `Modal` and `Toast` a `closeLabel`, `ScoreGauge` a set of `statusLabels`. The defaults are French, and they are exported (`defaultDropzoneLabels`, and so on) as a base for translation.
+- **Distribution** — dual ESM / CJS, `sideEffects: false` for tree-shaking.
+- **Tailwind majors** — the package supports 3 and 4, and avoids the utilities whose meaning changed between them (`shadow-sm`, `rounded-sm`, `blur-sm`, `outline-none`). `pnpm check:utilities` fails on any of them.
+- **Headless primitives** — reserved for future floating or composite widgets (`Select`, `Combobox`, `Popover`, `Tooltip`, `Menu`); the simple APG patterns stay hand-written. See [ADR 0001](docs/adr/0001-primitives-headless.md).
+
+## Local development
 
 ```bash
 pnpm install
-pnpm playwright:install   # Chromium, requis pour les tests
+pnpm playwright:install   # Chromium, required by the tests
 
 pnpm dev                  # Storybook → http://localhost:6006
 pnpm type-check           # tsc --noEmit
-pnpm build                # Build ESM/CJS + types dans dist/
-pnpm test:storybook       # Tests d'interaction et a11y (Vitest browser mode)
-pnpm build-storybook      # Export statique de la doc
+pnpm build                # ESM/CJS build plus types in dist/
+pnpm test:storybook       # Interaction and a11y tests (Vitest browser mode)
+pnpm build-storybook      # Static documentation export
+```
+
+Three guards run in CI, each also runnable locally:
+
+```bash
+pnpm check:utilities      # utilities whose meaning differs between Tailwind 3 and 4
+pnpm check:package        # every published entry point loads as documented
+pnpm check:tailwind-v4    # the preset and theme.css compile under Tailwind 4
 ```
 
 The Storybook toolbar carries a **Theme** switch (Light / Dark) driving the
@@ -148,14 +201,14 @@ palette rather than assuming it:
 STORYBOOK_THEME=dark pnpm test:storybook
 ```
 
-Les blocs visuels des pages MDX vivent dans `src/docs/_showcase.tsx` et `src/docs/_tokens.tsx`, et portent la classe `sb-unstyled` : sans elle, les styles de doc de Storybook écrasent les utilitaires Tailwind.
+The visual blocks of the MDX pages live in `src/docs/_showcase.tsx` and `src/docs/_tokens.tsx`, and carry the `sb-unstyled` class: without it, Storybook's own documentation styles override the Tailwind utilities.
 
-Toute évolution de token passe par `src/lib/design-tokens.ts` — le preset et la page Tokens en découlent automatiquement.
+Every token change goes through `src/lib/design-tokens.ts` — the preset, `theme.css` and the Tokens page all follow from it.
 
-## Limitations connues
+## Known limitations
 
-- **Next.js App Router** — la directive `"use client"` n'est pas encore émise au build. Importez les composants depuis un Client Component en attendant.
-- Le composant `DataTable` n'est pas virtualisé : il est prévu pour des vues paginées.
+- **Next.js App Router** — the `"use client"` directive is not emitted at build time yet. Import the components from a Client Component in the meantime.
+- `DataTable` is not virtualised: it is meant for paginated views.
 
 ## Licence
 
