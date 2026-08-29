@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push supersedes the run it interrupts: only the head of a branch is
+# worth a verdict.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Type-check, build and Storybook tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads `packageManager` from package.json, so the pinned pnpm version is
+      # the one CI uses.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The Storybook tests run in a real Chromium through Vitest browser mode.
+      # Downloading it dominates the run, hence the cache; the key follows the
+      # lockfile so a Playwright bump fetches a matching browser.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm type-check
+
+      - name: Build the package
+        run: pnpm build
+
+      - name: Build the static documentation
+        run: pnpm build-storybook
+
+      - name: Storybook tests
+        run: pnpm test:storybook
+
+      # The a11y addon is blocking, so this replay checks contrast against the
+      # dark palette instead of assuming it. It is what caught a primary button
+      # sitting at 4.17:1, below AA.
+      - name: Storybook tests (dark)
+        run: STORYBOOK_THEME=dark pnpm test:storybook
