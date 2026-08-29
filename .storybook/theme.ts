@@ -1,77 +1,95 @@
 import { create } from 'storybook/theming';
+import { aquellecColors, aquellecThemeExtensions } from '../src/lib/design-tokens';
+
+/*
+  The Storybook interface, built from the same tokens as the components.
+
+  Nothing here is a hand-picked hex: the chrome around a component and the
+  component itself have to be the same design system, or the documentation
+  quietly contradicts what it documents. When the palette moves, this moves.
+*/
+
+const { neutral, brand, ai } = aquellecColors;
+const sans = aquellecThemeExtensions.fontFamily.sans.join(', ');
+const mono = aquellecThemeExtensions.fontFamily.mono.join(', ');
+
+const identity = {
+  brandTitle: 'aquellec/ui',
+  brandUrl: 'https://github.com/aquellec/aquellec-ui',
+  brandImage: './logo.svg',
+  brandTarget: '_self' as const,
+
+  /*
+    `colorPrimary` marks the active item, `colorSecondary` every interactive
+    accent — selection, focus, links. Both are the brand blue rather than the
+    violet: `ai` is reserved for generated content and would be a false signal
+    on a sidebar row.
+  */
+  colorPrimary: brand[600],
+  colorSecondary: brand[600],
+
+  fontBase: sans,
+  fontCode: mono,
+
+  appBorderRadius: 8,
+  inputBorderRadius: 6,
+};
 
 /** Storybook interface in light mode. */
 export const aquellecTheme = create({
   base: 'light',
+  ...identity,
 
-  brandTitle: 'aquellec-ui',
-  brandUrl: 'https://github.com/aquellec/aquellec-ui',
-  brandImage: './logo.svg',
-  brandTarget: '_self',
-
-  colorPrimary: '#0066ff',
-  colorSecondary: '#8b5cf6',
-
-  appBg: '#f8fafc',
+  appBg: neutral[50],
   appContentBg: '#ffffff',
-  appBorderColor: '#e2e8f0',
-  appBorderRadius: 8,
+  appPreviewBg: '#ffffff',
+  appBorderColor: neutral[200],
 
-  fontBase: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  fontCode: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-
-  textColor: '#0f172a',
+  textColor: neutral[900],
   textInverseColor: '#ffffff',
-  textMutedColor: '#64748b',
+  textMutedColor: neutral[500],
 
-  barTextColor: '#64748b',
-  barSelectedColor: '#0066ff',
-  barHoverColor: '#0052cc',
+  barTextColor: neutral[500],
+  barSelectedColor: brand[600],
+  barHoverColor: brand[700],
   barBg: '#ffffff',
 
   inputBg: '#ffffff',
-  inputBorder: '#cbd5e1',
-  inputTextColor: '#0f172a',
-  inputBorderRadius: 6,
+  inputBorder: neutral[300],
+  inputTextColor: neutral[900],
 });
 
 /**
  * Storybook interface in dark mode.
  *
  * Applied to the documentation pages through the `theme` prop of
- * `DocsContainer`, so the prop tables, headings and page background follow the
- * toolbar switch instead of staying light around dark component previews.
+ * `DocsContainer`, so prop tables and page chrome follow the toolbar switch
+ * instead of framing dark previews in a light page.
  */
 export const aquellecDarkTheme = create({
   base: 'dark',
+  ...identity,
 
-  brandTitle: 'aquellec-ui',
-  brandUrl: 'https://github.com/aquellec/aquellec-ui',
-  brandImage: './logo.svg',
-  brandTarget: '_self',
+  colorSecondary: brand[400],
 
-  colorPrimary: '#0066ff',
-  colorSecondary: '#8b5cf6',
+  appBg: neutral[950],
+  appContentBg: neutral[900],
+  appPreviewBg: neutral[950],
+  appBorderColor: neutral[700],
 
-  appBg: '#020617',
-  appContentBg: '#0f172a',
-  appBorderColor: '#334155',
-  appBorderRadius: 8,
+  textColor: neutral[100],
+  textInverseColor: neutral[950],
+  textMutedColor: neutral[400],
 
-  fontBase: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  fontCode: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+  barTextColor: neutral[400],
+  barSelectedColor: brand[300],
+  barHoverColor: brand[200],
+  barBg: neutral[900],
 
-  textColor: '#f8fafc',
-  textInverseColor: '#0f172a',
-  textMutedColor: '#94a3b8',
-
-  barTextColor: '#94a3b8',
-  barSelectedColor: '#3690ff',
-  barHoverColor: '#7cb8ff',
-  barBg: '#0f172a',
-
-  inputBg: '#0f172a',
-  inputBorder: '#475569',
-  inputTextColor: '#f8fafc',
-  inputBorderRadius: 6,
+  inputBg: neutral[900],
+  inputBorder: neutral[700],
+  inputTextColor: neutral[100],
 });
+
+/** Exposed for the docs pages that render swatches of the interface itself. */
+export const storybookChrome = { neutral, brand, ai } as const;

@@ -45,6 +45,27 @@ const shadows = Object.entries(aquellecThemeExtensions.boxShadow)
   .map(([name, value]) => `  --shadow-${name}: ${value};`)
   .join('\n');
 
+const fonts = Object.entries(aquellecThemeExtensions.fontFamily)
+  .map(([name, stack]) => `  --font-${name}: ${stack.join(', ')};`)
+  .join('\n');
+
+/*
+  Tailwind 4 reads the line height and the tracking of a type step from two
+  companion variables, so a `--text-*` entry alone would emit the size and drop
+  the rest of the decision.
+*/
+const type = Object.entries(aquellecThemeExtensions.fontSize)
+  .flatMap(([name, [size, meta]]) => [
+    `  --text-${name}: ${size};`,
+    `  --text-${name}--line-height: ${meta.lineHeight};`,
+    `  --text-${name}--letter-spacing: ${meta.letterSpacing};`,
+  ])
+  .join('\n');
+
+const easings = Object.entries(aquellecThemeExtensions.transitionTimingFunction)
+  .map(([name, value]) => `  --ease-${name}: ${value};`)
+  .join('\n');
+
 const css = `/*
   Generated from src/lib/design-tokens.ts by scripts/generate-theme-css.mjs.
   Do not edit: run \`pnpm build\`.
@@ -68,9 +89,15 @@ const css = `/*
 @theme {
 ${colors}
 
+${fonts}
+
+${type}
+
 ${radii}
 
 ${shadows}
+
+${easings}
 }
 
 /*
@@ -87,10 +114,14 @@ ${shadows}
   */
   :root {
     color-scheme: light;
+    --aq-surface: #ffffff;
+    --aq-surface-ink: rgb(13 17 23 / 0.14);
   }
 
   .dark {
     color-scheme: dark;
+    --aq-surface: ${aquellecColors.neutral[900]};
+    --aq-surface-ink: rgb(0 0 0 / 0.55);
   }
 
   /* Neutralises animations when the user asks for reduced motion (WCAG 2.3.3). */
@@ -109,4 +140,7 @@ ${shadows}
 
 const out = resolve(import.meta.dirname, '..', 'dist', 'theme.css');
 writeFileSync(out, css);
-console.log(`theme.css written (${flatten(aquellecColors).length} colour tokens)`);
+console.log(
+  `theme.css written (${flatten(aquellecColors).length} colour tokens, ` +
+    `${Object.keys(aquellecThemeExtensions.fontSize).length} type steps)`
+);

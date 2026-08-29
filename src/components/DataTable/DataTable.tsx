@@ -40,8 +40,8 @@ export const defaultDataTableLabels: DataTableLabels = {
   nextPage: 'Next page',
   pageStatus: (currentPage, totalPages) => (
     <>
-      Page <strong className="text-slate-800 dark:text-slate-100">{currentPage}</strong> of{' '}
-      <strong className="text-slate-800 dark:text-slate-100">{totalPages}</strong>
+      Page <strong className="text-neutral-800 dark:text-neutral-100">{currentPage}</strong> of{' '}
+      <strong className="text-neutral-800 dark:text-neutral-100">{totalPages}</strong>
     </>
   ),
   scrollRegion: 'Table, scrollable horizontally',
@@ -62,10 +62,10 @@ export const defaultDataTableLabels: DataTableLabels = {
  */
 const scrollShadows: React.CSSProperties = {
   backgroundImage: [
-    'linear-gradient(to right, var(--aq-table-edge) 30%, transparent)',
-    'linear-gradient(to left, var(--aq-table-edge) 30%, transparent)',
-    'radial-gradient(farthest-side at 0 50%, var(--aq-table-shadow), transparent)',
-    'radial-gradient(farthest-side at 100% 50%, var(--aq-table-shadow), transparent)',
+    'linear-gradient(to right, var(--aq-surface) 30%, transparent)',
+    'linear-gradient(to left, var(--aq-surface) 30%, transparent)',
+    'radial-gradient(farthest-side at 0 50%, var(--aq-surface-ink), transparent)',
+    'radial-gradient(farthest-side at 100% 50%, var(--aq-surface-ink), transparent)',
   ].join(', '),
   backgroundPosition: 'left center, right center, left center, right center',
   backgroundRepeat: 'no-repeat',
@@ -73,14 +73,7 @@ const scrollShadows: React.CSSProperties = {
   backgroundAttachment: 'local, local, scroll, scroll',
 };
 
-/*
-  The cover matches the table surface (white / slate-900) so it hides the
-  shadow once an edge is reached. The shadow itself is deepened in dark mode:
-  a slate-tinted shadow is invisible against a dark surface.
-*/
-const scrollShadowTheme =
-  '[--aq-table-edge:#ffffff] [--aq-table-shadow:rgba(15,23,42,0.14)] ' +
-  'dark:[--aq-table-edge:#0f172a] dark:[--aq-table-shadow:rgba(0,0,0,0.55)]';
+
 
 export interface DataTableProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   /** Partial override of the component copy, merged over the defaults. */
@@ -123,8 +116,8 @@ function DataTableInner<T>(
     <div
       ref={ref}
       className={cn(
-        'w-full border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-xs',
-        'dark:border-slate-700 dark:bg-slate-900',
+        'w-full border border-neutral-200/80 rounded-card bg-white overflow-hidden shadow-xs',
+        'dark:border-neutral-700 dark:bg-neutral-900',
         className
       )}
       {...props}
@@ -140,15 +133,15 @@ function DataTableInner<T>(
           without it, reaching the last column hands the gesture to the browser,
           which triggers back-navigation on iOS and Chrome Android.
         */
-        className={cn('overflow-x-auto overscroll-x-contain', scrollShadowTheme, focusRing)}
+        className={cn('overflow-x-auto overscroll-x-contain', focusRing)}
         style={scrollShadows}
         tabIndex={0}
         role="region"
         aria-label={labels.scrollRegion}
       >
-        <table className="w-full text-left text-sm border-collapse" aria-busy={isLoading || undefined}>
+        <table className="w-full text-left text-body border-collapse" aria-busy={isLoading || undefined}>
           <thead>
-            <tr className="bg-slate-50/80 border-b border-slate-200/80 text-xs font-semibold text-slate-500 uppercase tracking-wider dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-400">
+            <tr className="bg-neutral-50/80 border-b border-neutral-200/80 text-caption font-semibold text-neutral-500 uppercase tracking-wider dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-400">
               {/*
                 Headers wrap, cells do not: a header is a label that can take
                 two lines, and keeping `CANDIDATE / RESUME` on one line alone
@@ -161,13 +154,13 @@ function DataTableInner<T>(
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+          <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, rowIdx) => (
                 <tr key={`skeleton-${rowIdx}`} className="animate-pulse">
                   {columns.map((col) => (
                     <td key={`${col.header}-skeleton-${rowIdx}`} className="py-4 px-3 sm:px-4">
-                      <div className="h-4 bg-slate-200/60 dark:bg-slate-700/60 rounded-md w-3/4" />
+                      <div className="h-4 bg-neutral-200/60 dark:bg-neutral-700/60 rounded-md w-3/4" />
                     </td>
                   ))}
                 </tr>
@@ -177,7 +170,7 @@ function DataTableInner<T>(
                 <td colSpan={columns.length} className={cn('py-12 text-center', mutedTextClass)}>
                   <div className="flex flex-col items-center justify-center space-y-2">
                     <Inbox className={cn('w-8 h-8', mutedTextClass)} aria-hidden="true" />
-                    <p className="text-sm font-medium">{emptyMessage}</p>
+                    <p className="text-body font-medium">{emptyMessage}</p>
                   </div>
                 </td>
               </tr>
@@ -185,7 +178,7 @@ function DataTableInner<T>(
               data.map((item) => (
                 <tr
                   key={keyExtractor(item)}
-                  className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors"
+                  className="hover:bg-neutral-50/60 dark:hover:bg-neutral-800/40 transition-colors"
                 >
                   {/*
                     Cells do not wrap: at 375px a wrapped cell turns a badge
@@ -196,7 +189,7 @@ function DataTableInner<T>(
                     <td
                       key={`${keyExtractor(item)}-${col.header}`}
                       className={cn(
-                        'py-3.5 px-3 sm:px-4 text-slate-700 dark:text-slate-200 whitespace-nowrap',
+                        'py-3.5 px-3 sm:px-4 text-neutral-700 dark:text-neutral-200 whitespace-nowrap',
                         col.className
                       )}
                     >
@@ -217,7 +210,7 @@ function DataTableInner<T>(
       {pagination && !isLoading && data.length > 0 && (
         <nav
           aria-label={labels.pagination}
-          className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-slate-50/50 border-t border-slate-100 text-xs text-slate-500 dark:bg-slate-800/40 dark:border-slate-800 dark:text-slate-400"
+          className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-neutral-50/50 border-t border-neutral-100 text-caption text-neutral-500 dark:bg-neutral-800/40 dark:border-neutral-800 dark:text-neutral-400"
         >
           <span>{labels.pageStatus(pagination.currentPage, pagination.totalPages)}</span>
           {/*
@@ -230,8 +223,8 @@ function DataTableInner<T>(
               onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
               disabled={pagination.currentPage <= 1}
               className={cn(
-                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
-                'dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800',
+                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-neutral-200 text-neutral-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-neutral-100 transition-colors',
+                'dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800',
                 focusRing
               )}
               aria-label={labels.previousPage}
@@ -243,8 +236,8 @@ function DataTableInner<T>(
               onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage >= pagination.totalPages}
               className={cn(
-                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors',
-                'dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800',
+                'inline-flex h-11 w-11 items-center justify-center sm:h-8 sm:w-8 rounded-md border border-neutral-200 text-neutral-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-neutral-100 transition-colors',
+                'dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800',
                 focusRing
               )}
               aria-label={labels.nextPage}

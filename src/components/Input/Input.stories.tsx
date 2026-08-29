@@ -103,7 +103,7 @@ export const WithIcon: Story = {
           className="pl-9"
         />
         <Building2
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-neutral-500 dark:text-neutral-400"
           aria-hidden="true"
         />
       </div>
@@ -124,7 +124,7 @@ export const SearchField: Story = {
           className="pl-9"
         />
         <Search
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-neutral-500 dark:text-neutral-400"
           aria-hidden="true"
         />
       </div>
@@ -145,7 +145,7 @@ export const PasswordWithIcon: Story = {
           className="pl-9"
         />
         <Lock
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-neutral-500 dark:text-neutral-400"
           aria-hidden="true"
         />
       </div>

@@ -57,9 +57,9 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     };
 
     const dimensions = {
-      sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-[10px]' },
-      md: { width: 140, strokeWidth: 10, fontSize: 'text-3xl', labelSize: 'text-sm' },
-      lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-base' },
+      sm: { width: 100, strokeWidth: 8, fontSize: 'text-title', labelSize: 'text-caption' },
+      md: { width: 140, strokeWidth: 10, fontSize: 'text-display', labelSize: 'text-body' },
+      lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-heading' },
     };
 
     const { width, strokeWidth, fontSize, labelSize } = dimensions[size];
@@ -112,8 +112,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       <div
         ref={ref}
         className={cn(
-          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-xs',
-          'dark:bg-slate-900 dark:border-slate-700',
+          'flex flex-col items-center justify-center p-4 bg-white rounded-card border border-neutral-100 shadow-xs',
+          'dark:bg-neutral-900 dark:border-neutral-700',
           className
         )}
         {...props}
@@ -134,7 +134,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               cx={width / 2}
               cy={width / 2}
               r={radius}
-              className="stroke-slate-100 dark:stroke-slate-800"
+              className="stroke-neutral-100 dark:stroke-neutral-800"
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -161,7 +161,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
             {label && (
               <span
                 className={cn(
-                  'font-medium text-slate-500 dark:text-slate-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
+                  'font-medium text-neutral-500 dark:text-neutral-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
                   labelSize
                 )}
               >
@@ -172,7 +172,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
         </div>
 
         {showStatus && (
-          <div className={cn('mt-3 px-3 py-1 rounded-full text-xs font-semibold border', colors.bg)}>
+          <div className={cn('mt-3 px-3 py-1 rounded-full text-caption font-semibold border', colors.bg)}>
             {colors.statusText}
           </div>
         )}

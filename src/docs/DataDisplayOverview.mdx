@@ -1,0 +1,84 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Data Display/Overview" />
+
+<div className="sb-unstyled">
+
+<p className="text-overline uppercase text-brand-700 dark:text-brand-300">Family</p>
+
+<h1 className="mt-1 text-display font-bold text-neutral-900 dark:text-neutral-50">Data display</h1>
+
+<p className="mt-3 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Where the numbers live: match scores, pipelines, quotas. A recruiter scans these for
+  hours, so density matters more than ornament — the hierarchy is carried by weight,
+  alignment and restraint, and colour is spent only where it means something.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Components</h2>
+
+<div className="mt-4 overflow-x-auto rounded-card border border-neutral-200 dark:border-neutral-700">
+  <table className="w-full text-left text-label">
+    <thead className="bg-neutral-50 text-neutral-500 dark:bg-neutral-800/60 dark:text-neutral-400">
+      <tr>
+        <th scope="col" className="p-3 font-semibold">Component</th>
+        <th scope="col" className="p-3 font-semibold">Use it for</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">DataTable</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">A pipeline: candidates against roles, with a status and a score per row.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">ScoreGauge</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">One score out of 100, when it is the point of the screen.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">ProgressBar</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Consumption against a limit: analyses used this month, seats taken.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Card</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Grouping a subject and its actions. Composed of Header, Body and Footer.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">PricingCard</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Plan comparison, when analyses per month is the axis that matters.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">When to use, and when not</h2>
+
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>rank columns by what a recruiter scans first — candidate, score, status — and hide the rest below <code>sm</code>;</li>
+      <li>let a score's colour follow its tier, and keep the number readable on its own;</li>
+      <li>give an empty table a sentence that says what would fill it, not “No data”;</li>
+      <li>write a real threshold into ProgressBar rather than colouring at 80% out of habit.</li>
+    </ul>
+  </div>
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do not</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>use a gauge for two numbers side by side; a gauge is for one figure that carries a decision;</li>
+      <li>expect DataTable to virtualise — it is built for paginated views, and says so;</li>
+      <li>wrap a cell to avoid a scroll: a wrapped badge clips, and the table scrolls sideways on purpose;</li>
+      <li>put more than one primary action in a card footer.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Reading a table on a phone</h2>
+
+<p className="mt-4 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  At 375px the table keeps candidate, score and status, and scrolls to reach the rest.
+  The scroll area is focusable and named, so the hidden columns are reachable from the
+  keyboard, and its edge shadows come from the surface tokens rather than a hard-coded
+  white — which is what lets them work in dark mode.
+</p>
+
+</div>

@@ -68,48 +68,48 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
       <div
         ref={ref}
         className={cn(
-          'relative flex flex-col p-6 rounded-2xl transition-all duration-200 bg-white border',
-          'dark:bg-slate-900',
+          'relative flex flex-col p-6 rounded-card transition-all duration-200 bg-white border',
+          'dark:bg-neutral-900',
           isPopular
             ? 'border-ai-500 shadow-md ring-1 ring-ai-500 dark:border-ai-400 dark:ring-ai-400'
-            : 'border-slate-200 hover:border-slate-300 shadow-xs dark:border-slate-700 dark:hover:border-slate-600',
+            : 'border-neutral-200 hover:border-neutral-300 shadow-xs dark:border-neutral-700 dark:hover:border-neutral-600',
           className
         )}
         {...props}
       >
         {isPopular && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-ai-600 to-brand-600 text-white text-[11px] font-semibold rounded-full shadow-xs flex items-center space-x-1">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-ai-600 to-brand-600 text-white text-caption font-semibold rounded-full shadow-xs flex items-center space-x-1">
             <Sparkles className="w-3 h-3" aria-hidden="true" />
             <span>{badgeText}</span>
           </div>
         )}
 
         <div className="mb-5">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 min-h-[32px]">{description}</p>
+          <h3 className="text-title font-bold text-neutral-800 dark:text-neutral-100">{title}</h3>
+          <p className="text-caption text-neutral-500 dark:text-neutral-400 mt-1 min-h-[32px]">{description}</p>
         </div>
 
         <div className="flex items-baseline mb-6">
-          <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
+          <span className="text-display font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight">
             {price}
           </span>
           {/* Rendered only when a period is provided: no magic value to compare
               the price against, which would tie the component to one language. */}
           {period && (
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">{period}</span>
+            <span className="text-caption font-medium text-neutral-500 dark:text-neutral-400 ml-1">{period}</span>
           )}
         </div>
 
         <ul className="space-y-3 mb-8 flex-1" aria-label={featuresLabel(title)}>
           {features.map((feature) => (
-            <li key={feature.text} className="flex items-start text-xs">
+            <li key={feature.text} className="flex items-start text-caption">
               <span className="sr-only">{feature.included ? includedLabel : excludedLabel}</span>
               <div
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',
                   feature.included
                     ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300'
-                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                    : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
                 )}
                 aria-hidden="true"
               >
@@ -118,7 +118,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
               <span
                 className={
                   feature.included
-                    ? 'text-slate-700 dark:text-slate-200'
+                    ? 'text-neutral-700 dark:text-neutral-200'
                     : cn(mutedTextClass, 'line-through')
                 }
               >

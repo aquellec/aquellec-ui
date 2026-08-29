@@ -42,22 +42,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           under the same copy only reaches 4.17:1 and fails AA — the dark
           replay of the suite caught it.
         */
-        'dark:bg-brand-400 dark:hover:bg-brand-300 dark:text-slate-950',
+        'dark:bg-brand-400 dark:hover:bg-brand-300 dark:text-neutral-950',
         focusRing
       ),
       secondary: cn(
-        'bg-slate-100 text-slate-900 hover:bg-slate-200',
-        'dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
+        'bg-neutral-100 text-neutral-900 hover:bg-neutral-200',
+        'dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700',
         focusRing
       ),
       outline: cn(
-        'border border-slate-300 bg-transparent hover:bg-slate-50 text-slate-700',
-        'dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800',
+        'border border-neutral-300 bg-transparent hover:bg-neutral-50 text-neutral-700',
+        'dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-800',
         focusRing
       ),
       ghost: cn(
-        'bg-transparent hover:bg-slate-100 text-slate-700',
-        'dark:text-slate-200 dark:hover:bg-slate-800',
+        'bg-transparent hover:bg-neutral-100 text-neutral-700',
+        'dark:text-neutral-200 dark:hover:bg-neutral-800',
         focusRingGhost
       ),
       /*
@@ -78,9 +78,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       of `sm` and `md` is unchanged on the screens that can use it.
     */
     const sizes = {
-      sm: 'h-11 px-3 text-xs sm:h-8',
-      md: 'h-11 px-4 text-sm sm:h-10',
-      lg: 'h-12 px-6 text-base',
+      sm: 'h-11 px-3 text-caption sm:h-8',
+      md: 'h-11 px-4 text-body sm:h-10',
+      lg: 'h-12 px-6 text-heading',
     };
 
     return (
@@ -90,7 +90,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         aria-busy={isLoading || undefined}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none',
+          'inline-flex items-center justify-center rounded-control font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none',
           variants[variant],
           sizes[size],
           className

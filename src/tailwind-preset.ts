@@ -43,6 +43,27 @@ const colorScheme = plugin(({ addBase }) => {
   });
 });
 
+/**
+ * Surface custom properties, for the places a Tailwind class cannot reach.
+ *
+ * An inline `style` carries no `dark:` variant, and a class assembled at
+ * runtime is invisible to the content scanner — so a component that needs the
+ * current surface colour inside a gradient has no way to ask for it. These two
+ * properties answer that, and flip with the theme like everything else.
+ */
+const surfaceVariables = plugin(({ addBase }) => {
+  addBase({
+    ':root': {
+      '--aq-surface': '#ffffff',
+      '--aq-surface-ink': `rgb(13 17 23 / 0.14)`,
+    },
+    '.dark': {
+      '--aq-surface': aquellecColors.neutral[900],
+      '--aq-surface-ink': 'rgb(0 0 0 / 0.55)',
+    },
+  });
+});
+
 const aquellecPreset = {
   /*
     Class strategy rather than media: the host application decides when dark
@@ -54,11 +75,30 @@ const aquellecPreset = {
   theme: {
     extend: {
       colors: aquellecColors,
+      /*
+        The tokens are frozen with `as const`, which is what lets the generator
+        read their exact shape; Tailwind's config type wants mutable arrays and
+        tuples. The copies below are that conversion, kept at the single
+        boundary where it is needed rather than by loosening the tokens.
+      */
+      fontFamily: Object.fromEntries(
+        Object.entries(aquellecThemeExtensions.fontFamily).map(([name, stack]) => [
+          name,
+          [...stack],
+        ])
+      ),
+      fontSize: Object.fromEntries(
+        Object.entries(aquellecThemeExtensions.fontSize).map(([name, [size, meta]]) => [
+          name,
+          [size, { ...meta }],
+        ])
+      ),
       borderRadius: aquellecThemeExtensions.borderRadius,
       boxShadow: aquellecThemeExtensions.boxShadow,
+      transitionTimingFunction: aquellecThemeExtensions.transitionTimingFunction,
     },
   },
-  plugins: [reducedMotion, colorScheme],
+  plugins: [reducedMotion, colorScheme, surfaceVariables],
 } satisfies Partial<Config>;
 
 export default aquellecPreset;

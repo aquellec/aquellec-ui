@@ -38,13 +38,13 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       warning:
         'bg-amber-50 text-amber-700 border border-amber-200/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
       neutral:
-        'bg-slate-100 text-slate-700 border border-slate-200/60 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700',
+        'bg-neutral-100 text-neutral-700 border border-neutral-200/60 dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700',
       ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-xs dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
     };
 
     const sizes = {
-      sm: 'text-xs px-2 py-0.5 gap-1',
-      md: 'text-xs px-2.5 py-1 gap-1.5',
+      sm: 'text-caption px-2 py-0.5 gap-1',
+      md: 'text-caption px-2.5 py-1 gap-1.5',
     };
 
     const iconSizes = size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5';

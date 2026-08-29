@@ -39,7 +39,7 @@ function fullColumns(t: Dictionary): Column<Product>[] {
     {
       header: t.table.columns.name,
       cell: (item) => (
-        <div className="flex items-center space-x-2 font-medium text-slate-900 dark:text-slate-100">
+        <div className="flex items-center space-x-2 font-medium text-neutral-900 dark:text-neutral-100">
           <Package className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
           <span>{item.name}</span>
         </div>

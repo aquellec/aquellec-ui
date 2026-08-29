@@ -35,7 +35,7 @@ export function LocalizedDocsPage() {
       <Title />
       <Subtitle />
       {description ? (
-        <p className="sb-unstyled mb-6 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300">
+        <p className="sb-unstyled mb-6 max-w-3xl text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
           {description}
         </p>
       ) : (

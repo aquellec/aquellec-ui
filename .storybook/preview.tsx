@@ -235,7 +235,27 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Docs', 'Templates', 'Actions', 'Forms', 'Feedback', 'Data Display', '*'],
+        /*
+          Foundations first — a reader needs the palette and the principles
+          before the parts. Templates last: they are the parts assembled, and
+          only make sense once the parts are known. Inside a family, Overview
+          leads.
+        */
+        order: [
+          'Foundations',
+          ['Introduction', 'Tokens'],
+          'Actions',
+          ['Overview'],
+          'Forms',
+          ['Overview'],
+          'Feedback',
+          ['Overview'],
+          'Data Display',
+          ['Overview'],
+          'Templates',
+          ['Overview'],
+          '*',
+        ],
       },
     },
   },

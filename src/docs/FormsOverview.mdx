@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Forms/Overview" />
+
+<div className="sb-unstyled">
+
+<p className="text-overline uppercase text-brand-700 dark:text-brand-300">Family</p>
+
+<h1 className="mt-1 text-display font-bold text-neutral-900 dark:text-neutral-50">Forms</h1>
+
+<p className="mt-3 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Everything a recruiter types or uploads: the job description a score is computed
+  against, the resumes themselves, the notes an interviewer leaves behind. These
+  fields carry decisions about people, so the error states are as designed as the
+  empty ones.
+</p>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Components</h2>
+
+<div className="mt-4 overflow-x-auto rounded-card border border-neutral-200 dark:border-neutral-700">
+  <table className="w-full text-left text-label">
+    <thead className="bg-neutral-50 text-neutral-500 dark:bg-neutral-800/60 dark:text-neutral-400">
+      <tr>
+        <th scope="col" className="p-3 font-semibold">Component</th>
+        <th scope="col" className="p-3 font-semibold">Use it for</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Input</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">One line: a job title, a candidate email, a search.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Textarea</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Long text: a job description, interview notes. Counts characters when <code>maxLength</code> is set.</td>
+      </tr>
+      <tr>
+        <th scope="row" className="p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">Dropzone</th>
+        <td className="p-3 text-neutral-600 dark:text-neutral-300">Resume upload, one file or a batch, with size and type validation.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">When to use, and when not</h2>
+
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>label every field visibly — a placeholder is not a label, it disappears the moment someone types;</li>
+      <li>say what went wrong and what to do: “The PDF is a scan with no text layer. Ask for a text version.”;</li>
+      <li>use <code>helperText</code> for the rule before the error, not after it;</li>
+      <li>keep Dropzone on a native file input, so the keyboard and the file picker work unchanged.</li>
+    </ul>
+  </div>
+  <div className="rounded-card border border-neutral-200 p-4 dark:border-neutral-700">
+    <p className="text-label font-semibold text-neutral-900 dark:text-neutral-100">Do not</p>
+    <ul className="mt-2 space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+      <li>write errors that blame the person: “Invalid input” tells a recruiter nothing;</li>
+      <li>hide the character counter until the limit is hit;</li>
+      <li>rely on colour alone for the error state — <code>aria-invalid</code> and the message carry it too;</li>
+      <li>accept a resume format the parser cannot read; refuse it at the drop, not after the analysis.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Anatomy</h2>
+
+<ul className="mt-4 max-w-2xl space-y-1.5 text-label text-neutral-600 dark:text-neutral-300">
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Label</strong> — bound with <code>htmlFor</code>, always rendered.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Field</strong> — the control itself, its border darkening on hover so the hit area is legible.</li>
+  <li><strong className="text-neutral-900 dark:text-neutral-100">Helper or error</strong> — one or the other, wired through <code>aria-describedby</code>; the error takes <code>role="alert"</code>.</li>
+</ul>
+
+<h2 className="mt-10 mb-3 text-title font-semibold text-neutral-900 dark:text-neutral-50">Localisation</h2>
+
+<p className="mt-4 max-w-2xl text-body text-neutral-600 dark:text-neutral-300">
+  Dropzone hard-codes no copy: every string arrives through <code>labels</code>, and the
+  French defaults are exported as <code>defaultDropzoneLabels</code> to start a translation
+  from. The same holds for DataTable. A design system for hiring is used in the language
+  of the team using it.
+</p>
+
+</div>
