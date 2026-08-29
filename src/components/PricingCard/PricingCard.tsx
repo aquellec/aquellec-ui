@@ -72,13 +72,13 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
           'dark:bg-slate-900',
           isPopular
             ? 'border-ai-500 shadow-md ring-1 ring-ai-500 dark:border-ai-400 dark:ring-ai-400'
-            : 'border-slate-200 hover:border-slate-300 shadow-sm dark:border-slate-700 dark:hover:border-slate-600',
+            : 'border-slate-200 hover:border-slate-300 shadow-xs dark:border-slate-700 dark:hover:border-slate-600',
           className
         )}
         {...props}
       >
         {isPopular && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-ai-600 to-brand-600 text-white text-[11px] font-semibold rounded-full shadow-sm flex items-center space-x-1">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-ai-600 to-brand-600 text-white text-[11px] font-semibold rounded-full shadow-xs flex items-center space-x-1">
             <Sparkles className="w-3 h-3" aria-hidden="true" />
             <span>{badgeText}</span>
           </div>

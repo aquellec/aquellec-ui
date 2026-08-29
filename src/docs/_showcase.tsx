@@ -109,7 +109,7 @@ export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-c
 export const softTransition = 'transition-colors duration-200 motion-reduce:transition-none';
 
 const linkClass = cn(
-  'rounded-sm text-brand-700 underline decoration-brand-500/40 underline-offset-2 dark:text-brand-300',
+  'rounded-[0.125rem] text-brand-700 underline decoration-brand-500/40 underline-offset-2 dark:text-brand-300',
   'hover:decoration-brand-500',
   softTransition,
   focusRing

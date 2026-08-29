@@ -58,7 +58,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         aria-live={variant === 'error' ? 'assertive' : 'polite'}
         aria-atomic="true"
         className={cn(
-          'flex items-start p-4 rounded-xl border shadow-sm transition-all duration-200 max-w-md w-full',
+          'flex items-start p-4 rounded-xl border shadow-xs transition-all duration-200 max-w-md w-full',
           semanticSurfaceClass[variant],
           className
         )}

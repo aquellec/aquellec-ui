@@ -125,7 +125,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
                 sizes[size],
                 focusRing,
                 isSelected
-                  ? 'bg-white text-slate-800 shadow-sm dark:bg-slate-700 dark:text-slate-50'
+                  ? 'bg-white text-slate-800 shadow-xs dark:bg-slate-700 dark:text-slate-50'
                   : cn(subtleTextClass, 'hover:text-slate-700 dark:hover:text-slate-100')
               )}
             >
