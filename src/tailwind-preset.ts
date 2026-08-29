@@ -1,5 +1,11 @@
 import type { Config } from 'tailwindcss';
-import plugin from 'tailwindcss/plugin';
+/*
+  `tailwindcss/plugin.js`, with the extension: Tailwind 3 ships no `exports`
+  map, so Node's ESM resolver cannot find the extensionless specifier and the
+  published `.mjs` was unloadable outside a bundler. Tailwind 4 exports both
+  `./plugin` and `./plugin.js`, so the suffixed form is valid on both majors.
+*/
+import plugin from 'tailwindcss/plugin.js';
 import { aquellecColors, aquellecThemeExtensions } from './lib/design-tokens';
 
 /**
