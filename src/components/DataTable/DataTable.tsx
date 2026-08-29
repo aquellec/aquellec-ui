@@ -116,7 +116,7 @@ function DataTableInner<T>(
     <div
       ref={ref}
       className={cn(
-        'w-full border border-neutral-200/80 rounded-2xl bg-white overflow-hidden shadow-xs',
+        'w-full border border-neutral-200/80 rounded-card bg-white overflow-hidden shadow-xs',
         'dark:border-neutral-700 dark:bg-neutral-900',
         className
       )}
@@ -139,9 +139,9 @@ function DataTableInner<T>(
         role="region"
         aria-label={labels.scrollRegion}
       >
-        <table className="w-full text-left text-sm border-collapse" aria-busy={isLoading || undefined}>
+        <table className="w-full text-left text-body border-collapse" aria-busy={isLoading || undefined}>
           <thead>
-            <tr className="bg-neutral-50/80 border-b border-neutral-200/80 text-xs font-semibold text-neutral-500 uppercase tracking-wider dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-400">
+            <tr className="bg-neutral-50/80 border-b border-neutral-200/80 text-caption font-semibold text-neutral-500 uppercase tracking-wider dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-400">
               {/*
                 Headers wrap, cells do not: a header is a label that can take
                 two lines, and keeping `CANDIDATE / RESUME` on one line alone
@@ -170,7 +170,7 @@ function DataTableInner<T>(
                 <td colSpan={columns.length} className={cn('py-12 text-center', mutedTextClass)}>
                   <div className="flex flex-col items-center justify-center space-y-2">
                     <Inbox className={cn('w-8 h-8', mutedTextClass)} aria-hidden="true" />
-                    <p className="text-sm font-medium">{emptyMessage}</p>
+                    <p className="text-body font-medium">{emptyMessage}</p>
                   </div>
                 </td>
               </tr>
@@ -210,7 +210,7 @@ function DataTableInner<T>(
       {pagination && !isLoading && data.length > 0 && (
         <nav
           aria-label={labels.pagination}
-          className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-neutral-50/50 border-t border-neutral-100 text-xs text-neutral-500 dark:bg-neutral-800/40 dark:border-neutral-800 dark:text-neutral-400"
+          className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-neutral-50/50 border-t border-neutral-100 text-caption text-neutral-500 dark:bg-neutral-800/40 dark:border-neutral-800 dark:text-neutral-400"
         >
           <span>{labels.pageStatus(pagination.currentPage, pagination.totalPages)}</span>
           {/*

@@ -78,10 +78,10 @@ function CandidateDashboardPage() {
       <header className="border-b border-neutral-200 bg-white px-4 py-4 sm:px-6 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+            <p className="text-caption font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">
               {t.dashboard.candidate.brand}
             </p>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-50">{t.dashboard.candidate.title}</h1>
+            <h1 className="text-title font-bold text-neutral-900 dark:text-neutral-50">{t.dashboard.candidate.title}</h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -103,7 +103,7 @@ function CandidateDashboardPage() {
               <Card.Body className="overflow-visible">
                 <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
                   <div className="flex flex-col">
-                    <p className="mb-3 text-xs font-semibold text-neutral-700 dark:text-neutral-200">
+                    <p className="mb-3 text-caption font-semibold text-neutral-700 dark:text-neutral-200">
                       {t.dashboard.candidate.analysis.resumeLabel}
                     </p>
                     <Dropzone
@@ -172,7 +172,7 @@ function CandidateDashboardPage() {
                 }
               />
               <Card.Body className="space-y-3">
-                <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.dashboard.candidate.advice.body}</p>
+                <p className="text-body text-neutral-600 dark:text-neutral-300">{t.dashboard.candidate.advice.body}</p>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="success" icon="check">
                     React / Next.js
@@ -186,7 +186,7 @@ function CandidateDashboardPage() {
                 </div>
               </Card.Body>
               <Card.Footer>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">{t.dashboard.candidate.advice.meta}</span>
+                <span className="text-caption text-neutral-500 dark:text-neutral-400">{t.dashboard.candidate.advice.meta}</span>
                 <Button variant="ghost" size="sm">
                   {t.dashboard.candidate.advice.action}
                   <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -204,7 +204,7 @@ function CandidateDashboardPage() {
                   label={t.dashboard.candidate.score.label}
                   statusLabels={t.components.gaugeStatus}
                 />
-                <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                <p className="text-body font-medium text-emerald-700 dark:text-emerald-300">
                   {t.dashboard.candidate.score.status}
                 </p>
               </Card.Body>

@@ -73,7 +73,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border border-neutral-200/80 bg-neutral-50 p-4',
+          'rounded-control border border-neutral-200/80 bg-neutral-50 p-4',
           'dark:border-neutral-700 dark:bg-neutral-800/50',
           className
         )}
@@ -88,12 +88,12 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
                 </span>
               )}
               {label && (
-                <span className="truncate text-xs font-semibold text-neutral-700 dark:text-neutral-200">
+                <span className="truncate text-caption font-semibold text-neutral-700 dark:text-neutral-200">
                   {label}
                 </span>
               )}
             </div>
-            <span className={cn('shrink-0 text-xs font-medium', mutedTextClass)}>{counter}</span>
+            <span className={cn('shrink-0 text-caption font-medium', mutedTextClass)}>{counter}</span>
           </div>
         )}
 
@@ -118,7 +118,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
         {(helperText || action) && (
           <div className="mt-3 flex items-center justify-between gap-3 border-t border-neutral-200/60 dark:border-neutral-700/60 pt-2">
             {helperText ? (
-              <span className={cn('text-xs', mutedTextClass)}>{helperText}</span>
+              <span className={cn('text-caption', mutedTextClass)}>{helperText}</span>
             ) : (
               <span />
             )}

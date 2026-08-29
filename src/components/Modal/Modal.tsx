@@ -77,7 +77,7 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <TitleElement id={titleId} className="text-base font-bold text-neutral-800 dark:text-neutral-100">
+            <TitleElement id={titleId} className="text-heading font-bold text-neutral-800 dark:text-neutral-100">
               {title}
             </TitleElement>
           )}
@@ -91,7 +91,7 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
                by its label, which is language dependent. */
             data-autofocus=""
             className={cn(
-              'p-1 rounded-lg hover:bg-neutral-100 transition-colors flex-shrink-0 ml-4',
+              'p-1 rounded-control hover:bg-neutral-100 transition-colors flex-shrink-0 ml-4',
               'dark:hover:bg-neutral-800',
               subtleTextClass,
               focusRingGhost
@@ -113,7 +113,7 @@ export const ModalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
     return (
       <div
         ref={ref}
-        className={cn('px-6 py-5 overflow-y-auto text-sm text-neutral-600 dark:text-neutral-300', className)}
+        className={cn('px-6 py-5 overflow-y-auto text-body text-neutral-600 dark:text-neutral-300', className)}
         {...props}
       >
         {children}
@@ -230,7 +230,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           aria-label={dialogLabelId ? undefined : ariaLabel}
           aria-describedby={describedBy}
           className={cn(
-            'relative w-full bg-white rounded-2xl shadow-xl border border-neutral-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
+            'relative w-full bg-white rounded-surface shadow-overlay border border-neutral-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
             'dark:bg-neutral-900 dark:border-neutral-700',
             maxWidths[maxWidth],
             className

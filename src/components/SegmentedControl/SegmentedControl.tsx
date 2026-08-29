@@ -30,8 +30,8 @@ export interface SegmentedControlProps
 }
 
 const sizes = {
-  sm: 'px-2.5 py-1 text-xs',
-  md: 'px-3.5 py-1.5 text-xs',
+  sm: 'px-2.5 py-1 text-caption',
+  md: 'px-3.5 py-1.5 text-caption',
 } as const;
 
 /**
@@ -92,7 +92,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
         aria-label={ariaLabel}
         onKeyDown={handleKeyDown}
         className={cn(
-          'inline-flex rounded-xl border border-neutral-200/60 bg-neutral-100 p-1',
+          'inline-flex rounded-control border border-neutral-200/60 bg-neutral-100 p-1',
           'dark:border-neutral-700 dark:bg-neutral-800',
           className
         )}
@@ -120,7 +120,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
                   control stretches to the full width, and without this the
                   segments stay on the left with dead space beside them.
                 */
-                'flex grow items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200',
+                'flex grow items-center justify-center gap-2 rounded-control font-semibold transition-all duration-200',
                 'motion-reduce:transition-none',
                 sizes[size],
                 focusRing,

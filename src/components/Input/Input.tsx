@@ -24,7 +24,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex w-full min-w-0 flex-col text-left">
         {label && (
-          <label htmlFor={id} className="mb-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-200">
+          <label htmlFor={id} className="mb-1.5 text-caption font-semibold text-neutral-700 dark:text-neutral-200">
             {label}
           </label>
         )}
@@ -37,7 +37,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           aria-required={required}
           aria-describedby={describedBy}
           className={cn(
-            'w-full min-w-0 rounded-xl border px-3 py-2.5 text-xs transition-all duration-150',
+            'w-full min-w-0 rounded-control border px-3 py-2.5 text-caption transition-all duration-150',
             'bg-white text-neutral-800 dark:bg-neutral-900 dark:text-neutral-100',
             placeholderClass,
             error
@@ -53,12 +53,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {(error || helperText) && (
           <div className="mt-1 space-y-1">
             {error && (
-              <span id={errorId} className={cn('block text-[11px]', errorTextClass)} role="alert">
+              <span id={errorId} className={cn('block text-caption', errorTextClass)} role="alert">
                 {error}
               </span>
             )}
             {helperText && (
-              <span id={helperId} className={cn('block text-[11px]', mutedTextClass)}>
+              <span id={helperId} className={cn('block text-caption', mutedTextClass)}>
                 {helperText}
               </span>
             )}

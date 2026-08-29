@@ -248,7 +248,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     const removeLabel = labels.remove(multiple);
 
     const dropzoneSurfaceClassName = cn(
-      'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ease-in-out',
+      'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-control transition-all duration-200 ease-in-out',
       focusRing,
       isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
       isDragActive
@@ -277,22 +277,22 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            className="flex w-full items-center justify-between rounded-xl border border-neutral-200 bg-white p-3 shadow-xs dark:border-neutral-700 dark:bg-neutral-900"
+            className="flex w-full items-center justify-between rounded-control border border-neutral-200 bg-white p-3 shadow-xs dark:border-neutral-700 dark:bg-neutral-900"
             aria-describedby={error ? errorId : undefined}
           >
             <div className="flex min-w-0 items-center space-x-3 truncate">
-              <div className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+              <div className="rounded-control bg-brand-50 p-2 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                 <FileText className="h-6 w-6" aria-hidden="true" />
               </div>
               <div className="truncate text-left">
                 {multiple ? (
                   <>
-                    <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                    <p className="truncate text-body font-medium text-neutral-800 dark:text-neutral-100">
                       {labels.selection(displayedFiles.length)}
                     </p>
                     <p
                       className={cn(
-                        'text-xs',
+                        'text-caption',
                         isLoading
                           ? 'text-brand-600 dark:text-brand-300'
                           : 'text-neutral-500 dark:text-neutral-400'
@@ -303,12 +303,12 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                   </>
                 ) : (
                   <>
-                    <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                    <p className="truncate text-body font-medium text-neutral-800 dark:text-neutral-100">
                       {displayedFile!.name}
                     </p>
                     <p
                       className={cn(
-                        'text-xs',
+                        'text-caption',
                         isLoading
                           ? 'text-brand-600 dark:text-brand-300'
                           : 'text-neutral-500 dark:text-neutral-400'
@@ -355,10 +355,10 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                   <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                <p className="mb-1 text-body font-medium text-neutral-700 dark:text-neutral-200">
                   {labels.loadingTitle}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-caption text-neutral-500 dark:text-neutral-400">
                   {labels.loadingHint(multiple)}
                 </p>
               </div>
@@ -374,13 +374,13 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 >
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                <p className="mb-1 text-body font-medium text-neutral-700 dark:text-neutral-200">
                   <span className="text-brand-600 dark:text-brand-300 underline underline-offset-2">
                     {labels.browse}
                   </span>{' '}
                   {labels.dropHint(multiple)}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-caption text-neutral-500 dark:text-neutral-400">
                   {labels.constraint(maxSizeMB, multiple)}
                 </p>
               </div>
@@ -389,7 +389,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
         )}
 
         {error && (
-          <div id={errorId} role="alert" className={cn('mt-2 flex items-center space-x-1.5 text-xs', errorTextClass)}>
+          <div id={errorId} role="alert" className={cn('mt-2 flex items-center space-x-1.5 text-caption', errorTextClass)}>
             <AlertCircle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span>{error}</span>
           </div>

@@ -78,9 +78,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       of `sm` and `md` is unchanged on the screens that can use it.
     */
     const sizes = {
-      sm: 'h-11 px-3 text-xs sm:h-8',
-      md: 'h-11 px-4 text-sm sm:h-10',
-      lg: 'h-12 px-6 text-base',
+      sm: 'h-11 px-3 text-caption sm:h-8',
+      md: 'h-11 px-4 text-body sm:h-10',
+      lg: 'h-12 px-6 text-heading',
     };
 
     return (
@@ -90,7 +90,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         aria-busy={isLoading || undefined}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none',
+          'inline-flex items-center justify-center rounded-control font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none',
           variants[variant],
           sizes[size],
           className

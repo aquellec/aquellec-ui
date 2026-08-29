@@ -72,10 +72,10 @@ function RecruiterDashboardPage() {
       <header className="border-b border-neutral-200 bg-white px-4 py-4 sm:px-6 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600 dark:text-ai-300">
+            <p className="text-caption font-semibold uppercase tracking-wide text-ai-600 dark:text-ai-300">
               {t.dashboard.recruiter.brand}
             </p>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-50">{t.dashboard.recruiter.title}</h1>
+            <h1 className="text-title font-bold text-neutral-900 dark:text-neutral-50">{t.dashboard.recruiter.title}</h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -104,19 +104,19 @@ function RecruiterDashboardPage() {
                 showStatus={false}
                 className="border-0 bg-transparent p-0 shadow-none"
               />
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">{t.dashboard.recruiter.kpi.matchCaption}</p>
+              <p className="text-caption text-neutral-500 dark:text-neutral-400">{t.dashboard.recruiter.kpi.matchCaption}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">18</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.dashboard.recruiter.kpi.compatible}</p>
+              <p className="text-display font-bold text-emerald-700 dark:text-emerald-300">18</p>
+              <p className="text-body text-neutral-600 dark:text-neutral-300">{t.dashboard.recruiter.kpi.compatible}</p>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">6</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.dashboard.recruiter.kpi.toReview}</p>
+              <p className="text-display font-bold text-amber-700 dark:text-amber-300">6</p>
+              <p className="text-body text-neutral-600 dark:text-neutral-300">{t.dashboard.recruiter.kpi.toReview}</p>
             </Card.Body>
           </Card>
         </div>

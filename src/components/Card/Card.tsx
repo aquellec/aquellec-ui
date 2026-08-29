@@ -55,13 +55,13 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
           {title && (
             <TitleElement
               id={resolvedTitleId}
-              className="text-base font-semibold text-neutral-800 dark:text-neutral-100"
+              className="text-heading font-semibold text-neutral-800 dark:text-neutral-100"
             >
               {title}
             </TitleElement>
           )}
           {subtitle && (
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{subtitle}</p>
+            <p className="text-caption text-neutral-500 dark:text-neutral-400 mt-0.5">{subtitle}</p>
           )}
           {children}
         </div>
@@ -91,7 +91,7 @@ export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
       <div
         ref={ref}
         className={cn(
-          'pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500',
+          'pt-4 border-t border-neutral-100 flex items-center justify-between text-caption text-neutral-500',
           'dark:border-neutral-800 dark:text-neutral-400',
           className
         )}
@@ -138,7 +138,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
             the screen. Desktop spacing is unchanged.
           */
           className={cn(
-            'rounded-2xl p-4 sm:p-5 transition-all duration-200',
+            'rounded-card p-4 sm:p-5 transition-all duration-200',
             variants[variant],
             className
           )}

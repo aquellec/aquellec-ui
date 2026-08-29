@@ -54,7 +54,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full flex flex-col text-left">
         {label && (
-          <label htmlFor={id} className="text-xs font-semibold text-neutral-700 dark:text-neutral-200 mb-1.5">
+          <label htmlFor={id} className="text-caption font-semibold text-neutral-700 dark:text-neutral-200 mb-1.5">
             {label}
           </label>
         )}
@@ -69,7 +69,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={cn(
-            'w-full p-3 text-xs rounded-xl border transition-all duration-150',
+            'w-full p-3 text-caption rounded-control border transition-all duration-150',
             'bg-white text-neutral-800 dark:bg-neutral-900 dark:text-neutral-100',
             placeholderClass,
             error
@@ -84,18 +84,18 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
         <div className="flex items-center justify-between mt-1 gap-2">
           {error ? (
-            <span id={errorId} className={cn('text-[11px]', errorTextClass)} role="alert">
+            <span id={errorId} className={cn('text-caption', errorTextClass)} role="alert">
               {error}
             </span>
           ) : helperText ? (
-            <span id={helperId} className={cn('text-[11px]', mutedTextClass)}>
+            <span id={helperId} className={cn('text-caption', mutedTextClass)}>
               {helperText}
             </span>
           ) : (
             <span />
           )}
           {maxLength && (
-            <span className={cn('text-[11px] flex-shrink-0', mutedTextClass)} aria-live="polite">
+            <span className={cn('text-caption flex-shrink-0', mutedTextClass)} aria-live="polite">
               {length} / {maxLength}
             </span>
           )}

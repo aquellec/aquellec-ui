@@ -57,9 +57,9 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     };
 
     const dimensions = {
-      sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-[10px]' },
-      md: { width: 140, strokeWidth: 10, fontSize: 'text-3xl', labelSize: 'text-sm' },
-      lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-base' },
+      sm: { width: 100, strokeWidth: 8, fontSize: 'text-title', labelSize: 'text-caption' },
+      md: { width: 140, strokeWidth: 10, fontSize: 'text-display', labelSize: 'text-body' },
+      lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-heading' },
     };
 
     const { width, strokeWidth, fontSize, labelSize } = dimensions[size];
@@ -112,7 +112,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       <div
         ref={ref}
         className={cn(
-          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-neutral-100 shadow-xs',
+          'flex flex-col items-center justify-center p-4 bg-white rounded-card border border-neutral-100 shadow-xs',
           'dark:bg-neutral-900 dark:border-neutral-700',
           className
         )}
@@ -172,7 +172,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
         </div>
 
         {showStatus && (
-          <div className={cn('mt-3 px-3 py-1 rounded-full text-xs font-semibold border', colors.bg)}>
+          <div className={cn('mt-3 px-3 py-1 rounded-full text-caption font-semibold border', colors.bg)}>
             {colors.statusText}
           </div>
         )}
