@@ -5,9 +5,17 @@
   other locale must match. A missing or extra key in `fr.tsx` is therefore a
   compile error rather than a string missing at runtime.
 
-  Examples are deliberately domain agnostic (product catalog, storage, billing,
-  team) — the design system is not tied to recruitment. Only the dashboard
-  templates keep a business context.
+  Examples are written in the product's own domain: resumes, match scores, ATS
+  statuses, hiring pipelines. An earlier pass had made them domain agnostic, on
+  the reasoning that a reader should not have to parse a scenario before seeing
+  the component — sound in principle, but the execution replaced the scenarios
+  with lorem ipsum and with the variant names themselves ('success', 'Label',
+  'Placeholder'). That is not neutrality, it is the absence of content: it hides
+  how a component behaves under a real label length, and it gives a reviewer
+  nothing to judge the design against.
+
+  The rule that survives from that pass is the useful one — no narrative. A
+  label reads 'Shortlisted', not a three-sentence story about a candidate.
 */
 import {
   defaultDataTableLabels,
@@ -258,11 +266,11 @@ export const en = {
   },
 
   badge: {
-    inStock: 'success',
-    lowStock: 'warning',
-    outOfStock: 'danger',
-    aiSuggested: 'ai',
-    draft: 'neutral',
+    inStock: 'Shortlisted',
+    lowStock: 'To review',
+    outOfStock: 'Not retained',
+    aiSuggested: 'AI extracted',
+    draft: 'Sourced',
     ok: 'success',
     error: 'danger',
     warning: 'warning',
@@ -272,56 +280,67 @@ export const en = {
 
   card: {
     report: {
-      title: 'Card title',
-      subtitle: 'Card subtitle',
-      badge: 'badge',
-      body: 'Nunc laoreet egestas nulla, quis dictum eros consequat vitae.',
-      meta: 'Metadata',
-      action: 'Action',
+      title: 'Application summary',
+      subtitle: 'Senior Front-End Engineer',
+      badge: 'Shortlisted',
+      body: 'Eight years of front-end work, four of them on design systems. Matches the required React and TypeScript experience; no accessibility work stated.',
+      meta: 'Analysed 12 minutes ago',
+      action: 'Open the resume',
     },
     ai: {
-      title: 'AI card',
-      subtitle: 'Card subtitle',
-      body: 'Nunc laoreet egestas nulla, quis dictum eros consequat vitae.',
-      confidence: 'badge',
-      action: 'Action',
+      title: 'Extracted from the resume',
+      subtitle: 'Fields read by the parser, not entered by hand',
+      body: 'Nine years of experience, last role held for three years, notice period of two months. Salary expectation was not stated in the document.',
+      confidence: 'AI extracted',
+      action: 'Check against the source',
     },
     plan: {
-      title: 'Outline card',
-      subtitle: 'Card subtitle',
-      body: 'Nunc laoreet egestas nulla.',
+      title: 'Screening call',
+      subtitle: 'Scheduled by the hiring manager',
+      body: 'Thirty minutes, remote. Confirm the notice period and the expected range before the technical round.',
     },
     tip: {
-      title: 'Ghost card',
-      body: 'Nunc laoreet egestas nulla.',
+      title: 'Two roles left unfilled',
+      body: 'Both have been open for more than sixty days. Widening the location criteria would triple the matching pool.',
     },
     section: {
-      title: 'Section title',
+      title: 'Evaluation',
       subtitle: 'Rendered as an h2',
-      body: 'Nunc laoreet egestas nulla.',
+      body: 'Three interviewers submitted a scorecard. The technical round is the only one still pending.',
     },
     minimal: {
-      title: 'Title only',
-      body: 'Nunc laoreet egestas nulla.',
+      title: 'Pipeline',
+      body: 'Twenty-four applications received, six shortlisted.',
     },
   },
 
   input: {
-    workspace: { label: 'Label', placeholder: 'Placeholder', value: 'Value' },
-    email: { label: 'Email', placeholder: 'name@example.com', error: 'Error message' },
-    password: { label: 'Password', helper: 'Helper text' },
-    search: { label: 'Search', placeholder: 'Placeholder' },
+    workspace: {
+      label: 'Job title',
+      placeholder: 'Senior Front-End Engineer',
+      value: 'Senior Front-End Engineer',
+    },
+    email: {
+      label: 'Candidate email',
+      placeholder: 'first.last@example.com',
+      error: 'This address is already attached to another application.',
+    },
+    password: { label: 'ATS access key', helper: 'Used to sync with the applicant tracking system.' },
+    search: { label: 'Search candidates', placeholder: 'Name, skill or job reference' },
   },
 
   textarea: {
     description: {
-      label: 'Label',
-      placeholder: 'Placeholder',
-      helper: 'Helper text',
-      error: 'Error message',
-      value: 'Nunc laoreet egestas nulla',
+      label: 'Job description',
+      placeholder: 'Paste the description the ATS will match against',
+      helper: 'The more precise the description, the more reliable the match score.',
+      error: 'A description is required to run the analysis.',
+      value: 'We are looking for a senior front-end engineer with solid React and TypeScript experience, comfortable owning a design system and its accessibility.',
     },
-    note: { label: 'Label', helper: 'Helper text' },
+    note: {
+      label: 'Interview notes',
+      helper: 'Visible to the hiring team only. Never sent to the candidate.',
+    },
   },
 
   segmented: {
@@ -338,82 +357,86 @@ export const en = {
   progress: {
     storage: { label: 'Label', unit: 'of' },
     credits: {
-      label: 'Label',
-      helper: 'Helper text',
-      helperNearLimit: 'Helper text',
-      action: 'Action',
+      label: 'Resume analyses this month',
+      helper: 'Resets on the first of the month.',
+      helperNearLimit: 'Close to the plan limit — analyses will queue once it is reached.',
+      action: 'Change plan',
     },
-    seats: { label: 'Label' },
-    undefined: { label: 'Label' },
-    processing: 'Progress',
+    seats: { label: 'Recruiter seats used' },
+    undefined: { label: 'Analyses run' },
+    processing: 'Parsing the resume',
   },
 
   gauge: {
-    performance: 'Score',
-    quality: 'Rating',
-    health: 'Level',
+    performance: 'ATS score',
+    quality: 'Resume quality',
+    health: 'Profile completeness',
     match: 'Match',
   },
 
   table: {
     columns: {
-      name: 'Name',
-      category: 'Category',
+      name: 'Candidate',
+      category: 'Role applied for',
       status: 'Status',
-      price: 'Price',
-      updated: 'Updated',
+      price: 'ATS score',
+      updated: 'Analysed',
       action: 'Action',
       empty: 'Empty',
     },
-    categories: { audio: 'Category A', accessories: 'Category B', displays: 'Category C' },
-    statuses: { active: 'active', review: 'pending', archived: 'archived' },
+    categories: {
+      audio: 'Front-End Engineer',
+      accessories: 'Full-Stack Developer',
+      displays: 'Product Designer',
+    },
+    statuses: { active: 'Shortlisted', review: 'To review', archived: 'Not retained' },
     rowAction: 'Open',
-    emptyMessage: 'Nunc laoreet egestas nulla.',
+    emptyMessage: 'No application has been analysed for this role yet.',
   },
 
   modal: {
     /* Opens the modal: the stories render it closed, as on the documentation page. */
     trigger: 'Open the modal',
     report: {
-      trigger: 'Open modal',
-      title: 'Modal title',
-      intro: 'Nunc laoreet egestas nulla, quis dictum eros consequat vitae',
-      campaign: 'Vestibulum',
-      checklist: 'Nullam quis risus',
+      trigger: 'Open the ATS report',
+      title: 'ATS report',
+      intro: 'Fields the parser could read from the resume submitted for',
+      campaign: 'Senior Front-End Engineer',
+      checklist: 'Extraction check',
       items: {
-        deliverability: 'success',
-        formatting: 'success',
-        links: 'success',
-        images: 'danger',
+        deliverability: 'Contact details',
+        formatting: 'Work history',
+        links: 'Skills',
+        images: 'Certifications',
       },
-      secondary: 'cancel',
-      primary: 'confirm',
+      secondary: 'Close',
+      primary: 'Shortlist',
     },
     confirm: {
-      title: 'Modal title',
-      body: 'Nunc laoreet egestas nulla, quis dictum eros consequat vitae.',
+      title: 'Reject this application?',
+      body: 'The candidate moves out of the pipeline. Nothing is sent to them until you send the rejection yourself.',
     },
     overlay: {
-      title: 'Modal title',
+      title: 'Analysis details',
       body: 'Clicking the overlay dismisses the dialog.',
     },
     keyboard: {
-      title: 'Modal title',
-      body: 'Nunc laoreet egestas nulla.',
-      cancel: 'cancel',
-      submit: 'confirm',
+      title: 'Move to the technical round',
+      body: 'The hiring manager is notified and the candidate keeps their current status until the interview is scheduled.',
+      cancel: 'Cancel',
+      submit: 'Move forward',
     },
     untitled: {
       ariaLabel: 'Dialog without a visible title',
-      body: 'Nunc laoreet egestas nulla.',
+      body: 'The resume has been queued. The score appears once parsing completes.',
     },
     headerClose: {
-      title: 'Modal title',
-      body: 'Nunc laoreet egestas nulla.',
+      title: 'Screening summary',
+      body: 'Six of the eight required skills were found in the resume.',
     },
     noFocusable: {
       ariaLabel: 'Content with no focusable element',
-      body: 'Nunc laoreet egestas nulla.',
+      body: 'No application matches the current filters.',
     },
     compound: {
       title: 'Composed header',
@@ -425,67 +448,73 @@ export const en = {
   pricing: {
     starter: {
       title: 'Starter',
-      description: 'Nunc laoreet egestas nulla.',
+      description: 'One recruiter, one open role at a time.',
       price: '$9',
       button: 'Choose Starter',
       badge: 'Most popular',
       features: {
-        projects: 'Feature one',
-        history: 'Feature two',
-        exports: 'Feature three',
-        api: 'Feature four',
-        sso: 'Feature five',
+        projects: '50 resume analyses per month',
+        history: '90 days of analysis history',
+        exports: 'CSV export',
+        api: 'ATS integration',
+        sso: 'SSO',
       },
     },
     growth: {
       title: 'Growth',
-      description: 'Nunc laoreet egestas nulla.',
+      description: 'A hiring team running several roles in parallel.',
       price: '$49',
       button: 'Choose Growth',
       features: {
         everything: 'Everything in Starter',
-        automation: 'Feature two',
-        roles: 'Feature three',
-        seats: 'Feature four',
-        support: 'Feature five',
+        automation: '500 resume analyses per month',
+        roles: 'Unlimited open roles',
+        seats: 'Five recruiter seats',
+        support: 'Priority support',
       },
     },
     free: {
       title: 'Free',
-      description: 'Nunc laoreet egestas nulla.',
+      description: 'Try the parser on a handful of resumes.',
       price: 'Free',
       button: 'Choose Free',
-      feature: 'Feature one',
+      feature: '10 resume analyses per month',
     },
     enterprise: {
       title: 'Enterprise',
-      description: 'Nunc laoreet egestas nulla.',
+      description: 'In-house recruitment at scale, with your own ATS.',
       price: 'Custom',
       period: '/ year',
-      feature: 'Feature one',
+      feature: 'Unlimited analyses and seats',
     },
     select: {
       title: 'Growth',
-      description: 'Nunc laoreet egestas nulla.',
+      description: 'A hiring team running several roles in parallel.',
       button: 'Choose this plan',
-      feature: 'Feature one',
+      feature: '500 resume analyses per month',
     },
     period: '/ month',
     heading: 'Pricing',
   },
 
   toast: {
-    success: { title: 'success', description: 'Nunc laoreet egestas nulla.' },
-    ai: { title: 'ai', description: 'Nunc laoreet egestas nulla.' },
-    warning: { title: 'warning', description: 'Nunc laoreet egestas nulla.' },
-    error: { title: 'error', description: 'Nunc laoreet egestas nulla.' },
-    info: { title: 'info', description: 'Nunc laoreet egestas nulla.' },
-    titleOnly: { title: 'Title only' },
+    success: { title: 'Resume analysed', description: 'Match score available on the application.' },
+    ai: { title: 'Parsing in progress', description: 'Twelve resumes queued, about two minutes left.' },
+    warning: {
+      title: 'Approaching the monthly limit',
+      description: '46 of 50 analyses used on the Starter plan.',
+    },
+    error: {
+      title: 'Resume could not be read',
+      description: 'The PDF is a scan with no text layer. Ask for a text version.',
+    },
+    info: { title: 'Job description updated', description: 'Scores will be recomputed tonight.' },
+    titleOnly: { title: 'Shortlist saved' },
     dismissed: 'Toast dismissed.',
     queue: {
       trigger: 'Push a toast',
-      title: 'success',
-      description: 'Nunc laoreet egestas nulla.',
+      title: 'Resume analysed',
+      description: 'Match score available on the application.',
     },
   },
 
