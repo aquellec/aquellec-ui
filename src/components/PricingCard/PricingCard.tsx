@@ -69,9 +69,10 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         ref={ref}
         className={cn(
           'relative flex flex-col p-6 rounded-2xl transition-all duration-200 bg-white border',
+          'dark:bg-slate-900',
           isPopular
-            ? 'border-ai-500 shadow-md ring-1 ring-ai-500'
-            : 'border-slate-200 hover:border-slate-300 shadow-sm',
+            ? 'border-ai-500 shadow-md ring-1 ring-ai-500 dark:border-ai-400 dark:ring-ai-400'
+            : 'border-slate-200 hover:border-slate-300 shadow-sm dark:border-slate-700 dark:hover:border-slate-600',
           className
         )}
         {...props}
@@ -84,15 +85,19 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         )}
 
         <div className="mb-5">
-          <h3 className="text-lg font-bold text-slate-800">{title}</h3>
-          <p className="text-xs text-slate-500 mt-1 min-h-[32px]">{description}</p>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 min-h-[32px]">{description}</p>
         </div>
 
         <div className="flex items-baseline mb-6">
-          <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{price}</span>
+          <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
+            {price}
+          </span>
           {/* Rendered only when a period is provided: no magic value to compare
               the price against, which would tie the component to one language. */}
-          {period && <span className="text-xs font-medium text-slate-500 ml-1">{period}</span>}
+          {period && (
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">{period}</span>
+          )}
         </div>
 
         <ul className="space-y-3 mb-8 flex-1" aria-label={featuresLabel(title)}>
@@ -102,13 +107,21 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
               <div
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',
-                  feature.included ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+                  feature.included
+                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300'
+                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                 )}
                 aria-hidden="true"
               >
                 <Check className="w-3 h-3" />
               </div>
-              <span className={feature.included ? 'text-slate-700' : cn(mutedTextClass, 'line-through')}>
+              <span
+                className={
+                  feature.included
+                    ? 'text-slate-700 dark:text-slate-200'
+                    : cn(mutedTextClass, 'line-through')
+                }
+              >
                 {feature.text}
               </span>
             </li>

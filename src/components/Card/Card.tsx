@@ -45,16 +45,24 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center justify-between pb-4 border-b border-slate-100', className)}
+        className={cn(
+          'flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800',
+          className
+        )}
         {...props}
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <TitleElement id={resolvedTitleId} className="text-base font-semibold text-slate-800">
+            <TitleElement
+              id={resolvedTitleId}
+              className="text-base font-semibold text-slate-800 dark:text-slate-100"
+            >
               {title}
             </TitleElement>
           )}
-          {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+          {subtitle && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{subtitle}</p>
+          )}
           {children}
         </div>
         {action && <div className="flex-shrink-0 ml-4">{action}</div>}
@@ -84,6 +92,7 @@ export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
         ref={ref}
         className={cn(
           'pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500',
+          'dark:border-slate-800 dark:text-slate-400',
           className
         )}
         {...props}
@@ -107,10 +116,16 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         the dashboards, a translucent border almost disappears at 375px, where
         the card outline is the only thing separating two sections.
       */
-      default: 'bg-white border border-slate-200 shadow-card hover:shadow-md',
-      outline: 'bg-transparent border border-slate-300',
-      ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-card',
-      ghost: 'bg-slate-50/80 border border-transparent',
+      default:
+        'bg-white border border-slate-200 shadow-card hover:shadow-md dark:bg-slate-900 dark:border-slate-700',
+      outline: 'bg-transparent border border-slate-300 dark:border-slate-600',
+      /*
+        The `ai` gradient keeps its diagonal wash in dark mode, at a much lower
+        opacity: the tint has to read as a hint of colour on the surface, not
+        repaint the card.
+      */
+      ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-card dark:from-ai-500/10 dark:via-slate-900 dark:to-brand-500/10 dark:border-ai-500/25',
+      ghost: 'bg-slate-50/80 border border-transparent dark:bg-slate-800/50',
     };
 
     return (

@@ -57,7 +57,7 @@ export const CustomFormat: Story = {
       <ProgressBar
         {...args}
         label={t.progress.storage.label}
-        icon={<HardDrive className="h-4 w-4 text-brand-600" />}
+        icon={<HardDrive className="h-4 w-4 text-brand-600 dark:text-brand-300" />}
         formatValue={(value, max) => `${value} ${t.progress.storage.unit} ${max}`}
       />
     );
@@ -73,7 +73,7 @@ export const TeamSeats: Story = {
       <ProgressBar
         {...args}
         label={t.progress.seats.label}
-        icon={<Users className="h-4 w-4 text-brand-600" />}
+        icon={<Users className="h-4 w-4 text-brand-600 dark:text-brand-300" />}
       />
     );
   },
@@ -88,7 +88,7 @@ export const WithAction: Story = {
       <ProgressBar
         {...args}
         label={t.progress.credits.label}
-        icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600" />}
+        icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600 dark:fill-brand-400/20 dark:text-brand-300" />}
         helperText={t.progress.credits.helperNearLimit}
         action={
           <Button variant="ghost" size="sm">

@@ -12,6 +12,11 @@ const meta: Meta<typeof Input> = {
   title: 'Forms/Input',
   component: Input,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { type: 'text' },
   argTypes: {
     type: { control: 'select', options: ['text', 'email', 'password', 'search'] },
     disabled: { control: 'boolean' },
@@ -98,7 +103,7 @@ export const WithIcon: Story = {
           className="pl-9"
         />
         <Building2
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
           aria-hidden="true"
         />
       </div>
@@ -119,7 +124,7 @@ export const SearchField: Story = {
           className="pl-9"
         />
         <Search
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
           aria-hidden="true"
         />
       </div>
@@ -140,7 +145,7 @@ export const PasswordWithIcon: Story = {
           className="pl-9"
         />
         <Lock
-          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500"
+          className="pointer-events-none absolute left-3 top-[34px] h-4 w-4 text-slate-500 dark:text-slate-400"
           aria-hidden="true"
         />
       </div>

@@ -24,7 +24,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex w-full min-w-0 flex-col text-left">
         {label && (
-          <label htmlFor={id} className="mb-1.5 text-xs font-semibold text-slate-700">
+          <label htmlFor={id} className="mb-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200">
             {label}
           </label>
         )}
@@ -37,11 +37,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           aria-required={required}
           aria-describedby={describedBy}
           className={cn(
-            'w-full min-w-0 rounded-xl border bg-white px-3 py-2.5 text-xs text-slate-800 transition-all duration-150',
+            'w-full min-w-0 rounded-xl border px-3 py-2.5 text-xs transition-all duration-150',
+            'bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100',
             placeholderClass,
             error
-              ? cn('border-rose-300', focusRingDanger)
-              : cn('border-slate-300 hover:border-slate-400', focusRing),
+              ? cn('border-rose-300 dark:border-rose-500/60', focusRingDanger)
+              : cn(
+                  'border-slate-300 hover:border-slate-400 dark:border-slate-600 dark:hover:border-slate-500',
+                  focusRing
+                ),
             className
           )}
           {...props}

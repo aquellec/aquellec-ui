@@ -13,6 +13,11 @@ const meta: Meta<typeof SegmentedControl> = {
   title: 'Actions/SegmentedControl',
   component: SegmentedControl,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { size: 'md' },
   argTypes: {
     size: { control: 'inline-radio', options: ['sm', 'md'] },
     options: { control: 'object' },
@@ -40,12 +45,12 @@ const workspaceOptions = (t: Dictionary): SegmentedControlOption[] => [
   {
     value: 'candidate',
     label: t.segmented.workspace.candidate,
-    icon: <User className="h-3.5 w-3.5 text-brand-600" />,
+    icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
   },
   {
     value: 'recruiter',
     label: t.segmented.workspace.recruiter,
-    icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" />,
+    icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
   },
 ];
 
@@ -94,9 +99,9 @@ export const RoleSwitcherDemo: Story = {
           onChange={setWorkspace}
           ariaLabel={t.segmented.workspace.label}
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           {t.segmented.workspace.active}{' '}
-          <strong className="text-slate-800">{workspace}</strong>
+          <strong className="text-slate-800 dark:text-slate-100">{workspace}</strong>
         </p>
       </div>
     );

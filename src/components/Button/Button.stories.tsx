@@ -14,6 +14,11 @@ const meta: Meta<typeof Button> = {
   title: 'Actions/Button',
   component: Button,
   tags: ['autodocs'],
+  /*
+    Mirrors the defaults declared by the component, so the controls open on the
+    real state instead of an empty selection. Story args still take precedence.
+  */
+  args: { variant: 'primary', size: 'md', isLoading: false },
   argTypes: {
     variant: {
       control: 'select',

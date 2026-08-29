@@ -372,6 +372,8 @@ export const en = {
   },
 
   modal: {
+    /* Opens the modal: the stories render it closed, as on the documentation page. */
+    trigger: 'Open the modal',
     report: {
       trigger: 'Open modal',
       title: 'Modal title',

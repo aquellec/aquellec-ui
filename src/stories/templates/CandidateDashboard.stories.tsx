@@ -64,24 +64,24 @@ function CandidateDashboardPage() {
     {
       value: 'candidate',
       label: t.segmented.workspace.candidate,
-      icon: <User className="h-3.5 w-3.5 text-brand-600" />,
+      icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
     },
     {
       value: 'recruiter',
       label: t.segmented.workspace.recruiter,
-      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600" />,
+      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6 dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">
               {t.dashboard.candidate.brand}
             </p>
-            <h1 className="text-xl font-bold text-slate-900">{t.dashboard.candidate.title}</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t.dashboard.candidate.title}</h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -103,7 +103,7 @@ function CandidateDashboardPage() {
               <Card.Body className="overflow-visible">
                 <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
                   <div className="flex flex-col">
-                    <p className="mb-3 text-xs font-semibold text-slate-700">
+                    <p className="mb-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
                       {t.dashboard.candidate.analysis.resumeLabel}
                     </p>
                     <Dropzone
@@ -160,7 +160,7 @@ function CandidateDashboardPage() {
               <Card.Header
                 title={
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-ai-600" aria-hidden="true" />
+                    <Sparkles className="h-4 w-4 text-ai-600 dark:text-ai-300" aria-hidden="true" />
                     <span>{t.dashboard.candidate.advice.title}</span>
                   </div>
                 }
@@ -172,7 +172,7 @@ function CandidateDashboardPage() {
                 }
               />
               <Card.Body className="space-y-3">
-                <p className="text-sm text-slate-600">{t.dashboard.candidate.advice.body}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.candidate.advice.body}</p>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="success" icon="check">
                     React / Next.js
@@ -186,7 +186,7 @@ function CandidateDashboardPage() {
                 </div>
               </Card.Body>
               <Card.Footer>
-                <span className="text-xs text-slate-500">{t.dashboard.candidate.advice.meta}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{t.dashboard.candidate.advice.meta}</span>
                 <Button variant="ghost" size="sm">
                   {t.dashboard.candidate.advice.action}
                   <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -204,7 +204,7 @@ function CandidateDashboardPage() {
                   label={t.dashboard.candidate.score.label}
                   statusLabels={t.components.gaugeStatus}
                 />
-                <p className="text-sm font-medium text-emerald-700">
+                <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
                   {t.dashboard.candidate.score.status}
                 </p>
               </Card.Body>
@@ -217,7 +217,7 @@ function CandidateDashboardPage() {
                   value={3}
                   max={10}
                   label={t.dashboard.candidate.quota.label}
-                  icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600" />}
+                  icon={<Zap className="h-4 w-4 fill-brand-600/20 text-brand-600 dark:text-brand-300" />}
                   formatValue={(value, max) =>
                     `${value} / ${max} ${t.dashboard.candidate.quota.unit}`
                   }
@@ -253,9 +253,9 @@ function CandidateDashboardPage() {
                   header: t.dashboard.candidate.history.columns.position,
                   className: 'whitespace-normal min-w-[9rem]',
                   cell: (item) => (
-                    <div className="flex items-start space-x-2 font-medium text-slate-900">
+                    <div className="flex items-start space-x-2 font-medium text-slate-900 dark:text-slate-100">
                       <Briefcase
-                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600 dark:text-brand-300"
                         aria-hidden="true"
                       />
                       <span>

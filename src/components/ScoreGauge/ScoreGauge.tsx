@@ -70,33 +70,33 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     const getScoreColor = () => {
       if (isAiTheme) {
         return {
-          stroke: 'stroke-ai-500',
-          text: 'text-ai-700',
-          bg: 'bg-ai-50 text-ai-700 border-ai-200',
+          stroke: 'stroke-ai-500 dark:stroke-ai-400',
+          text: 'text-ai-700 dark:text-ai-300',
+          bg: 'bg-ai-50 text-ai-700 border-ai-200 dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
           statusText: statusLabels.ai,
         };
       }
 
       if (normalizedScore >= 75) {
         return {
-          stroke: 'stroke-emerald-500',
-          text: 'text-emerald-700',
-          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          stroke: 'stroke-emerald-500 dark:stroke-emerald-400',
+          text: 'text-emerald-700 dark:text-emerald-300',
+          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
           statusText: statusLabels.high,
         };
       }
       if (normalizedScore >= 50) {
         return {
-          stroke: 'stroke-amber-500',
-          text: 'text-amber-700',
-          bg: 'bg-amber-50 text-amber-700 border-amber-200',
+          stroke: 'stroke-amber-500 dark:stroke-amber-400',
+          text: 'text-amber-700 dark:text-amber-300',
+          bg: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
           statusText: statusLabels.medium,
         };
       }
       return {
-        stroke: 'stroke-rose-500',
-        text: 'text-rose-700',
-        bg: 'bg-rose-50 text-rose-700 border-rose-200',
+        stroke: 'stroke-rose-500 dark:stroke-rose-400',
+        text: 'text-rose-700 dark:text-rose-300',
+        bg: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
         statusText: statusLabels.low,
       };
     };
@@ -113,6 +113,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
         ref={ref}
         className={cn(
           'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm',
+          'dark:bg-slate-900 dark:border-slate-700',
           className
         )}
         {...props}
@@ -133,7 +134,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               cx={width / 2}
               cy={width / 2}
               r={radius}
-              className="stroke-slate-100"
+              className="stroke-slate-100 dark:stroke-slate-800"
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -160,7 +161,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
             {label && (
               <span
                 className={cn(
-                  'font-medium text-slate-500 leading-none mt-0.5 max-w-[80%] line-clamp-2',
+                  'font-medium text-slate-500 dark:text-slate-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
                   labelSize
                 )}
               >

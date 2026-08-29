@@ -55,10 +55,10 @@ export const InteractiveExample: Story = {
           <div className="space-y-4">
             <p>
               {t.modal.report.intro}{' '}
-              <strong className="text-slate-800">{t.modal.report.campaign}</strong> :
+              <strong className="text-slate-800 dark:text-slate-100">{t.modal.report.campaign}</strong> :
             </p>
-            <div className="space-y-2 rounded-xl border border-slate-200/60 bg-slate-50 p-3">
-              <h3 className="text-xs font-semibold text-slate-700">{t.modal.report.checklist}</h3>
+            <div className="space-y-2 rounded-xl border border-slate-200/60 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+              <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-200">{t.modal.report.checklist}</h3>
               <div className="flex flex-wrap gap-1.5">
                 <Badge variant="success" icon="check">
                   {t.modal.report.items.deliverability}
@@ -96,21 +96,40 @@ export const InteractiveExample: Story = {
 export const CloseWithEscape: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        closeLabel={t.components.modalClose}
-        title={t.modal.confirm.title}
-      >
-        {t.modal.confirm.body}
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          closeLabel={t.components.modalClose}
+          title={t.modal.confirm.title}
+        >
+          {t.modal.confirm.body}
+        </Modal>
+      </div>
     );
   },
-  play: async () => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
+    const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await expect(body.getByRole('dialog')).toBeInTheDocument();
     await userEvent.keyboard('{Escape}');
@@ -121,21 +140,40 @@ export const CloseWithEscape: Story = {
 export const CloseOnOverlayClick: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        closeLabel={t.components.modalClose}
-        title={t.modal.overlay.title}
-      >
-        {t.modal.overlay.body}
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          closeLabel={t.components.modalClose}
+          title={t.modal.overlay.title}
+        >
+          {t.modal.overlay.body}
+        </Modal>
+      </div>
     );
   },
-  play: async () => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
+    const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await expect(body.getByRole('dialog')).toBeInTheDocument();
     const overlay = body.getByRole('dialog').parentElement?.firstElementChild as HTMLElement;
@@ -147,32 +185,50 @@ export const CloseOnOverlayClick: Story = {
 export const FocusTrapInteraction: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        closeLabel={t.components.modalClose}
-        title={t.modal.keyboard.title}
-        footer={
-          <>
-            <Button variant="outline" size="sm" onClick={() => setIsOpen(false)}>
-              {t.modal.keyboard.cancel}
-            </Button>
-            <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
-              {t.modal.keyboard.submit}
-            </Button>
-          </>
-        }
-      >
-        {t.modal.keyboard.body}
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          closeLabel={t.components.modalClose}
+          title={t.modal.keyboard.title}
+          footer={
+            <>
+              <Button variant="outline" size="sm" onClick={() => setIsOpen(false)}>
+                {t.modal.keyboard.cancel}
+              </Button>
+              <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
+                {t.modal.keyboard.submit}
+              </Button>
+            </>
+          }
+        >
+          {t.modal.keyboard.body}
+        </Modal>
+      </div>
     );
   },
-  play: async ({ globals }) => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
     const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await expect(body.getByRole('dialog')).toBeInTheDocument();
     await expect(body.getByRole('button', { name: t.components.modalClose })).toHaveFocus();
@@ -194,22 +250,41 @@ export const FocusTrapInteraction: Story = {
 export const WithoutTitle: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        maxWidth="sm"
-        ariaLabel={t.modal.untitled.ariaLabel}
-      >
-        {t.modal.untitled.body}
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          maxWidth="sm"
+          ariaLabel={t.modal.untitled.ariaLabel}
+        >
+          {t.modal.untitled.body}
+        </Modal>
+      </div>
     );
   },
-  play: async ({ globals }) => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
     const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
+
     const dialog = body.getByRole('dialog');
 
     await expect(dialog).toHaveAccessibleName(t.modal.untitled.ariaLabel);
@@ -220,22 +295,40 @@ export const WithoutTitle: Story = {
 export const CloseWithHeaderButton: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        closeLabel={t.components.modalClose}
-        title={t.modal.headerClose.title}
-      >
-        {t.modal.headerClose.body}
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          closeLabel={t.components.modalClose}
+          title={t.modal.headerClose.title}
+        >
+          {t.modal.headerClose.body}
+        </Modal>
+      </div>
     );
   },
-  play: async ({ globals }) => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
     const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await userEvent.click(body.getByRole('button', { name: t.components.modalClose }));
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
@@ -245,21 +338,40 @@ export const CloseWithHeaderButton: Story = {
 export const NoFocusableElements: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        maxWidth="xl"
-        ariaLabel={t.modal.noFocusable.ariaLabel}
-      >
-        <p>{t.modal.noFocusable.body}</p>
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          maxWidth="xl"
+          ariaLabel={t.modal.noFocusable.ariaLabel}
+        >
+          <p>{t.modal.noFocusable.body}</p>
+        </Modal>
+      </div>
     );
   },
-  play: async () => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
+    const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await expect(body.getByRole('dialog')).toBeInTheDocument();
     await userEvent.keyboard('{Tab}');
@@ -271,29 +383,47 @@ export const NoFocusableElements: Story = {
 export const CompoundComponents: Story = {
   render: () => {
     const t = useI18n();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const titleId = useId();
 
     return (
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} maxWidth="md" labelledBy={titleId}>
-        <Modal.Header
-          title={t.modal.compound.title}
-          titleId={titleId}
-          closeLabel={t.components.modalClose}
-          onClose={() => setIsOpen(false)}
-        />
-        <Modal.Body>{t.modal.compound.body}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
-            {t.modal.compound.confirm}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <div className="p-4">
+        {/*
+          Closed by default, opened by this trigger. A documentation page
+          renders every story of the component at once: a modal open on mount
+          would portal into `document.body`, mark the rest of the page `inert`
+          and lock its scroll — seven stories, seven overlays stacked over the
+          docs. Fluent and welcome-ui put their dialogs behind a trigger for
+          the same reason.
+        */}
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          {t.modal.trigger}
+        </Button>
+
+        <Modal   isOpen={isOpen} onClose={() => setIsOpen(false)} maxWidth="md" labelledBy={titleId}>
+          <Modal.Header
+            title={t.modal.compound.title}
+            titleId={titleId}
+            closeLabel={t.components.modalClose}
+            onClose={() => setIsOpen(false)}
+          />
+          <Modal.Body>{t.modal.compound.body}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
+              {t.modal.compound.confirm}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     );
   },
-  play: async ({ globals }) => {
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
     const t = getDictionary(globals.locale);
+
+    // The modal starts closed, as it does on the documentation page.
+    await userEvent.click(canvas.getByRole('button', { name: t.modal.trigger }));
 
     await expect(body.getByText(t.modal.compound.title)).toBeInTheDocument();
     await userEvent.click(body.getByRole('button', { name: t.modal.compound.confirm }));

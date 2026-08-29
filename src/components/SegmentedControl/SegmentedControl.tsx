@@ -93,6 +93,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
         onKeyDown={handleKeyDown}
         className={cn(
           'inline-flex rounded-xl border border-slate-200/60 bg-slate-100 p-1',
+          'dark:border-slate-700 dark:bg-slate-800',
           className
         )}
         {...props}
@@ -124,8 +125,8 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
                 sizes[size],
                 focusRing,
                 isSelected
-                  ? 'bg-white text-slate-800 shadow-sm'
-                  : cn(subtleTextClass, 'hover:text-slate-700')
+                  ? 'bg-white text-slate-800 shadow-sm dark:bg-slate-700 dark:text-slate-50'
+                  : cn(subtleTextClass, 'hover:text-slate-700 dark:hover:text-slate-100')
               )}
             >
               {option.icon && (

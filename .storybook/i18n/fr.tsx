@@ -46,8 +46,8 @@ export const fr: Dictionary = {
       nextPage: 'Page suivante',
       pageStatus: (currentPage, totalPages) => (
         <>
-          Page <strong className="text-slate-800">{currentPage}</strong> sur{' '}
-          <strong className="text-slate-800">{totalPages}</strong>
+          Page <strong className="text-slate-800 dark:text-slate-100">{currentPage}</strong> sur{' '}
+          <strong className="text-slate-800 dark:text-slate-100">{totalPages}</strong>
         </>
       ),
       scrollRegion: 'Tableau, défilement horizontal',
@@ -371,6 +371,8 @@ export const fr: Dictionary = {
   },
 
   modal: {
+    /* Ouvre la modale : les stories la rendent fermée, comme sur la page de doc. */
+    trigger: 'Ouvrir la modale',
     report: {
       trigger: 'Ouvrir la modale',
       title: 'Titre de modale',

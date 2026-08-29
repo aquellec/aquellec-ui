@@ -4,7 +4,7 @@ import { cn } from '../lib/cn';
 import { aquellecColors, aquellecThemeExtensions } from '../lib/design-tokens';
 import { focusRing, focusRingDanger, focusRingGhost } from '../lib/focus-ring';
 import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
-import { anchorSlug, cardSurface, softTransition } from './_showcase';
+import { accentTileClass, anchorSlug, cardSurface, softTransition } from './_showcase';
 
 /*
   Visual blocks of the Docs/Tokens page.
@@ -29,17 +29,18 @@ export function TokensHero() {
   return (
     <div
       className={cn(
-        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20',
-        'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10'
+        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20 dark:border-brand-400/20',
+        'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10',
+        'dark:from-brand-500/20 dark:via-slate-900 dark:to-ai-500/20'
       )}
     >
       <div className="flex flex-col items-start gap-4">
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+        <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:border-brand-400/30 dark:bg-slate-900/70 dark:text-brand-300">
           <Palette className="h-3.5 w-3.5" aria-hidden="true" />
           {t.heroKicker}
         </p>
 
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 md:text-5xl">
           {t.heroTitle}
         </h1>
 
@@ -69,19 +70,22 @@ function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; h
 
   return (
     <div className="flex flex-col">
+      {/*
+        One identical hairline on every swatch. The key shades used to carry an
+        extra `ring-2`, which stayed almost invisible on white but turned into a
+        thick grey double frame on a dark surface — and it was redundant: the
+        role is already named underneath, in colour.
+      */}
       <div
-        className={cn(
-          'mb-1.5 h-14 w-full rounded-lg border border-slate-900/10',
-          role && 'ring-2 ring-slate-900/10 ring-offset-1'
-        )}
+        className="mb-1.5 h-14 w-full rounded-lg border border-slate-900/10 dark:border-white/15"
         style={{ backgroundColor: hex }}
         aria-hidden="true"
       />
-      <p className="font-mono text-xs font-semibold text-slate-900">
+      <p className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">
         {scaleName}-{shade}
       </p>
       <p className={cn('font-mono text-xs uppercase', mutedTextClass)}>{hex}</p>
-      {role && <p className="text-xs font-medium text-brand-700">{role}</p>}
+      {role && <p className="text-xs font-medium text-brand-700 dark:text-brand-300">{role}</p>}
     </div>
   );
 }
@@ -96,7 +100,7 @@ export function ColorScale({ name }: { name: 'brand' | 'ai' }) {
       {/* Card label, deliberately not an `h3`: the Storybook table of contents
           targets `h3` and would list "brand" / "ai" as sections. */}
       <div className="mb-4 flex items-baseline justify-between gap-4">
-        <p className="font-mono text-sm font-bold text-slate-900">{name}</p>
+        <p className="font-mono text-sm font-bold text-slate-900 dark:text-slate-100">{name}</p>
         <p className={cn('text-xs', mutedTextClass)}>{usage}</p>
       </div>
 
@@ -137,7 +141,7 @@ export function SemanticTokens() {
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-slate-900">{t[key].label}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t[key].label}</p>
               <p className={cn('font-mono text-xs', mutedTextClass)}>semantic-{key}-*</p>
             </div>
           </div>
@@ -150,11 +154,11 @@ export function SemanticTokens() {
             {semanticRoles.map((role) => (
               <div key={role}>
                 <div
-                  className="h-8 w-full rounded-md border border-slate-900/10"
+                  className="h-8 w-full rounded-md border border-slate-900/10 dark:border-white/15"
                   style={{ backgroundColor: tokens[role] }}
                   aria-hidden="true"
                 />
-                <p className="mt-1 font-mono text-xs font-semibold text-slate-900">{role}</p>
+                <p className="mt-1 font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">{role}</p>
                 <p className={cn('font-mono text-xs uppercase', mutedTextClass)}>{tokens[role]}</p>
               </div>
             ))}
@@ -176,20 +180,20 @@ export function NeutralText() {
   return (
     <div className={cn('sb-unstyled mb-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-slate-200 bg-slate-50">
+        <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
           <tr>
-            <th scope="col" className="p-3 font-semibold text-slate-900">{t.token}</th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">{t.value}</th>
-            <th scope="col" className="p-3 font-semibold text-slate-900">{t.usage}</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">{t.token}</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">{t.value}</th>
+            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">{t.usage}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
           {neutrals.map(({ token, hex, usage }) => (
             <tr key={token}>
               <th scope="row" className="whitespace-nowrap p-3 text-left">
-                <span className="flex items-center gap-2 font-mono font-medium text-slate-900">
+                <span className="flex items-center gap-2 font-mono font-medium text-slate-900 dark:text-slate-100">
                   <span
-                    className="inline-block h-4 w-4 shrink-0 rounded border border-slate-900/10"
+                    className="inline-block h-4 w-4 shrink-0 rounded border border-slate-900/10 dark:border-white/15"
                     style={{ backgroundColor: hex }}
                     aria-hidden="true"
                   />
@@ -216,21 +220,21 @@ export function RadiusScale() {
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-500/20">
+        <span className={cn('inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', accentTileClass.brand)}>
           <Ruler className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">{t.radii}</p>
+        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.radii}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {Object.entries(aquellecThemeExtensions.borderRadius).map(([token, value]) => (
           <div key={token}>
             <div
-              className="mb-1.5 h-16 w-full border border-brand-500/30 bg-brand-50"
+              className="mb-1.5 h-16 w-full border border-brand-500/30 bg-brand-50 dark:border-brand-400/30 dark:bg-brand-500/15"
               style={{ borderRadius: value }}
               aria-hidden="true"
             />
-            <p className="font-mono text-xs font-semibold text-slate-900">rounded-{token}</p>
+            <p className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">rounded-{token}</p>
             <p className={cn('font-mono text-xs', mutedTextClass)}>{value}</p>
           </div>
         ))}
@@ -245,21 +249,21 @@ export function ElevationScale() {
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ai-50 text-ai-700 ring-1 ring-ai-500/20">
+        <span className={cn('inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', accentTileClass.ai)}>
           <Layers className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">{t.elevations}</p>
+        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.elevations}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         {Object.entries(aquellecThemeExtensions.boxShadow).map(([token, value]) => (
           <div key={token}>
             <div
-              className="mb-2.5 h-16 w-full rounded-xl border border-slate-100 bg-white"
+              className="mb-2.5 h-16 w-full rounded-xl border border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800"
               style={{ boxShadow: value }}
               aria-hidden="true"
             />
-            <p className="font-mono text-xs font-semibold text-slate-900">shadow-{token}</p>
+            <p className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">shadow-{token}</p>
             <p className={cn('break-all font-mono text-xs', mutedTextClass)}>{value}</p>
           </div>
         ))}
@@ -292,24 +296,24 @@ export function TypeScale() {
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border">
+        <span className={cn('inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', accentTileClass.info)}>
           <Type className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
-          <p className="text-sm font-semibold text-slate-900">{t.typeScale}</p>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.typeScale}</p>
           <p className={cn('text-xs', mutedTextClass)}>
             {t.typeScaleSubtitle} (<code>font-sans</code>)
           </p>
         </div>
       </div>
 
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-slate-100 dark:divide-slate-800">
         {typeScale.map(({ token, size, usage }) => (
           <li key={token} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-2.5">
-            <span className={cn(token, 'min-w-0 flex-1 font-semibold text-slate-900')}>
+            <span className={cn(token, 'min-w-0 flex-1 font-semibold text-slate-900 dark:text-slate-100')}>
               {t.typeSample}
             </span>
-            <span className="font-mono text-xs font-semibold text-slate-900">{token}</span>
+            <span className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">{token}</span>
             <span className={cn('w-12 text-right font-mono text-xs', mutedTextClass)}>{size}</span>
             <span className={cn('w-full text-xs sm:w-56 sm:text-right', mutedTextClass)}>
               {t.typeUsage[usage]}
@@ -342,7 +346,7 @@ const focusVariants: Array<{
     name: 'focusRingGhost',
     className: focusRingGhost,
     label: 'quiet',
-    accent: 'bg-slate-100 text-slate-800',
+    accent: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100',
   },
 ];
 
@@ -352,10 +356,10 @@ export function FocusRings() {
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-1 flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border">
+        <span className={cn('inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', accentTileClass.success)}>
           <Focus className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">{t.focusRings}</p>
+        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.focusRings}</p>
       </div>
 
       <p className={cn('text-xs', mutedTextClass)}>{t.focusIntro}</p>
@@ -399,16 +403,16 @@ export function Viewports() {
   return (
     <section className={cn('sb-unstyled mb-4 p-5', cardSurface)}>
       <div className="mb-4 flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border">
+        <span className={cn('inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', accentTileClass.warning)}>
           <MonitorSmartphone className="h-4 w-4" aria-hidden="true" />
         </span>
-        <p className="text-sm font-semibold text-slate-900">{t.viewportsTitle}</p>
+        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.viewportsTitle}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {viewports.map(({ key, name, size }) => (
-          <div key={key} className="flex flex-col gap-0.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3">
-            <p className="text-sm font-semibold text-slate-900">{name}</p>
+          <div key={key} className="flex flex-col gap-0.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-700 dark:bg-slate-800/50">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{name}</p>
             <p className={cn('font-mono text-xs', mutedTextClass)}>{key}</p>
             <p className={cn('font-mono text-xs', subtleTextClass)}>{size}</p>
           </div>
@@ -448,7 +452,7 @@ export function TokensHeading({ id }: { id: TokensHeadingKey }) {
   return (
     <h3
       id={anchorSlug(id)}
-      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900"
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50"
     >
       {t[id]}
     </h3>

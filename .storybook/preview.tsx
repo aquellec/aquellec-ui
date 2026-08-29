@@ -4,7 +4,15 @@ import type { Decorator, Preview } from '@storybook/react-vite';
 import { DocsContainer, type DocsContainerProps } from '@storybook/addon-docs/blocks';
 import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
 import { LocalizedDocsPage } from './docs-page';
-import { aquellecTheme } from './theme';
+import { aquellecDarkTheme, aquellecTheme } from './theme';
+import {
+  DEFAULT_THEME,
+  THEMES,
+  applyTheme,
+  isTheme,
+  themeLabels,
+  type Theme,
+} from './theme-mode';
 import {
   DEFAULT_LOCALE,
   I18nContext,
@@ -49,11 +57,34 @@ const aquellecViewports = {
   The preview runs in the browser, where `process.env` does not exist: Vite
   exposes `STORYBOOK_`-prefixed variables on `import.meta.env` instead.
 */
+const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+
 const envLocale = (() => {
-  const value = (import.meta as unknown as { env?: Record<string, string | undefined> }).env
-    ?.STORYBOOK_LOCALE;
+  const value = env?.STORYBOOK_LOCALE;
   return isLocale(value) ? value : DEFAULT_LOCALE;
 })();
+
+const envTheme = (() => {
+  const value = env?.STORYBOOK_THEME;
+  return isTheme(value) ? value : DEFAULT_THEME;
+})();
+
+/**
+ * Applies the light / dark mode chosen in the toolbar to every story.
+ *
+ * The class is set on `<html>` rather than on a wrapper, because the Modal and
+ * the toasts render through a portal attached to `document.body` and would
+ * otherwise stay light while the rest of the page turns dark.
+ */
+const withTheme: Decorator = (Story, context) => {
+  const theme = isTheme(context.globals.theme) ? context.globals.theme : DEFAULT_THEME;
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  return <Story />;
+};
 
 const withI18n: Decorator = (Story, context) => {
   const locale = isLocale(context.globals.locale) ? context.globals.locale : DEFAULT_LOCALE;
@@ -77,25 +108,30 @@ const withI18n: Decorator = (Story, context) => {
 };
 
 /**
- * Reads the active locale from a docs context.
+ * Reads one global from a docs context and keeps it in sync.
  *
  * MDX pages render outside the story pipeline, so decorators never run on them
- * and the preview hooks (`useGlobals`) throw. The locale therefore has to be
- * read from the docs context, and kept in sync through the preview channel so
- * the toolbar switch updates the page without a reload.
+ * and the preview hooks (`useGlobals`) throw. Globals therefore have to be read
+ * from the docs context, then followed through the preview channel so a toolbar
+ * switch updates the page without a reload. Locale and theme share this reader.
  */
-function useDocsLocale(context: DocsContainerProps['context']): Locale {
-  const readLocale = useCallback((): Locale => {
+function useDocsGlobal<T>(
+  context: DocsContainerProps['context'],
+  key: string,
+  isValid: (value: unknown) => value is T,
+  fallback: T
+): T {
+  const read = useCallback((): T => {
     const store = (context as unknown as { store?: { userGlobals?: { globals?: Record<string, unknown> } } })
       ?.store;
-    const value = store?.userGlobals?.globals?.locale;
-    return isLocale(value) ? value : DEFAULT_LOCALE;
-  }, [context]);
+    const value = store?.userGlobals?.globals?.[key];
+    return isValid(value) ? value : fallback;
+  }, [context, key, isValid, fallback]);
 
-  const [locale, setLocale] = useState<Locale>(readLocale);
+  const [value, setValue] = useState<T>(read);
 
   useEffect(() => {
-    setLocale(readLocale());
+    setValue(read());
 
     const channel = (context as unknown as { channel?: {
       on: (event: string, handler: (payload: { globals?: Record<string, unknown> }) => void) => void;
@@ -104,27 +140,40 @@ function useDocsLocale(context: DocsContainerProps['context']): Locale {
     if (!channel) return;
 
     const handleGlobalsUpdated = ({ globals }: { globals?: Record<string, unknown> }) => {
-      if (isLocale(globals?.locale)) setLocale(globals.locale);
+      const next = globals?.[key];
+      if (isValid(next)) setValue(next);
     };
 
     channel.on(GLOBALS_UPDATED, handleGlobalsUpdated);
     return () => channel.off(GLOBALS_UPDATED, handleGlobalsUpdated);
-  }, [context, readLocale]);
+  }, [context, key, isValid, read]);
 
-  return locale;
+  return value;
 }
 
-/** Gives MDX documentation pages the same dictionary and `lang` as the stories. */
-function I18nDocsContainer({ children, ...rest }: DocsContainerProps) {
-  const locale = useDocsLocale(rest.context);
+/**
+ * Gives MDX documentation pages the same dictionary, `lang` and theme as the
+ * stories.
+ *
+ * `DocsContainer` takes the Storybook theme as a prop, so the page chrome —
+ * prop tables, headings, backgrounds — switches with the toolbar instead of
+ * staying light around dark component previews.
+ */
+function DocsShell({ children, ...rest }: DocsContainerProps) {
+  const locale = useDocsGlobal<Locale>(rest.context, 'locale', isLocale, DEFAULT_LOCALE);
+  const theme = useDocsGlobal<Theme>(rest.context, 'theme', isTheme, DEFAULT_THEME);
 
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
   return (
     <I18nContext.Provider value={getDictionary(locale)}>
-      <DocsContainer {...rest}>
+      <DocsContainer {...rest} theme={theme === 'dark' ? aquellecDarkTheme : aquellecTheme}>
         <div lang={locale}>{children}</div>
       </DocsContainer>
     </I18nContext.Provider>
@@ -132,8 +181,21 @@ function I18nDocsContainer({ children, ...rest }: DocsContainerProps) {
 }
 
 const preview: Preview = {
-  decorators: [withI18n],
+  decorators: [withI18n, withTheme],
   globalTypes: {
+    theme: {
+      description: 'Light or dark rendering of the components',
+      toolbar: {
+        title: 'Theme',
+        icon: 'contrast',
+        dynamicTitle: true,
+        items: THEMES.map((theme) => ({
+          value: theme,
+          title: themeLabels[theme].title,
+          icon: themeLabels[theme].icon,
+        })),
+      },
+    },
     locale: {
       description: 'Language of the story examples',
       toolbar: {
@@ -168,7 +230,7 @@ const preview: Preview = {
     docs: {
       theme: aquellecTheme,
       toc: true,
-      container: I18nDocsContainer,
+      container: DocsShell,
       page: LocalizedDocsPage,
     },
     options: {
@@ -186,6 +248,12 @@ const preview: Preview = {
       fails the test instead of passing silently.
     */
     locale: envLocale,
+    /*
+      `STORYBOOK_THEME=dark pnpm test:storybook` replays the whole suite in dark
+      mode. The a11y addon is blocking, so contrast is checked against the dark
+      palette too rather than assumed.
+    */
+    theme: envTheme,
   },
 };
 
