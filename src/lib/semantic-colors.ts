@@ -21,17 +21,17 @@ export const semanticIconClass = {
 } as const;
 
 /** Muted copy: captions, hints, secondary metadata (WCAG AA 4.5:1). */
-export const mutedTextClass = 'text-semantic-muted dark:text-slate-400';
+export const mutedTextClass = 'text-semantic-muted dark:text-neutral-400';
 
 /** Secondary copy and controls (WCAG AA 4.5:1). */
-export const subtleTextClass = 'text-semantic-subtle dark:text-slate-300';
+export const subtleTextClass = 'text-semantic-subtle dark:text-neutral-300';
 
 /** Form validation errors (WCAG AA 4.5:1). */
 export const errorTextClass = 'text-semantic-error-fg dark:text-rose-300';
 
 /** Placeholder tone (WCAG AA 4.5:1). */
 export const placeholderClass =
-  'placeholder:text-semantic-muted dark:placeholder:text-slate-500';
+  'placeholder:text-semantic-muted dark:placeholder:text-neutral-500';
 
 /** Toast and banner surface tokens mapped to the preset. */
 export const semanticSurfaceClass = {
@@ -42,7 +42,7 @@ export const semanticSurfaceClass = {
   warning:
     'bg-semantic-warning-surface/90 border-semantic-warning-border text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-100',
   info: 'bg-semantic-info-surface/90 border-semantic-info-border text-blue-900 dark:bg-blue-500/10 dark:border-blue-500/30 dark:text-blue-100',
-  ai: 'bg-gradient-to-r from-ai-50/90 to-brand-50/90 border-ai-200 text-slate-800 dark:from-ai-500/15 dark:to-brand-500/15 dark:border-ai-500/30 dark:text-slate-100',
+  ai: 'bg-gradient-to-r from-ai-50/90 to-brand-50/90 border-ai-200 text-neutral-800 dark:from-ai-500/15 dark:to-brand-500/15 dark:border-ai-500/30 dark:text-neutral-100',
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -50,32 +50,32 @@ export const semanticSurfaceClass = {
 /* -------------------------------------------------------------------------- */
 
 /** Page canvas behind the content: dashboards, full-screen templates. */
-export const pageSurfaceClass = 'bg-slate-50 dark:bg-slate-950';
+export const pageSurfaceClass = 'bg-neutral-50 dark:bg-neutral-950';
 
 /** Raised surface: cards, dialogs, popovers, anything sitting on the page. */
-export const raisedSurfaceClass = 'bg-white dark:bg-slate-900';
+export const raisedSurfaceClass = 'bg-white dark:bg-neutral-900';
 
 /** Sunken surface inside a raised one: table head, footers, ghost fills. */
-export const sunkenSurfaceClass = 'bg-slate-50 dark:bg-slate-800/60';
+export const sunkenSurfaceClass = 'bg-neutral-50 dark:bg-neutral-800/60';
 
 /** Outer border of a raised surface. */
-export const surfaceBorderClass = 'border-slate-200 dark:border-slate-700';
+export const surfaceBorderClass = 'border-neutral-200 dark:border-neutral-700';
 
 /** Hairline separating rows or sections inside a surface. */
-export const dividerBorderClass = 'border-slate-100 dark:border-slate-800';
+export const dividerBorderClass = 'border-neutral-100 dark:border-neutral-800';
 
 /** Border of an interactive control: inputs, outline buttons, drop zones. */
-export const controlBorderClass = 'border-slate-300 dark:border-slate-600';
+export const controlBorderClass = 'border-neutral-300 dark:border-neutral-600';
 
 /* -------------------------------------------------------------------------- */
 /*  Copy                                                                       */
 /* -------------------------------------------------------------------------- */
 
 /** Headings and primary copy on any surface. */
-export const strongTextClass = 'text-slate-900 dark:text-slate-50';
+export const strongTextClass = 'text-neutral-900 dark:text-neutral-50';
 
 /** Body copy on any surface. */
-export const bodyTextClass = 'text-slate-700 dark:text-slate-200';
+export const bodyTextClass = 'text-neutral-700 dark:text-neutral-200';
 
 /** Brand accent used for links, icons and emphasis. */
 export const brandAccentClass = 'text-brand-600 dark:text-brand-300';

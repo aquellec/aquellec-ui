@@ -99,9 +99,9 @@ export const RoleSwitcherDemo: Story = {
           onChange={setWorkspace}
           ariaLabel={t.segmented.workspace.label}
         />
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
           {t.segmented.workspace.active}{' '}
-          <strong className="text-slate-800 dark:text-slate-100">{workspace}</strong>
+          <strong className="text-neutral-800 dark:text-neutral-100">{workspace}</strong>
         </p>
       </div>
     );

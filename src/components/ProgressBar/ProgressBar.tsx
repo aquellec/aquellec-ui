@@ -65,7 +65,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       formatValue(value, max)
     ) : (
       <>
-        <strong className="font-bold text-slate-800 dark:text-slate-100">{value}</strong> / {max}
+        <strong className="font-bold text-neutral-800 dark:text-neutral-100">{value}</strong> / {max}
       </>
     );
 
@@ -73,8 +73,8 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border border-slate-200/80 bg-slate-50 p-4',
-          'dark:border-slate-700 dark:bg-slate-800/50',
+          'rounded-xl border border-neutral-200/80 bg-neutral-50 p-4',
+          'dark:border-neutral-700 dark:bg-neutral-800/50',
           className
         )}
         {...props}
@@ -88,7 +88,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
                 </span>
               )}
               {label && (
-                <span className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <span className="truncate text-xs font-semibold text-neutral-700 dark:text-neutral-200">
                   {label}
                 </span>
               )}
@@ -104,7 +104,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           aria-valuenow={value}
           aria-valuetext={`${percentage}%`}
           aria-label={ariaLabel ?? label}
-          className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+          className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700"
         >
           <div
             className={cn(
@@ -116,7 +116,7 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
         </div>
 
         {(helperText || action) && (
-          <div className="mt-3 flex items-center justify-between gap-3 border-t border-slate-200/60 dark:border-slate-700/60 pt-2">
+          <div className="mt-3 flex items-center justify-between gap-3 border-t border-neutral-200/60 dark:border-neutral-700/60 pt-2">
             {helperText ? (
               <span className={cn('text-xs', mutedTextClass)}>{helperText}</span>
             ) : (

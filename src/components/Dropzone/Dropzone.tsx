@@ -253,10 +253,10 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
       isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
       isDragActive
         ? 'border-brand-500 bg-brand-50/50 scale-[0.99] dark:border-brand-400 dark:bg-brand-500/10'
-        : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 dark:border-slate-600 dark:hover:border-slate-500 dark:bg-slate-800/40 dark:hover:bg-slate-800/70',
+        : 'border-neutral-300 hover:border-neutral-400 bg-neutral-50/50 hover:bg-neutral-50 dark:border-neutral-600 dark:hover:border-neutral-500 dark:bg-neutral-800/40 dark:hover:bg-neutral-800/70',
       error && 'border-red-400 bg-red-50/30',
       isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait dark:border-brand-400 dark:bg-brand-500/10',
-      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200 dark:border-slate-700'
+      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-neutral-200 dark:border-neutral-700'
     );
 
     return (
@@ -277,7 +277,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs dark:border-slate-700 dark:bg-slate-900"
+            className="flex w-full items-center justify-between rounded-xl border border-neutral-200 bg-white p-3 shadow-xs dark:border-neutral-700 dark:bg-neutral-900"
             aria-describedby={error ? errorId : undefined}
           >
             <div className="flex min-w-0 items-center space-x-3 truncate">
@@ -287,7 +287,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
               <div className="truncate text-left">
                 {multiple ? (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                    <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-100">
                       {labels.selection(displayedFiles.length)}
                     </p>
                     <p
@@ -295,7 +295,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                         'text-xs',
                         isLoading
                           ? 'text-brand-600 dark:text-brand-300'
-                          : 'text-slate-500 dark:text-slate-400'
+                          : 'text-neutral-500 dark:text-neutral-400'
                       )}
                     >
                       {isLoading ? labels.uploading : labels.totalSize(formatFileSize(totalSize))}
@@ -303,7 +303,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                   </>
                 ) : (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                    <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-100">
                       {displayedFile!.name}
                     </p>
                     <p
@@ -311,7 +311,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                         'text-xs',
                         isLoading
                           ? 'text-brand-600 dark:text-brand-300'
-                          : 'text-slate-500 dark:text-slate-400'
+                          : 'text-neutral-500 dark:text-neutral-400'
                       )}
                     >
                       {isLoading ? labels.uploading : formatFileSize(displayedFile!.size)}
@@ -331,7 +331,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 onClick={clearSelection}
                 disabled={isDisabled}
                 className={cn(
-                  'rounded-md p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800',
+                  'rounded-md p-1 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800',
                   subtleTextClass,
                   focusRingGhost
                 )}
@@ -355,10 +355,10 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                   <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                <p className="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                   {labels.loadingTitle}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
                   {labels.loadingHint(multiple)}
                 </p>
               </div>
@@ -369,18 +369,18 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                     'mb-3 rounded-full p-3 transition-colors',
                     isDragActive
                       ? 'bg-brand-100 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300'
-                      : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                      : 'bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400'
                   )}
                 >
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                <p className="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                   <span className="text-brand-600 dark:text-brand-300 underline underline-offset-2">
                     {labels.browse}
                   </span>{' '}
                   {labels.dropHint(multiple)}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
                   {labels.constraint(maxSizeMB, multiple)}
                 </p>
               </div>

@@ -1,3 +1,5 @@
+import { aquellecColors } from '../src/lib/design-tokens';
+
 /**
  * Light / dark mode shared by the toolbar switch, the story decorator and the
  * documentation container.
@@ -22,10 +24,10 @@ export function isTheme(value: unknown): value is Theme {
   return typeof value === 'string' && (THEMES as readonly string[]).includes(value);
 }
 
-/** Canvas behind the stories, matching `pageSurfaceClass` on both sides. */
+/** Canvas behind the stories, taken from the token used by `pageSurfaceClass`. */
 const CANVAS_BACKGROUND: Record<Theme, string> = {
   light: '',
-  dark: '#020617',
+  dark: aquellecColors.neutral[950],
 };
 
 /**

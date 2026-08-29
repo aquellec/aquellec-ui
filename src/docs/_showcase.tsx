@@ -103,7 +103,7 @@ const accents: Record<AccentName, Accent> = {
 };
 
 /** Shared card surface: consistent radius and elevation. */
-export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900';
+export const cardSurface = 'rounded-xl border border-neutral-200 bg-white shadow-card dark:border-neutral-700 dark:bg-neutral-900';
 
 /** Transitions neutralised when the user asks for reduced motion. */
 export const softTransition = 'transition-colors duration-200 motion-reduce:transition-none';
@@ -134,7 +134,7 @@ export function SectionHeader({
         <span className="h-px w-6 bg-brand-500/40" aria-hidden="true" />
         {kicker}
       </p>
-      <h2 id={id} className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 md:text-3xl">
+      <h2 id={id} className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-3xl">
         {title}
       </h2>
     </header>
@@ -182,17 +182,17 @@ export function Hero() {
       className={cn(
         'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20 dark:border-brand-400/20',
         'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10',
-        'dark:from-brand-500/20 dark:via-slate-900 dark:to-ai-500/20'
+        'dark:from-brand-500/20 dark:via-neutral-900 dark:to-ai-500/20'
       )}
     >
       <div>
         <div className="flex flex-col items-start gap-4">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:border-brand-400/30 dark:bg-slate-900/70 dark:text-brand-300">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:border-brand-400/30 dark:bg-neutral-900/70 dark:text-brand-300">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             {t.heroKicker}
           </p>
 
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 md:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-5xl">
             @aquellec/ui
           </h1>
 
@@ -256,7 +256,7 @@ export function Pillars() {
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t[key].title}</p>
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{t[key].title}</p>
             </div>
             <p className={cn('text-sm leading-relaxed', subtleTextClass)}>{t[key].body}</p>
           </div>
@@ -388,7 +388,7 @@ export function Families() {
             {links.map(({ label, href }, index) => (
               <React.Fragment key={label}>
                 {index > 0 && (
-                  <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
+                  <span className="text-neutral-300 dark:text-neutral-600" aria-hidden="true">
                     ·
                   </span>
                 )}
@@ -446,20 +446,20 @@ export function Governance() {
   return (
     <div className={cn('sb-unstyled my-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+        <thead className="border-b border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800/60">
           <tr>
-            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
+            <th scope="col" className="p-3 font-semibold text-neutral-900 dark:text-neutral-100">
               {t.axis}
             </th>
-            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
+            <th scope="col" className="p-3 font-semibold text-neutral-900 dark:text-neutral-100">
               {t.practice}
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+        <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
           {governance.map(({ axis, icon: Icon, accent, practice }) => (
             <tr key={axis}>
-              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-slate-900 dark:text-slate-100">
+              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-neutral-900 dark:text-neutral-100">
                 <span className="flex items-center gap-2">
                   <span
                     className={cn(
@@ -518,7 +518,7 @@ export function IntroHeading({ id }: { id: IntroHeadingKey }) {
   return (
     <h3
       id={anchorSlug(id)}
-      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50"
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-neutral-900 dark:text-neutral-50"
     >
       {text}
     </h3>

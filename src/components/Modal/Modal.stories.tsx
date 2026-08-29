@@ -55,10 +55,10 @@ export const InteractiveExample: Story = {
           <div className="space-y-4">
             <p>
               {t.modal.report.intro}{' '}
-              <strong className="text-slate-800 dark:text-slate-100">{t.modal.report.campaign}</strong> :
+              <strong className="text-neutral-800 dark:text-neutral-100">{t.modal.report.campaign}</strong> :
             </p>
-            <div className="space-y-2 rounded-xl border border-slate-200/60 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
-              <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-200">{t.modal.report.checklist}</h3>
+            <div className="space-y-2 rounded-xl border border-neutral-200/60 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800/60">
+              <h3 className="text-xs font-semibold text-neutral-700 dark:text-neutral-200">{t.modal.report.checklist}</h3>
               <div className="flex flex-wrap gap-1.5">
                 <Badge variant="success" icon="check">
                   {t.modal.report.items.deliverability}

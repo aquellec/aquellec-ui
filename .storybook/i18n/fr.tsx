@@ -46,8 +46,8 @@ export const fr: Dictionary = {
       nextPage: 'Page suivante',
       pageStatus: (currentPage, totalPages) => (
         <>
-          Page <strong className="text-slate-800 dark:text-slate-100">{currentPage}</strong> sur{' '}
-          <strong className="text-slate-800 dark:text-slate-100">{totalPages}</strong>
+          Page <strong className="text-neutral-800 dark:text-neutral-100">{currentPage}</strong> sur{' '}
+          <strong className="text-neutral-800 dark:text-neutral-100">{totalPages}</strong>
         </>
       ),
       scrollRegion: 'Tableau, défilement horizontal',

@@ -112,8 +112,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       <div
         ref={ref}
         className={cn(
-          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-xs',
-          'dark:bg-slate-900 dark:border-slate-700',
+          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-neutral-100 shadow-xs',
+          'dark:bg-neutral-900 dark:border-neutral-700',
           className
         )}
         {...props}
@@ -134,7 +134,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               cx={width / 2}
               cy={width / 2}
               r={radius}
-              className="stroke-slate-100 dark:stroke-slate-800"
+              className="stroke-neutral-100 dark:stroke-neutral-800"
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -161,7 +161,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
             {label && (
               <span
                 className={cn(
-                  'font-medium text-slate-500 dark:text-slate-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
+                  'font-medium text-neutral-500 dark:text-neutral-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
                   labelSize
                 )}
               >

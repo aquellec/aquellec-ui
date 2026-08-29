@@ -69,10 +69,10 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         ref={ref}
         className={cn(
           'relative flex flex-col p-6 rounded-2xl transition-all duration-200 bg-white border',
-          'dark:bg-slate-900',
+          'dark:bg-neutral-900',
           isPopular
             ? 'border-ai-500 shadow-md ring-1 ring-ai-500 dark:border-ai-400 dark:ring-ai-400'
-            : 'border-slate-200 hover:border-slate-300 shadow-xs dark:border-slate-700 dark:hover:border-slate-600',
+            : 'border-neutral-200 hover:border-neutral-300 shadow-xs dark:border-neutral-700 dark:hover:border-neutral-600',
           className
         )}
         {...props}
@@ -85,18 +85,18 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         )}
 
         <div className="mb-5">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 min-h-[32px]">{description}</p>
+          <h3 className="text-lg font-bold text-neutral-800 dark:text-neutral-100">{title}</h3>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 min-h-[32px]">{description}</p>
         </div>
 
         <div className="flex items-baseline mb-6">
-          <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
+          <span className="text-3xl font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight">
             {price}
           </span>
           {/* Rendered only when a period is provided: no magic value to compare
               the price against, which would tie the component to one language. */}
           {period && (
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">{period}</span>
+            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 ml-1">{period}</span>
           )}
         </div>
 
@@ -109,7 +109,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',
                   feature.included
                     ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300'
-                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                    : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
                 )}
                 aria-hidden="true"
               >
@@ -118,7 +118,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
               <span
                 className={
                   feature.included
-                    ? 'text-slate-700 dark:text-slate-200'
+                    ? 'text-neutral-700 dark:text-neutral-200'
                     : cn(mutedTextClass, 'line-through')
                 }
               >

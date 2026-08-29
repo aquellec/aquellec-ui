@@ -44,7 +44,7 @@ export const Default: Story = {
           }
         />
         <Card.Body>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t.card.report.body}</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.card.report.body}</p>
         </Card.Body>
         <Card.Footer>
           <span>
@@ -83,7 +83,7 @@ export const AICard: Story = {
           subtitle={t.card.ai.subtitle}
         />
         <Card.Body>
-          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200">{t.card.ai.body}</p>
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-200">{t.card.ai.body}</p>
         </Card.Body>
         <Card.Footer>
           <Badge variant="ai" icon="ai">
@@ -105,7 +105,7 @@ export const OutlineCard: Story = {
       <Card variant="outline" className="max-w-md">
         <Card.Header title={t.card.plan.title} subtitle={t.card.plan.subtitle} />
         <Card.Body>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t.card.plan.body}</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.card.plan.body}</p>
         </Card.Body>
       </Card>
     );
@@ -119,7 +119,7 @@ export const GhostCard: Story = {
       <Card variant="ghost" className="max-w-md">
         <Card.Header title={t.card.tip.title} />
         <Card.Body>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t.card.tip.body}</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.card.tip.body}</p>
         </Card.Body>
       </Card>
     );
@@ -133,7 +133,7 @@ export const SemanticTitle: Story = {
       <Card className="max-w-md">
         <Card.Header title={t.card.section.title} titleAs="h2" subtitle={t.card.section.subtitle} />
         <Card.Body>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t.card.section.body}</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-300">{t.card.section.body}</p>
         </Card.Body>
       </Card>
     );

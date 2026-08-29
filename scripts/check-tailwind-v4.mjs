@@ -22,6 +22,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, readFileSync, cpSync, mkdirSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const root = resolve(import.meta.dirname, '..');
 const dist = join(root, 'dist');
@@ -33,14 +34,35 @@ for (const file of ['tailwind-preset.mjs', 'theme.css', 'index.mjs']) {
   }
 }
 
+/*
+  Expectations are derived from the tokens, never copied: a hard-coded hex here
+  would have to be edited every time the palette moves, and a stale assertion
+  that still passes is worse than no assertion.
+*/
+const { aquellecColors, aquellecThemeExtensions } = await import(
+  pathToFileURL(resolve(import.meta.dirname, '..', 'src', 'lib', 'design-tokens.ts')).href
+);
+
+const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** The shadow colour, as it appears in the emitted declaration. */
+const shadowInk = aquellecThemeExtensions.boxShadow.card.match(/rgb\(([^)]+)\)/)[1].split(' /')[0];
+
 /* Properties a consumer actually depends on, whichever path they took. */
 const shared = [
-  ['brand scale', /\.bg-brand-600\s*\{[^}]*(#0052cc|--color-brand-600)/],
-  ['semantic scale', /\.text-semantic-muted\s*\{[^}]*(#64748b|--color-semantic-muted)/],
-  ['custom shadow', /\.shadow-card\s*\{[^}]*15 23 42/],
+  [
+    'brand scale',
+    new RegExp(`\\.bg-brand-600\\s*\\{[^}]*(${escape(aquellecColors.brand[600])}|--color-brand-600)`),
+  ],
+  [
+    'semantic scale',
+    new RegExp(
+      `\\.text-semantic-muted\\s*\\{[^}]*(${escape(aquellecColors.semantic.muted)}|--color-semantic-muted)`
+    ),
+  ],
+  ['custom shadow', new RegExp(`\\.shadow-card\\s*\\{[^}]*${escape(shadowInk)}`)],
   // The load-bearing one: a media-query fallback breaks every application
   // driving the theme from a toggle.
-  ['dark uses the class strategy', /\.dark\\:bg-slate-900:(is|where)\(\s*\.dark/],
+  ['dark uses the class strategy', /\.dark\\:bg-neutral-900:(is|where)\(\s*\.dark/],
   ['dark does not fall back to the media query', /^(?!.*prefers-color-scheme: dark).*$/s],
   // These assert the declarations the preset emits, not merely the at-rule:
   // Tailwind 4 ships its own reduced-motion block and color-scheme utilities.
@@ -88,7 +110,7 @@ function viaConfig(work) {
   );
   writeFileSync(
     join(work, 'content.html'),
-    '<div class="bg-brand-600 text-semantic-muted shadow-card dark:bg-slate-900"></div>\n'
+    '<div class="bg-brand-600 text-semantic-muted shadow-card dark:bg-neutral-900"></div>\n'
   );
   writeFileSync(join(work, 'input.css'), '@import "tailwindcss";\n@config "./tailwind.config.js";\n');
   return compile(work);

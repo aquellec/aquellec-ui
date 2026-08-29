@@ -92,8 +92,8 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
         aria-label={ariaLabel}
         onKeyDown={handleKeyDown}
         className={cn(
-          'inline-flex rounded-xl border border-slate-200/60 bg-slate-100 p-1',
-          'dark:border-slate-700 dark:bg-slate-800',
+          'inline-flex rounded-xl border border-neutral-200/60 bg-neutral-100 p-1',
+          'dark:border-neutral-700 dark:bg-neutral-800',
           className
         )}
         {...props}
@@ -125,8 +125,8 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
                 sizes[size],
                 focusRing,
                 isSelected
-                  ? 'bg-white text-slate-800 shadow-xs dark:bg-slate-700 dark:text-slate-50'
-                  : cn(subtleTextClass, 'hover:text-slate-700 dark:hover:text-slate-100')
+                  ? 'bg-white text-neutral-800 shadow-xs dark:bg-neutral-700 dark:text-neutral-50'
+                  : cn(subtleTextClass, 'hover:text-neutral-700 dark:hover:text-neutral-100')
               )}
             >
               {option.icon && (
