@@ -2,7 +2,7 @@
 
 React UI components for recruitment SaaS products: resume parsing, ATS matching, candidate and recruiter workspaces.
 
-**📖 [Interactive documentation](https://2557e86ad54197cb72e744837682249e.share.chromatic.com/?path=/docs/docs-introduction--documentation&globals=locale:fr)** — the published Storybook: components, the Tokens and Introduction pages, dashboard templates.
+**📖 [Interactive documentation](http://amandinequellec.me/aquellec-ui/?path=/docs/docs-introduction--documentation&globals=locale:fr)** — the published Storybook: components, the Tokens and Introduction pages, dashboard templates.
 
 ## Why this project
 
