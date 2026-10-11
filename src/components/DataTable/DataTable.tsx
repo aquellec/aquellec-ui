@@ -130,8 +130,7 @@ function DataTableInner<T>(
       className={cn(
         /*
           No outline. The table is a sheet: elevation holds it together, and the
-          masthead rule under the column heads does the structural work a border
-          was pretending to do.
+          hairline under the column heads does the structural work.
         */
         'w-full overflow-hidden rounded-2xl shadow-card',
         raisedSurfaceClass,
@@ -162,8 +161,7 @@ function DataTableInner<T>(
               The header is set in the eyebrow tracking used above every section
               title in the documentation: wide, uppercase, quiet, on a hairline.
               A column head is a label for a column, not a competitor to the data
-              in it — it ran on four pixels of full ink for one pass and turned
-              every table into a ledger.
+              in it.
             */}
             <tr
               className={cn(

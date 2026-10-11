@@ -423,3 +423,19 @@ export const OtherKeyIgnored: Story = {
     await expect(onFileSelect).not.toHaveBeenCalled();
   },
 };
+
+export const KeyboardFocusVisible: Story = {
+  play: async ({ canvasElement, globals }) => {
+    const d = getDictionary(globals.locale).components.dropzone;
+    const fileInput = getFileInput(canvasElement, d.inputLabel(false));
+    const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
+
+    await expect(getComputedStyle(dropzone).boxShadow).toBe('none');
+
+    await userEvent.tab();
+
+    await expect(fileInput).toHaveFocus();
+    // The input is visually hidden: the ring has to be drawn by the label.
+    await expect(getComputedStyle(dropzone).boxShadow).not.toBe('none');
+  },
+};

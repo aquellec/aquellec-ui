@@ -13,10 +13,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /*
-  `primary` and `ai` keep their saturated fill in dark mode — they are the
-  page's call to action and have to stay the brightest thing on it. Only
-  the neutral variants flip, since they are defined by the surface they
-  sit on.
+  In dark mode `primary` inverts (lighter fill, near-black copy) rather than
+  dims, so the call to action stays the brightest thing on the page. The
+  neutral variants follow the surface they sit on.
 
   Every variant carries a 1px transparent border so the box is identical
   across the set, whether or not the variant draws on it. A variant that
@@ -40,9 +39,7 @@ const variants = {
   ),
   /*
     Drawn rather than filled, at `ink-400` — the lightest step that still
-    clears the 3:1 WCAG asks of a control boundary. It ran at two pixels of
-    full ink for one pass and turned every secondary action into a hard
-    black frame, which is the register this refinement exists to leave.
+    clears the 3:1 WCAG asks of a control boundary.
   */
   outline: cn(
     'border-ink-400 bg-transparent text-ink-800 hover:border-ink-500 hover:bg-ink-50',
@@ -59,9 +56,7 @@ const variants = {
 
     `primary` is the solid fill and `ai` is the same colour held back — a
     machine-assisted action is worth marking, and worth marking *quietly*,
-    because it is offered rather than urged. It was a solid black button for
-    one pass, which made the loudest control on the page the one nobody had
-    asked for.
+    because it is offered rather than urged.
   */
   ai: cn(
     'bg-brand-50 text-brand-700 hover:bg-brand-100',

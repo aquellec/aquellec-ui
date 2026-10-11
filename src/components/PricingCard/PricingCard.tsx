@@ -26,7 +26,7 @@ export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
   period?: string;
   /** List of plan features with inclusion state. */
   features: PricingFeature[];
-  /** Highlights the card with a recommended badge and accent border. */
+  /** Highlights the card with a recommended badge and a raised elevation. */
   isPopular?: boolean;
   /** CTA button label. */
   buttonText?: string;
@@ -72,11 +72,6 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
           'relative flex flex-col rounded-2xl p-6',
           'transition-all duration-150 ease-settle motion-reduce:transition-none',
           raisedSurfaceClass,
-          /*
-            The recommended plan is one step up the elevation ladder and wears
-            the AI mark — not a second, brighter card in a different visual
-            language. Everything else on the row stays put.
-          */
           /*
             The recommended plan is one step up the elevation ladder and wears
             the brand tag. Emphasis is elevation plus the one brand hue — never

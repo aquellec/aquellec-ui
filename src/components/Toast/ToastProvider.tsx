@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { Toast, type ToastProps } from './Toast';
 
@@ -6,7 +6,10 @@ export type ToastInput = {
   variant?: ToastProps['variant'];
   title: string;
   description?: string;
-  /** Auto-dismiss delay in ms. Set to `0` to disable. Defaults to the provider value. */
+  /**
+   * Auto-dismiss delay in ms. Set to `0` to disable. Defaults to the provider
+   * value, except for `error` toasts, which stay until dismissed.
+   */
   duration?: number;
 };
 
@@ -37,7 +40,10 @@ export interface ToastProviderProps {
   children: React.ReactNode;
   /** Maximum number of visible toasts. Older toasts are removed first. */
   limit?: number;
-  /** Default auto-dismiss delay in ms when `duration` is omitted on a toast. */
+  /**
+   * Default auto-dismiss delay in ms when `duration` is omitted on a toast.
+   * Not applied to `error` toasts, which stay until dismissed.
+   */
   defaultDuration?: number;
   /** Classes applied to the fixed viewport container. */
   viewportClassName?: string;
@@ -58,13 +64,31 @@ function ToastViewportItem({
   closeLabel?: string;
   onDismiss: (id: string) => void;
 }) {
-  const duration = toast.duration ?? defaultDuration;
+  /*
+    An error is the one message most likely to be missed, so it never leaves on
+    its own unless the caller asked for it with an explicit `duration`.
+  */
+  const duration = toast.duration ?? (toast.variant === 'error' ? 0 : defaultDuration);
+
+  /*
+    The countdown pauses while the toast is hovered or holds focus (WCAG 2.2.1):
+    nobody should lose a message while reading it or reaching for its button.
+    `remaining` carries the time left across pauses.
+  */
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasFocus, setHasFocus] = useState(false);
+  const remaining = useRef(duration);
+  const isPaused = isHovered || hasFocus;
 
   useEffect(() => {
-    if (duration <= 0) return;
-    const timer = window.setTimeout(() => onDismiss(toast.id), duration);
-    return () => window.clearTimeout(timer);
-  }, [duration, onDismiss, toast.id]);
+    if (duration <= 0 || isPaused) return;
+    const startedAt = Date.now();
+    const timer = window.setTimeout(() => onDismiss(toast.id), remaining.current);
+    return () => {
+      window.clearTimeout(timer);
+      remaining.current -= Date.now() - startedAt;
+    };
+  }, [duration, isPaused, onDismiss, toast.id]);
 
   return (
     <Toast
@@ -73,6 +97,14 @@ function ToastViewportItem({
       description={toast.description}
       closeLabel={closeLabel}
       onClose={() => onDismiss(toast.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setHasFocus(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setHasFocus(false);
+        }
+      }}
     />
   );
 }

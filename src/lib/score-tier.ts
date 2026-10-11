@@ -2,9 +2,11 @@
   ATS score tiers.
 
   The two thresholds are exported rather than buried in the branches: ScoreGauge
-  and ProgressBar both draw the threshold form of the mark at these exact
-  values, and a tick that disagrees with the colour it sits next to would be
-  worse than no tick at all.
+  draws its threshold ticks at these exact values, and a tick that disagrees
+  with the colour it sits next to would be worse than no tick at all.
+
+  ProgressBar does not use them: it measures quotas, with its own thresholds
+  (75% and 90% by default).
 */
 
 /** Score at or above which a profile reads as a match. */

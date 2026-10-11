@@ -11,8 +11,7 @@
   SURFACES WITHOUT BOXES
   In light mode the page is white and a raised surface is also white. They are
   told apart by elevation and by space, not by a tinted rectangle with a grey
-  line around it. That is the single biggest change this direction makes to the
-  rendered product: outlines are reserved for controls, where the boundary is
+  line around it. Outlines are reserved for controls, where the boundary is
   functional, and for the one card variant whose whole job is to be outlined.
 
   That inversion does not survive on a dark canvas — a shadow needs something to
@@ -37,20 +36,18 @@ export const semanticIconClass = {
   Light runs 900 · 700 · 600 · 500 from strong to muted; dark runs 50 · 100 ·
   200 · 300 back up. Four steps either way, one mental model.
 
-  Dark stops at `ink-300` rather than reaching for the `-400` the eye would
-  guess at: the dark suite caught `#918978` sitting at 4.01:1 on a sunken
-  surface, which looks perfectly muted and fails AA. Muted copy on a dark
-  ground has to be brighter than it feels like it should be — captions are read
-  by exactly the people a thin grey excludes.
+  Dark stops at `ink-300` rather than `-400`: muted copy on a dark surface has
+  to be brighter than it looks like it should be to clear 4.5:1, and captions
+  are read by exactly the people a thin grey excludes.
 */
 
-/** Muted copy: captions, hints, secondary metadata. 5.34:1 on white, 9.08:1 on ink-800. */
+/** Muted copy: captions, hints, secondary metadata. 5.55:1 on white, 9.51:1 on ink-800. */
 export const mutedTextClass = 'text-semantic-muted dark:text-ink-300';
 
-/** Secondary copy and controls. 7.15:1 on white. */
+/** Secondary copy and controls. 8.28:1 on white. */
 export const subtleTextClass = 'text-semantic-subtle dark:text-ink-200';
 
-/** Form validation errors. 8.70:1 on white. */
+/** Form validation errors. 8.50:1 on white. */
 export const errorTextClass = 'text-semantic-error-fg dark:text-brick-300';
 
 /** Placeholder tone. Muted, never lighter — a placeholder is still content. */
@@ -59,10 +56,10 @@ export const placeholderClass = 'placeholder:text-semantic-muted dark:placeholde
 /*
   Toast and banner surfaces.
 
-  A notification is identified by its fill and by the icon and words inside it —
-  not by an accent bar down its edge, which is the placement this system
-  retired. `ai` is tonal cobalt rather than a hue of its own, because a
-  machine's contribution is not a status and must not look like one.
+  A notification is identified by its fill and by the icon and words inside it,
+  not by an accent bar down its edge. `ai` is tonal cobalt rather than a hue of
+  its own, because a machine's contribution is not a status and must not look
+  like one.
 */
 export const semanticSurfaceClass = {
   success: 'bg-moss-100 text-moss-900 dark:bg-moss-500/20 dark:text-moss-100',
@@ -80,10 +77,9 @@ export const semanticSurfaceClass = {
 /**
  * Page canvas behind the content: dashboards, full-screen templates.
  *
- * White, not a tint. A coloured canvas with white cards floating on it is the
- * look this direction was rewritten to remove: it reads timid, it wastes the
- * strongest contrast available, and it forces every surface to justify itself
- * with a border.
+ * White, not a tint: surfaces are separated from the canvas by elevation, which
+ * keeps the strongest contrast available and means no surface needs a border
+ * to stand out.
  */
 export const pageSurfaceClass = 'bg-white dark:bg-ink-950';
 
@@ -93,11 +89,8 @@ export const raisedSurfaceClass = 'bg-white dark:bg-ink-900';
 /**
  * Inverted surface.
  *
- * RETAINED FOR COMPATIBILITY and no longer used by the library. A full-bleed
- * near-black band was tried as the hero and read brutal rather than premium:
- * in this register black is ink, not a fill. The hero now sits on `ink-50` and
- * gets its weight from the size of the numeral. The constant stays exported
- * because a consumer may already compose it.
+ * Retained for compatibility: it is part of the public exports, but no
+ * component of the library uses it.
  */
 export const invertedSurfaceClass = 'bg-ink-950 text-ink-50 dark:bg-ink-900';
 
@@ -142,10 +135,9 @@ export const bodyTextClass = 'text-ink-700 dark:text-ink-100';
 export const brandAccentClass = 'text-brand-700 dark:text-brand-300';
 
 /**
- * AI emphasis — ink, not an accent.
+ * AI emphasis, retained under its original name because it is exported.
  *
- * Retained under its original name because it is exported, but it no longer
- * names a hue: a machine's contribution is marked by inversion, and the system
- * has exactly one non-semantic colour.
+ * It resolves to the strong text colour. Components mark machine-written
+ * content with tonal cobalt instead (see `semanticSurfaceClass.ai`).
  */
 export const aiAccentClass = 'text-ink-900 dark:text-ink-50';
