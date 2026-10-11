@@ -368,7 +368,7 @@ export const fr: Dictionary = {
     introduction: {
       heroKicker: 'Design system · Dossier',
       heroDescription:
-        "Une librairie React typée pour les logiciels de recrutement : CV analysés, postes appariés, candidatures classées. Elle suit une direction artistique unique — papier chaud, encre froide, une marque partout où quelque chose a été mesuré — parce qu'un outil qui décide qui obtient un entretien doit avoir l'air de le prendre au sérieux.",
+        "Une librairie de composants React typée pour les logiciels de recrutement : analyse de CV, matching ATS, espaces candidat et recruteur. L'accent est mis sur l'accessibilité, un système de tokens cohérent en clair et en sombre, et une documentation vivante dans Storybook.",
       facts: [
         { label: 'Runtime', value: 'React 18 · 19' },
         { label: 'Styles', value: 'Tailwind 3 · 4' },

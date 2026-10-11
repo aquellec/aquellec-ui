@@ -368,7 +368,7 @@ export const en = {
     introduction: {
       heroKicker: 'Design system · Dossier',
       heroDescription:
-        'A typed React library for hiring software: resumes parsed, roles matched, candidates ranked. It is built to one art direction — warm paper, cool ink, a mark wherever something was measured — because a tool that decides who gets an interview should look like it takes that seriously.',
+        'A typed React component library for recruitment software: resume analysis, ATS matching, candidate and recruiter workspaces. The focus is accessibility, a coherent token system in light and dark, and living documentation in Storybook.',
       facts: [
         { label: 'Runtime', value: 'React 18 · 19' },
         { label: 'Styling', value: 'Tailwind 3 · 4' },
