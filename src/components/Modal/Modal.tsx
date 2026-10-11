@@ -94,8 +94,10 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
           <button
             type="button"
             onClick={onClose}
-            /* Initial focus target of the trap: matched by attribute rather than
-               by its label, which is language dependent. */
+            /*
+              Initial focus target of the trap, matched by attribute rather than
+              by its localised label.
+            */
             data-autofocus=""
             className={cn(
               'ml-4 flex-shrink-0 rounded-lg p-1 transition-colors duration-150 ease-settle motion-reduce:transition-none',
@@ -221,9 +223,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       <div ref={portalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
           /*
-            The scrim is deepened in dark mode: a 40% slate veil over an
-            already dark page no longer separates the dialog from its
-            background.
+            The scrim is darker in dark mode (85% vs 50%) to keep the dialog
+            separated from a dark page.
           */
           className="fixed inset-0 bg-ink-950/50 backdrop-blur-[4px] transition-opacity dark:bg-ink-950/85"
           onClick={onClose}

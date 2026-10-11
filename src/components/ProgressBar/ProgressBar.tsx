@@ -17,7 +17,7 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   ariaLabel?: string;
   /** Optional illustration placed before the label. Rendered as decorative. */
   icon?: React.ReactNode;
-  /** Secondary text under the bar (context, tier, plan reminder). */
+  /** Secondary text under the bar. */
   helperText?: React.ReactNode;
   /** Action element aligned to the right of `helperText` (link, button). */
   action?: React.ReactNode;
@@ -56,10 +56,8 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       max > 0 ? Math.min(Math.max(Math.round((value / max) * 100), 0), 100) : 0;
 
     /*
-      The `-600` step in light rather than the customary `-500`: measured
-      against the `ink-200` rail, only `-600` clears the 3:1 WCAG 1.4.11 asks of
-      a graphic that carries meaning. Ochre is the one that exposed it — at
-      `-500` it sat at 2.83:1 and looked fine to anyone who did not measure.
+      `-600` fills in light mode: ochre `-500` measures 2.74:1 on the `ink-200`
+      rail, below the 3:1 required of a meaningful graphic (WCAG 1.4.11).
     */
     const progressColor =
       percentage >= thresholds.danger
@@ -69,10 +67,8 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           : 'bg-brand-600 dark:bg-brand-400';
 
     /*
-      The threshold form of the mark, on a straight rail: the two points where
-      this bar changes what it means. A quota bar that turns amber with no
-      indication of where amber began asks the reader to guess; these say it.
-      Only thresholds that fall inside the rail are drawn.
+      Threshold ticks at the points where the colour changes. Only thresholds
+      strictly inside the rail are drawn.
     */
     const markedThresholds = [thresholds.warning, thresholds.danger].filter(
       (threshold) => threshold > 0 && threshold < 100

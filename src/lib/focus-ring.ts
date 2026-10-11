@@ -1,20 +1,11 @@
 /*
-  The focus outline is spelled out rather than written `outline-none`. Under
-  Tailwind 3 that utility emits `outline: 2px solid transparent`, which is what
-  keeps focus visible in forced-colors mode, where box-shadow rings are dropped.
-  Under Tailwind 4 the same name means `outline-style: none` and the protection
-  silently disappears — the package supports both majors, so the intent is
-  written out.
+  The outline is written out instead of `outline-none`: in Tailwind 3 that
+  utility emits `outline: 2px solid transparent`, which keeps focus visible in
+  forced-colors mode where box-shadow rings are dropped, but in Tailwind 4 it
+  means `outline-style: none`. The package supports both majors.
 
-  `ring-offset-*` paints the gap between the control and the ring with a solid
-  colour, white by default. Left unset it draws a white halo around every focused
-  control in dark mode, so each ring pins the offset to the surface it sits on.
-
-  THE PERSONALITY
-  A solid cobalt ring held two pixels off the control, following its corner
-  radius exactly. No blur, no glow, no colour bleed — a ring that fades outward
-  is a ring you have to look for, and keyboard users are looking for it many
-  times a minute. The ring is a boundary, and this system draws boundaries hard.
+  `ring-offset-*` is pinned to the surface colour; left at its white default it
+  draws a white halo around focused controls in dark mode.
 */
 
 /** Default accessible focus ring for interactive controls. */

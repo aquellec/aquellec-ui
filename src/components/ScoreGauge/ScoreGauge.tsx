@@ -27,7 +27,7 @@ export const defaultScoreGaugeStatusLabels: ScoreGaugeStatusLabels = {
 export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Partial override of the status wording, merged over the defaults. */
   statusLabels?: Partial<ScoreGaugeStatusLabels>;
-  /** ATS compatibility score between 0 and 100. */
+  /** Score between 0 and 100. */
   score: number;
   /** Diameter preset for the circular gauge. */
   size?: 'sm' | 'md' | 'lg';
@@ -40,17 +40,12 @@ export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * The threshold form of the mark, on a circular track.
- *
- * A percentage on its own tells a candidate nothing — 62% is only meaningful
- * against the line it had to clear. So the two tier boundaries are drawn onto
- * the arc as 2px radial ticks, and the number stops being a verdict handed down
- * and becomes a position you can see yourself in.
+ * Threshold ticks on the circular track, one per tier boundary.
  *
  * The dash starts at three o'clock and runs clockwise, so a tick for fraction
- * `f` sits at `2πf` from the positive x-axis. The whole SVG is then rotated a
- * quarter turn, which carries the ticks with it — computing them in the rotated
- * frame would double the rotation.
+ * `f` sits at `2πf` from the positive x-axis. The SVG is then rotated a quarter
+ * turn, which carries the ticks with it; computing them in the rotated frame
+ * would apply the rotation twice.
  */
 function ThresholdTicks({
   center,
@@ -110,13 +105,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     };
 
     /*
-      The numeral is the point of this component, so it is set in the display
-      face and allowed to get genuinely large. At `lg` it is 52px of Archivo
-      inside a 200px ring — a score somebody can read from the far side of a
-      desk, which is what a recruiter scanning a pipeline is actually doing.
-
-      The ring thickens with the diameter so the arc keeps the same visual
-      weight relative to the number it surrounds.
+      Numeral size per preset. The ring stroke grows with the diameter to keep
+      the same proportion to the numeral.
     */
     const dimensions = {
       sm: { width: 104, strokeWidth: 10, fontSize: 'text-2xl', labelSize: 'text-[10px]' },
@@ -130,18 +120,12 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
 
     /*
-      The arc is drawn from the `-600` step in light and `-400` in dark: both
-      clear 3:1 against the track they sit on, which WCAG 1.4.11 requires of a
-      graphic that carries meaning. The `-500` step most gauges reach for does
-      not, on the `ink-200` track this system uses.
+      Arc colours: `-600` in light and `-400` in dark both clear 3:1 against
+      their track (WCAG 1.4.11); ochre `-500` does not on `ink-200`.
     */
     const getScoreColor = () => {
       if (isAiTheme) {
-        /*
-          The AI reading is not a tier, so it takes the brand hue rather than
-          one of the three status colours. Green here would claim the aggregate
-          had cleared a bar it was never measured against.
-        */
+        /* The AI theme is not a tier, so it uses the brand hue rather than a status colour. */
         return {
           stroke: 'stroke-brand-600 dark:stroke-brand-400',
           text: 'text-brand-700 dark:text-brand-300',
@@ -176,7 +160,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     };
 
     const colors = getScoreColor();
-    // `aria-valuetext`: punctuation is language agnostic here, only the variable
+    // `aria-valuetext`: punctuation is language-agnostic; only the variable
     // parts come from props.
     const gaugeLabel = label
       ? `${label} — ${normalizedScore}%. ${colors.statusText}.`
@@ -227,11 +211,10 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               fill="transparent"
             />
             {/*
-              Drawn last so the ticks stay legible where the arc has already
-              passed them — the mark has to remain readable at 100%, which is
-              exactly the reading where it matters least and would be missed most.
-              Suppressed under the AI accent, which has no tiers to clear.
-            */}
+               Drawn last so the ticks stay visible over the filled arc,
+               including at 100%. Not drawn under the AI theme, which has no
+               tiers.
+             */}
             {!isAiTheme && (
               <ThresholdTicks
                 center={width / 2}
@@ -270,11 +253,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           </div>
         </div>
 
-        {/*
-          A marked tag rather than a pill. The tier is a boundary the score fell
-          on one side of, so it is labelled with the same 2px edge the system
-          uses for every other boundary.
-        */}
+        {/* Status tag for the current tier. */}
         {showStatus && (
           <div
             className={cn(

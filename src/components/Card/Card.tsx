@@ -56,11 +56,7 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         className={cn('relative flex items-center justify-between pb-4', className)}
         {...props}
       >
-        {/*
-          A hairline under the header, and nothing heavier. The card has no
-          outline of its own; what separates the header from the body is this
-          line plus the space either side of it.
-        */}
+        {/* 1px divider between header and body. */}
         <span className={cn('absolute inset-x-0 bottom-0', mastheadRuleClass)} aria-hidden="true" />
         <div className="min-w-0 flex-1">
           {title && (
@@ -123,24 +119,16 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const ariaLabelledBy = labelledBy ?? headerTitleId;
 
     /*
-      Elevation, not outlines.
-
-      `default` is a white sheet on a white page, told apart by a shadow and by
-      the space around it, and lifts one step up the ladder on hover. `outline`
-      keeps a 2px border because being drawn is its entire job. `ghost` sits on
-      the sunken surface, with no shadow.
+      `default` is separated from the page by a shadow and raises one level on
+      hover. `outline` has a 2px border. `ghost` uses the sunken surface without
+      shadow.
     */
     const variants = {
       default: cn(raisedSurfaceClass, 'shadow-card hover:shadow-raised'),
       outline: cn(
         'border-2 bg-transparent border-ink-900 dark:border-ink-100'
       ),
-      /*
-        The AI card is emphasised by elevation, not by an accent. It sits one
-        step up the ladder from `default` and nothing else about it is coloured:
-        what identifies it as machine-written is the content placed in it —
-        typically an `ai` badge and an `ai` action — which says so in words.
-      */
+      /* One elevation level above `default`, with no colour of its own. */
       ai: cn(raisedSurfaceClass, 'shadow-raised'),
       ghost: cn(sunkenSurfaceClass),
     };
@@ -150,10 +138,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         <div
           ref={ref}
           aria-labelledby={ariaLabelledBy}
-          /*
-            Tighter padding below `sm`: at 375px, 20px on each side eats 11% of
-            the screen. Desktop spacing is unchanged.
-          */
+          /* Tighter padding below `sm` to save horizontal space on small screens. */
           className={cn(
             'rounded-2xl p-5 transition-all duration-150 ease-settle motion-reduce:transition-none sm:p-6',
             variants[variant],

@@ -24,17 +24,9 @@ import {
 import { PageCover, cardSurface, displayClass, eyebrowClass } from './_showcase';
 
 /*
-  The Overview page shared by every component family.
-
-  One page shape, six instances: a cover, the judgement calls (when to reach for
-  this family and when not to), a live specimen built from real hiring content,
-  and the states the family actually spends its life in.
-
-  The specimens are hand-authored per family rather than generated, because the
-  point of an overview is to show components *in composition* — a Badge beside a
-  score beside a status is the thing a reader has to recognise, and no amount of
-  prop tables teaches it. Content is plausible throughout: real roles, real
-  scores, real ATS statuses. Nothing here says "Feature one".
+  Overview page shared by every component family: a cover, usage guidance, a
+  live specimen and the main states. Specimens are written per family to show
+  components in composition, with realistic sample data.
 */
 
 export type FamilyKey = keyof Dictionary['docs']['overviews']['families'];
@@ -68,7 +60,7 @@ function OverviewHeading({ id, children }: { id: string; children: React.ReactNo
   );
 }
 
-/** Caption under a live specimen. Explains what to look at, never what it is. */
+/** Caption under a live specimen. */
 function Caption({ children }: { children: React.ReactNode }) {
   return (
     <p className={cn('sb-unstyled mt-3 max-w-measure text-sm leading-relaxed', mutedTextClass)}>
@@ -96,14 +88,7 @@ function Specimen({ children, className }: { children: React.ReactNode; classNam
 /*  Judgement: when to use, when not to                                        */
 /* -------------------------------------------------------------------------- */
 
-/**
- * The half of a component library that documentation usually omits.
- *
- * Props tables say what a component *can* do; this says when reaching for it is
- * the wrong call. The two columns wear the success and error marks, the same
- * vocabulary the components use for the same judgement, so the page teaches the
- * gesture while it teaches the guidance.
- */
+/** Usage guidance: when to use the family and when to choose something else. */
 export function FamilyGuidance({ family }: { family: FamilyKey }) {
   const overviews = useI18n().docs.overviews;
   const t = overviews.families[family];
@@ -154,7 +139,7 @@ export function FamilyGuidance({ family }: { family: FamilyKey }) {
   );
 }
 
-/** Where the signature gesture lands in this family. One sentence, set apart. */
+/** One-sentence note on how the family uses rules and ticks. */
 export function FamilyMark({ family }: { family: FamilyKey }) {
   const overviews = useI18n().docs.overviews;
 
@@ -174,7 +159,7 @@ export function FamilyMark({ family }: { family: FamilyKey }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Real hiring content, shared by the specimens                               */
+/* Sample data shared by the specimens */
 /* -------------------------------------------------------------------------- */
 
 interface Applicant {
@@ -189,13 +174,9 @@ interface Applicant {
 const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
 
 /**
- * The shortlist every specimen on these pages draws from.
- *
- * One set of applicants, reused across the families, so a reader recognises
- * Salomé Berthier's 88% in the table and again in the gauge and understands
- * they are looking at the same record rendered two ways. Scores straddle both
- * tier boundaries on purpose — 88 clears, 61 sits between, 43 does not — so
- * every threshold mark in the library has something to mark.
+ * Sample records shared by every specimen, so the same entry appears in several
+ * components. Values straddle both tier boundaries (88, 61, 43) so every
+ * threshold is exercised.
  */
 const shortlist: Applicant[] = [
   { id: 'a1', name: 'Salomé Berthier', role: 'Senior Front-End Engineer', score: 88, received: '2026-08-24', status: 'matched' },
@@ -486,14 +467,7 @@ export function TemplatesSpecimen() {
 /*  States                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/**
- * The states a hiring tool actually lives in.
- *
- * A recruiter's first week has no candidates in it, a parse fails on roughly
- * every tenth resume, and a quota runs out at the worst moment. These are not
- * edge cases to be handled — they are the product, most of the time, and they
- * are designed here rather than left to a framework default.
- */
+/** Empty, error and limit states for each family. */
 export function FamilyStates({ family }: { family: FamilyKey }) {
   const dict = useI18n();
   const t = dict.docs.overviews;

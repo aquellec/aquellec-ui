@@ -9,21 +9,18 @@ import {
 import { focusRingGhost } from '../../lib/focus-ring';
 
 /*
-  `focusRing`, keyed on the file input rather than on the element itself.
-
-  The input is the only focusable part of the zone and it is visually hidden,
-  so a `focus-visible:` ring on the label never shows: keyboard focus would land
-  on something invisible. The input is marked `peer` and the visible surfaces
-  that follow it draw the ring when it has focus. Spelled out in full so the
-  Tailwind scanner sees every class.
+  `focusRing` keyed on the file input. The input is the only focusable element
+  and is visually hidden, so a `focus-visible:` ring on the label would never
+  show. The input is marked `peer` and the visible surfaces after it draw the
+  ring. Written out in full so the Tailwind scanner sees every class.
 */
 const peerFocusRing =
   'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-transparent peer-focus-visible:outline-offset-2 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-600 peer-focus-visible:ring-offset-2 ring-offset-white dark:peer-focus-visible:ring-brand-400 dark:ring-offset-ink-900';
 
 /**
- * Every user-facing string of the component, including the ones only exposed to
- * assistive technology. Parameterised entries are functions so each language can
- * place its variables and handle its own pluralisation.
+ * Every user-facing string, including those exposed only to assistive
+ * technology. Parameterised entries are functions so each language controls
+ * word order and plurals.
  */
 export interface DropzoneLabels {
   /** Accessible name of the file input, the only focusable element of the zone. */
@@ -87,7 +84,7 @@ interface DropzoneBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   maxSizeMB?: number;
   /** Disables drag, drop and browse interactions. */
   isDisabled?: boolean;
-  /** Shows a loading state while upload or analysis is in progress. */
+  /** Shows a loading state while an upload is in progress. */
   isLoading?: boolean;
 }
 
@@ -264,12 +261,9 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     const removeLabel = labels.remove(multiple);
 
     /*
-      The empty state is the state this component spends most of its life in, so
-      it is designed rather than defaulted: a dashed boundary at the weight every
-      other control in the system uses, a light recess behind it, and the
-      accepted format stated before the drop rather than after it. Dragging a
-      file over does not bounce or glow — the dashes turn cobalt and the recess
-      tints, which is the whole animation a drop target needs.
+      Empty state: dashed border at the control border weight, with the accepted
+      format shown before the drop. The drag-over state changes only border and
+      background colour.
     */
     const dropzoneSurfaceClassName = cn(
       'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8',
@@ -303,11 +297,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            /*
-              A selected file leaves the dashed target and becomes a raised
-              sheet. The change of state is carried by elevation and by the file
-              name appearing, which is all it ever needed.
-            */
+            /* Selected state: a raised surface showing the file name. */
             className={cn(
               'flex w-full items-center justify-between rounded-xl p-3.5 shadow-card',
               raisedSurfaceClass,
@@ -423,12 +413,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
         )}
 
         {error && (
-          /*
-            The error is a marked strip rather than a line of red text under the
-            box. A parsing failure is the moment a candidate most needs to be
-            told what to do next, and a designed error state is what makes the
-            difference between "something broke" and "this file is not a PDF".
-          */
+          /* Error message on a tinted strip, linked to the input through `aria-describedby`. */
           <div
             id={errorId}
             role="alert"

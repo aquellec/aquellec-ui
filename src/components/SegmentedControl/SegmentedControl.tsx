@@ -21,8 +21,8 @@ export interface SegmentedControlProps
   /** Called with the value of the chosen option. */
   onChange: (value: string) => void;
   /**
-   * Accessible name of the group. Required unless an `aria-labelledby` is
-   * provided: an unnamed `radiogroup` is unusable with a screen reader.
+   * Accessible name of the group. Required unless `aria-labelledby` is
+   * provided: an unnamed `radiogroup` is not usable with a screen reader.
    */
   ariaLabel?: string;
   /** Segment size. */
@@ -30,9 +30,8 @@ export interface SegmentedControlProps
 }
 
 /*
-  Heights are fixed rather than derived from padding: the thumb is absolutely
-  positioned inside the track, so the track has to know how tall it is without
-  asking its children.
+  Fixed heights: the thumb is absolutely positioned, so the track height must
+  not depend on its children.
 */
 const sizes = {
   sm: 'h-7 px-2.5 text-xs',
@@ -40,15 +39,10 @@ const sizes = {
 } as const;
 
 /**
- * Group of exclusive segments, implementing the WAI-ARIA radio group pattern:
- * a single segment sits in the tab order (roving tabindex), arrow keys move the
- * selection, `Home` and `End` jump to either end.
- *
- * Visually it is one track with one indicator that slides between positions —
- * the selection is carried by fill and contrast, not by per-segment borders or
- * an underline. There is exactly one moving part, which is the point: a control
- * where every segment restyles itself reads as a row of buttons that happen to
- * agree.
+ * Group of exclusive segments implementing the WAI-ARIA radio group pattern:
+ * one segment in the tab order (roving tabindex), arrow keys move the
+ * selection, `Home` and `End` jump to either end. A single sliding indicator
+ * shows the selection.
  */
 export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
   (
@@ -97,14 +91,11 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
     };
 
     /*
-      The selected index drives one sliding indicator rather than each segment
-      styling itself. Segments are equal width (`flex-1 basis-0`), which is what
-      lets the thumb be positioned arithmetically — one segment wide, translated
-      by whole multiples of itself — with no measurement, no ResizeObserver and
-      nothing to go stale when a label is translated.
+      Segments are equal width (`flex-1 basis-0`), so the thumb is positioned
+      arithmetically, without measuring the DOM or a ResizeObserver.
 
-      A negative index (a `value` that matches no option) simply hides the
-      thumb, rather than parking it under the first segment and lying.
+      A `value` that matches no option yields a negative index and hides the
+      thumb.
     */
     const selectedIndex = options.findIndex((option) => option.value === value);
 
@@ -114,11 +105,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
         role="radiogroup"
         aria-label={ariaLabel}
         onKeyDown={handleKeyDown}
-        /*
-          One light track. Not a row of pills: there are no per-segment borders
-          and no per-segment fills anywhere below — the only filled thing in the
-          control is the single indicator that slides.
-        */
+        /* Single track; the indicator is the only filled element. */
         className={cn(
           'relative inline-flex w-full max-w-md rounded-xl bg-ink-100 p-1 dark:bg-ink-800',
           className
@@ -126,35 +113,25 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
         {...props}
       >
         {/*
-          The indicator is presentational and nothing else: `aria-hidden`, no
-          role, no name. The radio group's own `aria-checked` is what announces
-          the selection, and it would be announced identically if this element
-          were deleted.
-
-          It slides on the system's one easing curve. Under
-          `prefers-reduced-motion` the transition is dropped and it simply
-          appears in the new place — the position is information, the travel is
-          not.
-        */}
+           Presentational only (`aria-hidden`): the selection is announced
+           through `aria-checked`. The transition is removed under `prefers-
+           reduced-motion`.
+         */}
         {selectedIndex >= 0 && (
           <span
             aria-hidden="true"
             className={cn(
               /*
-                Dark mode steps the fill up to `-400`, exactly as `Button`
-                primary does: `brand-500` under near-black type measured 3.61:1
-                on the dark replay of the suite, and the same inversion fixes
-                both controls.
+                `-400` in dark mode, as in Button `primary`: `brand-500` under
+                near-black text measures 3.61:1.
               */
               'pointer-events-none absolute inset-y-1 left-1 rounded-lg bg-brand-600 shadow-xs dark:bg-brand-400',
               'transition-transform duration-150 ease-settle motion-reduce:transition-none'
             )}
             /*
-              An absolutely positioned box resolves a percentage width against
-              its containing block's *padding* box, so the track's own 0.5rem of
-              padding has to come out before the division. The thumb then
-              measures exactly one segment, and translating it by whole
-              multiples of its own width lands it precisely on each one.
+              A percentage width on an absolutely positioned box resolves
+              against the containing block's padding box, so the track's 0.5rem
+              padding is subtracted before dividing.
             */
             style={{
               width: `calc((100% - 0.5rem) / ${options.length})`,
@@ -179,9 +156,8 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
               onClick={() => onChange(option.value)}
               className={cn(
                 /*
-                  `flex-1 basis-0` makes every segment the same width, which is
-                  what the thumb arithmetic above depends on and what stops the
-                  control reflowing when a locale lengthens one label.
+                  `flex-1 basis-0` gives every segment the same width, which the
+                  thumb position relies on.
                 */
                 'relative z-10 flex flex-1 basis-0 items-center justify-center gap-2 rounded-lg font-semibold',
                 'transition-colors duration-150 ease-settle motion-reduce:transition-none',

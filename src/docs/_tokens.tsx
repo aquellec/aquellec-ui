@@ -7,16 +7,10 @@ import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
 import { PageCover, accentTileClass, anchorSlug, cardSurface, softTransition } from './_showcase';
 
 /*
-  Visual blocks of the Docs/Tokens page.
-
-  Everything shown here is derived from `src/lib/design-tokens.ts`: no hex value
-  is copied by hand. Adding a step to a palette or a shadow to the preset updates
-  the documentation with no further action, which avoids the drift the previous
-  version of this page had accumulated.
-
-  Colors are applied through inline `style` rather than Tailwind classes: they
-  come from a runtime object, so no class could be generated statically by the
-  compiler.
+  Visual blocks of the Docs/Tokens page. Everything is derived from
+  `src/lib/design-tokens.ts`, so adding a token updates the page. Colours use
+  inline `style` because they come from a runtime object, which Tailwind cannot
+  compile into classes.
 */
 
 /* -------------------------------------------------------------------------- */
@@ -35,11 +29,7 @@ function countColorTokens(value: unknown): number {
 export function TokensHero() {
   const t = useI18n().docs.tokens;
 
-  /*
-    The colophon is measured off the token object as the page renders, never
-    transcribed. A documentation page that claims a count is a documentation
-    page that will one day claim the wrong one.
-  */
+  /* Counts are computed from the token object at render time rather than written by hand. */
   const facts = [
     { label: t.factLabels.hues, value: String(Object.keys(aquellecColors).length - 1) },
     { label: t.factLabels.colours, value: String(countColorTokens(aquellecColors)) },
@@ -83,11 +73,10 @@ function Swatch({ scaleName, shade, hex }: { scaleName: string; shade: string; h
   return (
     <div className="flex flex-col">
       {/*
-        One identical hairline on every swatch. The key shades used to carry an
-        extra `ring-2`, which stayed almost invisible on white but turned into a
-        thick grey double frame on a dark surface — and it was redundant: the
-        role is already named underneath, in colour.
-      */}
+         Same 1px border on every swatch; a thicker ring on key shades rendered
+         as a heavy double frame in dark mode, and the role is already named
+         below.
+       */}
       <div
         className="mb-1.5 h-14 w-full rounded-lg border border-ink-900/10 dark:border-white/15"
         style={{ backgroundColor: hex }}

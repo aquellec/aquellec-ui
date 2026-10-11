@@ -30,21 +30,13 @@ import {
 } from '../lib/semantic-colors';
 
 /*
-  Visual blocks of the Docs/Introduction page, also reused by Docs/Tokens
-  (`_tokens.tsx`) so both pages share one visual language: same surfaces, same
-  accents, same section headers.
+  Visual blocks of the Docs/Introduction page, also used by Docs/Tokens
+  (`_tokens.tsx`). They live in `.tsx` rather than as inline classes in the MDX
+  so they can be shared and typed.
 
-  They live in a `.tsx` rather than as inline classes in the MDX so they can be
-  shared and typed. The Tailwind glob now covers `.mdx` too
-  (`tailwind.config.ts` -> content), so it is no longer a compilation
-  constraint, but the convention stands: styling lives in components.
-
-  Every block carries `sb-unstyled`. Storybook applies its documentation styles
-  to every element of an MDX page (`.css-xxx :where(div:not(.sb-unstyled…))`,
-  and likewise for p, ul, li, headings and tables) at the same specificity as
-  Tailwind utilities — but injected afterwards, so they win. Without that
-  marker, `text-xs` rendered at 16px and `font-mono` stayed in Inter.
-  `sb-unstyled` is the official escape hatch, honoured by all of their rules.
+  Every block carries `sb-unstyled`: Storybook applies its documentation styles
+  to MDX elements at the same specificity as Tailwind utilities but injects them
+  later, so they win. `sb-unstyled` is the supported opt-out.
 */
 
 /** Accents derived exclusively from preset tokens (brand / ai / semantic). */
@@ -60,22 +52,15 @@ interface Accent {
 }
 
 /**
- * Colours of the icon tiles, shared by both documentation pages.
- *
- * Every accent carries a ring on both sides of the theme. In light mode the
- * semantic `*-border` tokens are pastels that sit at the same weight as the
- * `brand` and `ai` rings; on a dark surface those same pastels stay opaque and
- * read as a hard outline, while a mid-tone hue at 20% disappears entirely —
- * which is why three tiles looked bordered and two did not. The dark ring is
- * therefore stated for all five at one opacity.
- *
- * The record is exported so `_tokens.tsx` composes the same strings instead of
- * repeating them: the drift above came from having two copies.
+ * Icon tile colours, shared by both documentation pages. The dark ring is set
+ * at one opacity for every accent, because the light `*-border` tokens read as
+ * hard outlines on a dark surface. Exported so `_tokens.tsx` reuses the same
+ * strings.
  */
 export const accentTileClass: Record<AccentName, string> = {
   brand:
     'bg-brand-50 text-brand-700 ring-1 ring-brand-500/20 dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-400/30',
-  /* Neutral, not an accent: the `ai` family is ink in this system. */
+  /* Neutral: the `ai` palette equals the ink ramp. */
   ai: 'bg-ink-100 text-ink-900 ring-1 ring-ink-900/15 dark:bg-ink-800 dark:text-ink-50 dark:ring-ink-100/20',
   info: 'bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-400/30',
   success:
@@ -120,17 +105,12 @@ export const cardSurface = cn(
 );
 
 /**
- * The display treatment, used by every heading that opens a page or a section.
- *
- * Fraunces with both decorative axes pinned off (`aq-display`, set in
- * `preview-head.html`) and tracking pulled in, because a serif at 48px with
- * default spacing reads as a word processor. This is the one place the system
- * allows itself a second typeface, and it is the reason the documentation does
- * not look like every other Storybook.
+ * Display treatment for page and section headings: Archivo through `aq-display`
+ * (set in `preview-head.html`) with tightened tracking.
  */
 export const displayClass = 'aq-display font-display font-semibold tracking-tight';
 
-/** Wide-tracked uppercase kicker. The same treatment the DataTable gives a column head. */
+/** Wide-tracked uppercase label, as in the DataTable header. */
 export const eyebrowClass = 'text-xs font-semibold uppercase tracking-eyebrow';
 
 /** Transitions neutralised when the user asks for reduced motion. */
@@ -159,7 +139,7 @@ export function SectionHeader({
 
   return (
     <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2.5">
-      {/* The rule form of the mark: 2px of brand, then the kicker. */}
+      {/* 2px brand rule before the label. */}
       <p
         className={cn(
           'flex items-center gap-2.5 text-brand-700 dark:text-brand-300',
@@ -190,17 +170,8 @@ export interface CoverFact {
 }
 
 /**
- * The cover every documentation page opens on.
- *
- * Not a hero. A hero is a gradient with a slogan in it; this is a specimen
- * page — the thing a foundry prints to show what a face does. The left column
- * carries the name at display size, the right column a colophon of hard facts
- * set in mono, and the whole sheet wears the leading mark and is signed off by
- * the brand ramp printed as a continuous band along the foot.
- *
- * The asymmetry is the point. A centred cover has nothing to say about where
- * reading starts; this one puts the rule, the title and the mark on one left
- * edge and lets the facts hang off the right, where the eye finishes.
+ * Cover of each documentation page: title on the left, a column of facts set in
+ * mono on the right, and the brand ramp as a band along the bottom.
  */
 export function PageCover({
   kicker,
@@ -244,10 +215,9 @@ export function PageCover({
         </div>
 
         {/*
-          The colophon. `div` rather than `dl`: Storybook's documentation styles
-          italicise `dt` and indent `dd`, which turns a ruled technical block
-          into a quotation.
-        */}
+           `div` rather than `dl`: Storybook's documentation styles italicise
+           `dt` and indent `dd`.
+         */}
         <div className="flex min-w-[13rem] flex-col justify-end">
           <div className={cn('divide-y border-t', dividerBorderClass)}>
             {facts.map(({ label, value }) => (
@@ -262,12 +232,7 @@ export function PageCover({
         </div>
       </div>
 
-      {/*
-        The ramp, printed edge to edge as one continuous band — eleven steps
-        with no gaps, so it reads as a single measured run of ink rather than
-        eleven chips. Every cover in the documentation is signed by the palette
-        it is written in.
-      */}
+      {/* The brand ramp as one continuous band, without gaps between steps. */}
       <div className="flex h-2" aria-hidden="true">
         {scale.map(([shade, hex]) => (
           <span key={shade} className="flex-1" style={{ backgroundColor: hex }} />
