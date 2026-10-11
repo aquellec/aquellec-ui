@@ -13,9 +13,23 @@ export const SCORE_TIER_HIGH = 75;
 /** Score at or above which a profile is worth reviewing by hand. */
 export const SCORE_TIER_MEDIUM = 50;
 
+export type ScoreTier = 'high' | 'medium' | 'low';
+
+/** Maps an ATS score onto the three documented tiers. */
+export function getScoreTier(score: number): ScoreTier {
+  if (score >= SCORE_TIER_HIGH) return 'high';
+  if (score >= SCORE_TIER_MEDIUM) return 'medium';
+  return 'low';
+}
+
 /** Text colour classes for ATS scores, readable on light and dark surfaces (WCAG AA 4.5:1). */
 export function getScoreTextClass(score: number): string {
-  if (score >= SCORE_TIER_HIGH) return 'text-moss-700 dark:text-moss-300';
-  if (score >= SCORE_TIER_MEDIUM) return 'text-ochre-700 dark:text-ochre-300';
-  return 'text-brick-700 dark:text-brick-300';
+  switch (getScoreTier(score)) {
+    case 'high':
+      return 'text-moss-700 dark:text-moss-300';
+    case 'medium':
+      return 'text-ochre-700 dark:text-ochre-300';
+    case 'low':
+      return 'text-brick-700 dark:text-brick-300';
+  }
 }

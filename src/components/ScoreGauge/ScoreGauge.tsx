@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
 import { dataFigureClass, thresholdStrokeClass } from '../../lib/mark';
-import { SCORE_TIER_HIGH, SCORE_TIER_MEDIUM } from '../../lib/score-tier';
+import { getScoreTier, SCORE_TIER_HIGH, SCORE_TIER_MEDIUM } from '../../lib/score-tier';
 import { mutedTextClass, raisedSurfaceClass } from '../../lib/semantic-colors';
 
 /** Status wording shown under the gauge, based on the tier reached. */
@@ -152,28 +152,29 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
         };
       }
 
-      if (normalizedScore >= SCORE_TIER_HIGH) {
-        return {
-          stroke: 'stroke-moss-600 dark:stroke-moss-400',
-          text: 'text-moss-700 dark:text-moss-300',
-          tag: 'bg-moss-100 text-moss-900 dark:bg-moss-500/20 dark:text-moss-100',
-          statusText: statusLabels.high,
-        };
+      switch (getScoreTier(normalizedScore)) {
+        case 'high':
+          return {
+            stroke: 'stroke-moss-600 dark:stroke-moss-400',
+            text: 'text-moss-700 dark:text-moss-300',
+            tag: 'bg-moss-100 text-moss-900 dark:bg-moss-500/20 dark:text-moss-100',
+            statusText: statusLabels.high,
+          };
+        case 'medium':
+          return {
+            stroke: 'stroke-ochre-600 dark:stroke-ochre-400',
+            text: 'text-ochre-700 dark:text-ochre-300',
+            tag: 'bg-ochre-100 text-ochre-900 dark:bg-ochre-500/20 dark:text-ochre-100',
+            statusText: statusLabels.medium,
+          };
+        case 'low':
+          return {
+            stroke: 'stroke-brick-600 dark:stroke-brick-400',
+            text: 'text-brick-700 dark:text-brick-300',
+            tag: 'bg-brick-100 text-brick-900 dark:bg-brick-500/20 dark:text-brick-100',
+            statusText: statusLabels.low,
+          };
       }
-      if (normalizedScore >= SCORE_TIER_MEDIUM) {
-        return {
-          stroke: 'stroke-ochre-600 dark:stroke-ochre-400',
-          text: 'text-ochre-700 dark:text-ochre-300',
-          tag: 'bg-ochre-100 text-ochre-900 dark:bg-ochre-500/20 dark:text-ochre-100',
-          statusText: statusLabels.medium,
-        };
-      }
-      return {
-        stroke: 'stroke-brick-600 dark:stroke-brick-400',
-        text: 'text-brick-700 dark:text-brick-300',
-        tag: 'bg-brick-100 text-brick-900 dark:bg-brick-500/20 dark:text-brick-100',
-        statusText: statusLabels.low,
-      };
     };
 
     const colors = getScoreColor();
