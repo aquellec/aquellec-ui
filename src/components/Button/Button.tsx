@@ -13,21 +13,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /*
-  In dark mode `primary` inverts (lighter fill, near-black copy) rather than
-  dims, so the call to action stays the brightest thing on the page. The
-  neutral variants follow the surface they sit on.
-
-  Every variant carries a 1px transparent border so the box is identical
-  across the set, whether or not the variant draws on it. A variant that
-  changes its own height when you swap it is a variant nobody trusts.
+  In dark mode `primary` uses a lighter fill with dark text; the neutral
+  variants follow their surface. Every variant has a 1px border (transparent
+  when unused) so all variants share the same box size.
 */
 const variants = {
   primary: cn(
     'bg-brand-600 text-white hover:bg-brand-700',
     /*
-      `brand-400` with near-black copy, measured at 5.73:1. The saturated
-      `-600` fill that works on white drops white copy below AA once the
-      page behind it is dark, so the pair inverts rather than dims.
+      `brand-400` under `ink-950` text: 5.73:1. White text on `brand-600` falls
+      below AA on a dark page.
     */
     'dark:bg-brand-400 dark:text-ink-950 dark:hover:bg-brand-300',
     focusRing
@@ -38,8 +33,8 @@ const variants = {
     focusRing
   ),
   /*
-    Drawn rather than filled, at `ink-400` — the lightest step that still
-    clears the 3:1 WCAG asks of a control boundary.
+    `ink-400` is the lightest step that clears the 3:1 required of a control
+    boundary (WCAG 1.4.11).
   */
   outline: cn(
     'border-ink-400 bg-transparent text-ink-800 hover:border-ink-500 hover:bg-ink-50',
@@ -51,13 +46,7 @@ const variants = {
     'dark:text-ink-100 dark:hover:bg-ink-800',
     focusRingGhost
   ),
-  /*
-    Tonal cobalt: the brand hue at low emphasis.
-
-    `primary` is the solid fill and `ai` is the same colour held back — a
-    machine-assisted action is worth marking, and worth marking *quietly*,
-    because it is offered rather than urged.
-  */
+  /* Tonal brand: the `primary` hue at lower emphasis. */
   ai: cn(
     'bg-brand-50 text-brand-700 hover:bg-brand-100',
     'dark:bg-brand-500/20 dark:text-brand-100 dark:hover:bg-brand-500/30',
@@ -66,10 +55,8 @@ const variants = {
 } as const;
 
 /*
-  Touch first: every size is at least 44px tall below the `sm` breakpoint,
-  the target size recommended by WCAG 2.5.5. The desktop heights are
-  restored from 640px, where the pointer is precise — so the compact look
-  of `sm` and `md` is unchanged on the screens that can use it.
+  Below the `sm` breakpoint every size is at least 44px tall (WCAG 2.5.5 target
+  size); desktop heights apply from 640px.
 */
 const sizes = {
   sm: 'h-11 px-3 text-xs sm:h-8',

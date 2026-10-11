@@ -37,8 +37,7 @@ interface CandidateAnalysis {
   status: keyof Dictionary['dashboard']['statuses'];
 }
 
-/* Company names and job titles are not translated: they are data, not
-   interface. Only statuses and column headers are. */
+/* Sample data values are not translated; only statuses and column headers are. */
 const recentAnalyses: CandidateAnalysis[] = [
   { id: '1', company: 'Vercel', jobTitle: 'Front-End Engineer', score: 88, date: '2026-08-12', status: 'matched' },
   { id: '2', company: 'Doctolib', jobTitle: 'React Developer', score: 62, date: '2026-08-10', status: 'review' },
@@ -49,8 +48,8 @@ const recentAnalyses: CandidateAnalysis[] = [
 const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
 
 /**
- * Candidate page template: resume upload, job description, ATS score, history.
- * All copy follows the language selector in the toolbar.
+ * Page template composing Dropzone, Textarea, ScoreGauge, ProgressBar and
+ * DataTable. All copy follows the language selector in the toolbar.
  */
 const meta: Meta = {
   title: 'Templates/CandidateDashboard',
@@ -71,18 +70,8 @@ type Story = StoryObj;
 
 
 /**
- * The lead story.
- *
- * A candidate opens this page for exactly one number. An early version buried
- * it in a 280px side card; the correction over-swung and put it on a full-bleed
- * black band, which reads brutal rather than premium. Both were the same
- * mistake in opposite directions: treating the *background* as the way to make
- * something important.
- *
- * It is the type that carries it. A 116px numeral in near-black on a barely
- * tinted surface is unmissable and calm at the same time, and it leaves the
- * only saturated colours on the block to the things that actually encode
- * something — the status tag and the rail fill.
+ * Hero block: the main figure set at `text-8xl` on a lightly tinted surface.
+ * The only status colours in the block are the tag and the rail fill.
  */
 function ScoreHeadline({
   score,
@@ -110,11 +99,7 @@ function ScoreHeadline({
             {t.hero.kicker}
           </p>
 
-          {/*
-            The percent sign is set at a third of the numeral and in a quieter
-            ink. At matching size it competes with the digits for a glyph that
-            carries none of the meaning.
-          */}
+          {/* The percent sign is smaller and lighter than the digits. */}
           <p className="mt-5 flex items-baseline gap-2">
             <span
               className={cn(
@@ -143,12 +128,7 @@ function ScoreHeadline({
         </div>
 
         <div className="flex flex-col gap-5">
-          {/*
-            The threshold form of the rule, at hero scale. Both tier boundaries
-            are drawn and both are labelled, so the number beside it is never
-            read in a vacuum. The fill is the only place a status colour appears
-            on this block, which is exactly what a status colour is for.
-          */}
+          {/* Threshold ticks at both tier boundaries, each with a label. */}
           <div>
             <div
               className="relative h-3 w-full overflow-hidden rounded-full bg-ink-200 dark:bg-ink-800"
@@ -207,7 +187,7 @@ function ScoreHeadline({
   );
 }
 
-/** Section head plus its hairline. Weight comes from the type, not the rule. */
+/** Section heading with a 1px divider. */
 function SectionHead({
   title,
   subtitle,
@@ -258,10 +238,9 @@ function CandidateDashboardPage() {
   return (
     <div className={cn('min-h-screen', pageSurfaceClass)}>
       {/*
-        The masthead. Brand line, page title set in the display face, and the
-        workspace switch — held on a heavy rule rather than boxed in a bar with
-        a grey bottom border.
-      */}
+         Page header: brand line, title in the display face and the workspace
+         switch, above a divider.
+       */}
       <header className="mx-auto max-w-6xl px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
         <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -312,9 +291,8 @@ function CandidateDashboardPage() {
                       maxSizeMB={5}
                       accept=".pdf"
                       /*
-                        The dashed area is the Dropzone `<label>`, not a `div`:
-                        it has to fill the column so both halves of the grid end
-                        at the same height, instead of leaving a void under it.
+                        The dashed area is the Dropzone `<label>`; it fills the
+                        column so both grid columns end at the same height.
                       */
                       className="flex-1 [&>label]:h-full [&>label]:min-h-[200px]"
                     />
@@ -361,11 +339,7 @@ function CandidateDashboardPage() {
               <Card.Header
                 title={t.dashboard.candidate.advice.title}
                 subtitle={t.dashboard.candidate.advice.subtitle}
-                /*
-                  The card is machine-written, so it says so in a word on an
-                  inverted badge rather than in a colour. The amber badge that
-                  used to sit here read as a warning about the advice.
-                */
+                /* The `ai` badge labels the card's content as generated. */
                 action={
                   <Badge variant="ai" size="sm">
                     {t.dashboard.candidate.advice.badge}
@@ -399,11 +373,9 @@ function CandidateDashboardPage() {
           </section>
 
           {/*
-            The aside carries no cards at all. The gauge is its own surface and
-            the quota bar is its own surface; wrapping either one in a second
-            rectangle would be a box around a box, which is the habit this
-            direction was written to break.
-          */}
+             The gauge and the progress bar are their own surfaces, so the aside
+             is not wrapped in a card.
+           */}
           <aside className="flex flex-col gap-10">
             <div className="flex flex-col items-center gap-3">
               <ScoreGauge
@@ -453,9 +425,8 @@ function CandidateDashboardPage() {
               columns={[
                 {
                   /*
-                    The only free text column, and the longest: it opts back
-                    into wrapping so the score and the status stay on screen at
-                    375px. Wrapping a sentence is fine, wrapping a badge is not.
+                    Free-text column: opts back into wrapping so the remaining
+                    columns stay visible at 375px.
                   */
                   header: t.dashboard.candidate.history.columns.position,
                   className: 'whitespace-normal min-w-[9rem]',

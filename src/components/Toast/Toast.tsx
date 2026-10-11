@@ -44,10 +44,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           return <AlertCircle className={cn(iconClass, semanticIconClass.danger)} aria-hidden="true" />;
         case 'warning':
           return <AlertTriangle className={cn(iconClass, semanticIconClass.warning)} aria-hidden="true" />;
-        /*
-          Inherits the surface's text colour (`brand-900` on the tonal cobalt
-          fill), so the icon and the copy read as one.
-        */
+        /* Inherits the surface text colour. */
         case 'ai':
           return <Sparkles className={iconClass} aria-hidden="true" />;
         default:

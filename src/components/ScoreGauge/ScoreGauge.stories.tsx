@@ -4,9 +4,8 @@ import { getDictionary, useI18n } from '../../../.storybook/i18n';
 import { ScoreGauge } from './ScoreGauge';
 
 /**
- * Circular gauge for a score out of 100: performance, quality, match rate.
- * The color follows the tier (>=75 green, >=50 amber, red below); `isAiTheme`
- * switches to the generative hue.
+ * Circular gauge for a score out of 100. The colour follows the tier (>=75
+ * green, >=50 amber, red below); `isAiTheme` switches to the brand hue.
  *
  * Exposed as `role="meter"`, so the value is announced as one.
  */

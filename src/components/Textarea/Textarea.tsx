@@ -75,14 +75,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-describedby={describedBy}
           className={cn(
             /*
-              Every field wears the mark from the start.
-
-              The leading edge is 2px at rest, in the same neutral as the rest
-              of the border, and only changes colour — brand on focus, brick on
-              error. Nothing reflows, because nothing resizes: a field that
-              grows a marked edge on focus jogs its own text sideways, and a
-              text field that moves while you type is a defect wearing a design
-              decision's clothes.
+              The left border is 2px at all times and only changes colour (brand
+              on focus, brick on error), so the text does not shift on focus.
             */
             'w-full min-w-0 rounded-xl border border-l-2 transition-colors duration-150 ease-settle motion-reduce:transition-none',
             'bg-white text-ink-900 dark:bg-ink-900 dark:text-ink-50',

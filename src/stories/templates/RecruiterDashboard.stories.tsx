@@ -36,8 +36,8 @@ const mockData: AnalysisHistory[] = [
 const statusVariant = { matched: 'success', review: 'warning', rejected: 'danger' } as const;
 
 /**
- * Recruiter page template: bulk resume import, KPIs and analysis history.
- * All copy follows the language selector in the toolbar.
+ * Page template composing Dropzone (multiple), KPIs and DataTable. All copy
+ * follows the language selector in the toolbar.
  */
 const meta: Meta = {
   title: 'Templates/RecruiterDashboard',
@@ -58,17 +58,8 @@ type Story = StoryObj;
 
 
 /**
- * One number, three supporting ones.
- *
- * A recruiter's question on opening this page is not "how many applications do
- * I have" but "how many are worth my morning". So the count that cleared the
- * bar is set at masthead size and everything else is arranged around it as
- * support — the row of three equal KPI cards this replaced gave the same weight
- * to a number nobody acts on.
- *
- * The block sits on a barely tinted surface rather than a black band: the size
- * of the numeral is what makes it the lead, and a dark slab behind it only made
- * the page heavier without making the number any bigger.
+ * Hero block: one main figure at `text-8xl` on a lightly tinted surface, with
+ * three secondary figures beside it.
  */
 function PipelineHeadline() {
   const t = useI18n().dashboard.recruiter;
@@ -110,11 +101,7 @@ function PipelineHeadline() {
         </div>
 
         <div className="flex flex-col gap-6">
-          {/*
-            Support figures, separated by space and one hairline rather than by
-            three boxes. They read as a sentence about a single pipeline, not as
-            three independent metrics that happen to be adjacent.
-          */}
+          {/* Secondary figures, separated by spacing and a 1px divider. */}
           <span className={mastheadRuleClass} aria-hidden="true" />
           <div className="flex flex-wrap gap-x-12 gap-y-6">
             {support.map((item) => (
@@ -148,7 +135,7 @@ function PipelineHeadline() {
   );
 }
 
-/** Section head plus its hairline. Weight comes from the type, not the rule. */
+/** Section heading with a 1px divider. */
 function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <header className="mb-6">
@@ -249,9 +236,8 @@ function RecruiterDashboardPage() {
               keyExtractor={(item) => item.id}
               labels={t.components.dataTable}
               /*
-                Column priority: below `sm` only candidate, score and status
-                stay, the columns a recruiter scans first. The rest is one
-                horizontal scroll away.
+                Below `sm` only the first three columns are shown; the rest is
+                reachable by horizontal scroll.
               */
               columns={[
                 {

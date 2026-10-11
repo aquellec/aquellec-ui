@@ -101,13 +101,10 @@ export const CloseWithEscape: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -145,13 +142,10 @@ export const CloseOnOverlayClick: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -190,13 +184,10 @@ export const FocusTrapInteraction: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -255,13 +246,10 @@ export const WithoutTitle: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -300,13 +288,10 @@ export const CloseWithHeaderButton: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -343,13 +328,10 @@ export const NoFocusableElements: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>
@@ -389,13 +371,10 @@ export const CompoundComponents: Story = {
     return (
       <div className="p-4">
         {/*
-          Closed by default, opened by this trigger. A documentation page
-          renders every story of the component at once: a modal open on mount
-          would portal into `document.body`, mark the rest of the page `inert`
-          and lock its scroll — seven stories, seven overlays stacked over the
-          docs. Fluent and welcome-ui put their dialogs behind a trigger for
-          the same reason.
-        */}
+           Closed by default: the documentation page renders every story at
+           once, and a dialog open on mount would make the rest of the page
+           `inert` and lock its scroll.
+         */}
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           {t.modal.trigger}
         </Button>

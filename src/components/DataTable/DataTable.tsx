@@ -30,11 +30,8 @@ export interface DataTableLabels {
   /** Current page indicator, rendered to the left of the controls. */
   pageStatus: (currentPage: number, totalPages: number) => React.ReactNode;
   /**
-   * Accessible name of the horizontal scroll area wrapping the table.
-   *
-   * Below the width of its columns the table scrolls sideways. The area is
-   * focusable so it can be scrolled with the keyboard, which means it needs a
-   * name to be announced.
+   * Accessible name of the horizontal scroll area. The area is focusable for
+   * keyboard scrolling, so it needs a name.
    */
   scrollRegion: string;
 }
@@ -54,17 +51,12 @@ export const defaultDataTableLabels: DataTableLabels = {
 };
 
 /**
- * Edge shadows revealing that the table scrolls sideways.
+ * Edge shadows indicating horizontal overflow, in pure CSS. The cover layers
+ * scroll with the content (`local`) and the shadows stay with the container
+ * (`scroll`), so a shadow is hidden when its edge is reached.
  *
- * The two cover layers are attached to the content (`local`) and the two
- * shadows to the container (`scroll`): a shadow is therefore covered while the
- * matching edge is reached, and appears as soon as content is hidden on that
- * side. Pure CSS, no scroll listener.
- *
- * Both colours come from custom properties rather than being written into the
- * gradients: an inline style cannot carry a `dark:` variant, and a hard-coded
- * white cover would smear across the left and right edges of a dark table. The
- * values are set by `scrollShadowTheme` below.
+ * Colours come from custom properties because an inline style cannot carry a
+ * `dark:` variant.
  */
 const scrollShadows: React.CSSProperties = {
   backgroundImage: [
@@ -80,11 +72,9 @@ const scrollShadows: React.CSSProperties = {
 };
 
 /*
-  `--aq-surface-raised` and `--aq-scroll-shadow` are published by the preset
-  (Tailwind 3) and by `theme.css` (Tailwind 4), on `:root` and `.dark`, from
-  `src/lib/design-tokens.ts`. The component reads them and declares nothing:
-  the cover therefore always matches the surface it hides the shadow against,
-  in either theme, with no hex written here.
+  `--aq-surface-raised` and `--aq-scroll-shadow` are published on `:root` and
+  `.dark` by the preset (Tailwind 3) and `theme.css` (Tailwind 4), from
+  `src/lib/design-tokens.ts`.
 */
 
 export interface DataTableProps<T> extends React.HTMLAttributes<HTMLDivElement> {
@@ -129,8 +119,8 @@ function DataTableInner<T>(
       ref={ref}
       className={cn(
         /*
-          No outline. The table is a sheet: elevation holds it together, and the
-          hairline under the column heads does the structural work.
+          No outer border: the table is separated by elevation, with a 1px
+          divider under the header.
         */
         'w-full overflow-hidden rounded-2xl shadow-card',
         raisedSurfaceClass,
@@ -139,15 +129,13 @@ function DataTableInner<T>(
       {...props}
     >
       {/*
-        `tabIndex` makes the scroll area reachable with the keyboard, which is
-        the only way to reach the hidden columns without a pointer. A focusable
-        element needs a role and a name, hence the labelled region.
-      */}
+         `tabIndex` makes the scroll area keyboard-reachable; a focusable
+         element needs a role and a name, hence the labelled region.
+       */}
       <div
         /*
-          `overscroll-x-contain` keeps a horizontal swipe inside the table:
-          without it, reaching the last column hands the gesture to the browser,
-          which triggers back-navigation on iOS and Chrome Android.
+          `overscroll-x-contain` stops a horizontal swipe from triggering
+          browser back-navigation (iOS, Chrome Android) at the scroll end.
         */
         className={cn('overflow-x-auto overscroll-x-contain', focusRing)}
         style={scrollShadows}
@@ -157,12 +145,7 @@ function DataTableInner<T>(
       >
         <table className="w-full text-left text-sm border-collapse" aria-busy={isLoading || undefined}>
           <thead>
-            {/*
-              The header is set in the eyebrow tracking used above every section
-              title in the documentation: wide, uppercase, quiet, on a hairline.
-              A column head is a label for a column, not a competitor to the data
-              in it.
-            */}
+            {/* Uppercase, wide-tracked header labels on a 1px divider. */}
             <tr
               className={cn(
                 'text-xs font-semibold uppercase tracking-eyebrow',
@@ -171,11 +154,7 @@ function DataTableInner<T>(
                 mutedTextClass
               )}
             >
-              {/*
-                Headers wrap, cells do not: a header is a label that can take
-                two lines, and keeping `CANDIDATE / RESUME` on one line alone
-                costs 230px of the 375px viewport.
-              */}
+              {/* Headers may wrap to two lines to save width on small screens; cells do not. */}
               {columns.map((col) => (
                 <th key={col.header} scope="col" className={cn('py-3.5 px-3 sm:px-4', col.className)}>
                   {col.header}
@@ -206,12 +185,9 @@ function DataTableInner<T>(
             ) : (
               data.map((item) => (
                 /*
-                  The row under the pointer picks up the leading mark, on the
-                  first cell rather than the row: under `border-collapse` a `tr`
-                  border is merged away by the cells it contains, so the mark
-                  has to be drawn by the cell that actually owns that edge. Both
-                  states declare the 2px so no row shifts as the pointer moves
-                  down a list of candidates.
+                  Hover accent on the first cell rather than the row: with
+                  `border-collapse`, a `tr` border is merged away by its cells.
+                  Both states declare the 2px width so rows do not shift.
                 */
                 <tr
                   key={keyExtractor(item)}
@@ -223,10 +199,10 @@ function DataTableInner<T>(
                   )}
                 >
                   {/*
-                    Cells do not wrap: at 375px a wrapped cell turns a badge
-                    into two clipped lines. The table scrolls instead, and a
-                    column can opt back in with `className: 'whitespace-normal'`.
-                  */}
+                     Cells do not wrap, so badges are not clipped; the table
+                     scrolls instead. A column can opt back in with `className:
+                     'whitespace-normal'`.
+                   */}
                   {columns.map((col) => (
                     <td
                       key={`${keyExtractor(item)}-${col.header}`}
@@ -261,10 +237,7 @@ function DataTableInner<T>(
           )}
         >
           <span>{labels.pageStatus(pagination.currentPage, pagination.totalPages)}</span>
-          {/*
-            44px targets on touch screens, back to a compact 32px from `sm`
-            where the pointer is precise.
-          */}
+          {/* 44px targets below `sm`, 32px from `sm` up. */}
           <div className="flex items-center gap-1">
             <button
               type="button"

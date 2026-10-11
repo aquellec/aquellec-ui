@@ -72,21 +72,14 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
           'relative flex flex-col rounded-2xl p-6',
           'transition-all duration-150 ease-settle motion-reduce:transition-none',
           raisedSurfaceClass,
-          /*
-            The recommended plan is one step up the elevation ladder and wears
-            the brand tag. Emphasis is elevation plus the one brand hue — never
-            a second accent invented for the occasion.
-          */
+          /* The highlighted plan is one elevation level higher. */
           isPopular ? 'shadow-raised' : 'shadow-card hover:shadow-raised',
           className
         )}
         {...props}
       >
         {isPopular && (
-          /*
-            A solid tag, squared like every other label in the system, sitting on
-            the card's top edge rather than a gradient pill floating above it.
-          */
+          /* Solid tag positioned on the card's top edge. */
           <div className="absolute -top-3 left-6 flex items-center gap-1.5 rounded-md bg-brand-600 px-2.5 py-1 text-xs font-semibold uppercase tracking-eyebrow text-white shadow-xs dark:bg-brand-500">
             <Sparkles className="h-3 w-3" aria-hidden="true" />
             <span>{badgeText}</span>
@@ -108,8 +101,10 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
           >
             {price}
           </span>
-          {/* Rendered only when a period is provided: no magic value to compare
-              the price against, which would tie the component to one language. */}
+          {/*
+             Rendered only when `period` is provided, rather than inferred from
+             the price string, which would depend on the language.
+           */}
           {period && (
             <span className={cn('ml-1.5 text-xs font-medium', mutedTextClass)}>{period}</span>
           )}

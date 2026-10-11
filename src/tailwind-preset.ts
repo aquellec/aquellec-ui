@@ -1,9 +1,8 @@
 import type { Config } from 'tailwindcss';
 /*
-  `tailwindcss/plugin.js`, with the extension: Tailwind 3 ships no `exports`
-  map, so Node's ESM resolver cannot find the extensionless specifier and the
-  published `.mjs` was unloadable outside a bundler. Tailwind 4 exports both
-  `./plugin` and `./plugin.js`, so the suffixed form is valid on both majors.
+  `tailwindcss/plugin.js` with its extension: Tailwind 3 has no `exports` map,
+  so Node's ESM resolver cannot resolve the extensionless specifier. Tailwind 4
+  exports both forms.
 */
 import plugin from 'tailwindcss/plugin.js';
 import {
@@ -14,10 +13,8 @@ import {
 } from './lib/design-tokens';
 
 /**
- * Neutralises animations and transitions when the user asks for reduced motion
- * (WCAG 2.3.3). Carried by the preset rather than by `src/index.css`, which is
- * not published: host applications inherit it with no extra import as soon as
- * they apply the preset.
+ * Disables animations and transitions under `prefers-reduced-motion` (WCAG
+ * 2.3.3). Shipped in the preset because `src/index.css` is not published.
  */
 const reducedMotion = plugin(({ addBase }) => {
   addBase({
@@ -33,13 +30,9 @@ const reducedMotion = plugin(({ addBase }) => {
 });
 
 /**
- * Declares the active color scheme to the browser so its own UI follows the
- * theme: scrollbars, form control chrome, spell-check underlines and the
- * default canvas behind the page.
- *
- * The scheme is pinned rather than left to `prefers-color-scheme`, because the
- * `class` strategy makes the application the source of truth. A host that wants
- * to follow the OS toggles the `dark` class itself.
+ * Sets `color-scheme` so native UI (scrollbars, form controls) follows the
+ * theme. Pinned to the `dark` class rather than `prefers-color-scheme`,
+ * matching the `class` dark mode strategy.
  */
 const colorScheme = plugin(({ addBase }) => {
   addBase({
@@ -49,11 +42,9 @@ const colorScheme = plugin(({ addBase }) => {
 });
 
 /*
-  `design-tokens.ts` is frozen with `as const` so the token names are literal
-  types the rest of the package can reason about. Tailwind's own `Config` type
-  wants mutable arrays, so the two array-shaped families are copied here rather
-  than loosened at the source: the tokens stay exactly as strict as they should
-  be, and the widening happens once, at the boundary that needs it.
+  The tokens are `as const`; Tailwind's `Config` type expects mutable arrays, so
+  the array-shaped families are copied here instead of loosening the source
+  types.
 */
 const fontFamily: Record<string, string[]> = Object.fromEntries(
   Object.entries(aquellecThemeExtensions.fontFamily).map(([name, stack]) => [name, [...stack]])
@@ -69,22 +60,15 @@ const fontSize: Record<string, [string, { lineHeight: string; letterSpacing: str
 
 const aquellecPreset = {
   /*
-    Class strategy rather than media: the host application decides when dark
-    mode applies, which is what makes a Storybook toolbar switch, a user
-    preference or a per-section override possible. Adding the `dark` class on
-    `<html>` (or on any ancestor) switches every component below it.
+    `class` strategy: dark mode applies below any ancestor with the `dark`
+    class, so the host application controls it.
   */
   darkMode: 'class',
   theme: {
     /*
-      `extend` rather than a replacement: Tailwind's own scales stay reachable.
-      A consumer keeps `slate` and `violet` if they need them — the package
-      simply makes its own vocabulary the one that reads best.
-
-      `fontSize` and `fontFamily` do override their defaults, and that is the
-      point of applying a design system's preset: the type is part of the
-      identity, not an accessory to it. A host that wants its own face
-      re-extends `fontFamily` after the preset, which is one line.
+      `extend` keeps Tailwind's default scales available. `fontSize` and
+      `fontFamily` keys replace the defaults of the same name; a host can re-
+      extend `fontFamily` after the preset.
     */
     extend: {
       colors: aquellecColors,

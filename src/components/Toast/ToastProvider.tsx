@@ -64,16 +64,12 @@ function ToastViewportItem({
   closeLabel?: string;
   onDismiss: (id: string) => void;
 }) {
-  /*
-    An error is the one message most likely to be missed, so it never leaves on
-    its own unless the caller asked for it with an explicit `duration`.
-  */
+  /* Error toasts do not auto-dismiss unless an explicit `duration` is passed. */
   const duration = toast.duration ?? (toast.variant === 'error' ? 0 : defaultDuration);
 
   /*
-    The countdown pauses while the toast is hovered or holds focus (WCAG 2.2.1):
-    nobody should lose a message while reading it or reaching for its button.
-    `remaining` carries the time left across pauses.
+    The countdown pauses while the toast is hovered or focused (WCAG 2.2.1).
+    `remaining` keeps the time left across pauses.
   */
   const [isHovered, setIsHovered] = useState(false);
   const [hasFocus, setHasFocus] = useState(false);
