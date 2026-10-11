@@ -239,7 +239,7 @@ export const en = {
             'More than four segments; past that it is a select, not a control.',
             'A ghost button as the only action on a screen. Nobody finds it.',
           ],
-          mark: "On both dashboards the score is set at masthead size on the one inverted panel, and every section head sits on the rule at full width. Those two devices carry the entire page; there is almost no other decoration in it, and exactly one colour that is not a status.",
+          mark: "On both dashboards the headline figure is set at display size in a light band, and every section head sits on a full-width 1px rule. The rest of the page is held together by the type scale and spacing, with one colour that is not a status: the cobalt of actions.",
           states:
             'A pending analysis holds its label and spins in place rather than swapping to a spinner — a button that loses its word loses the reason it was pressed. A spent quota disables rather than hides, because the recruiter needs to know the action exists.',
         },
@@ -287,7 +287,7 @@ export const en = {
             'A modal to show information — that is a page, or a card on the one they are on.',
             'Stacking more than three toasts; past that nobody reads any of them.',
           ],
-          mark: 'Every semantic surface in this family wears the rule in its own hue on the leading edge, which is what makes a badge, a toast and an AI card legible as one family rather than three tinted rectangles.',
+          mark: 'No rule in this family. A status is identified by its fill, its icon and its word, never by colour alone. Status badges are solid so they read at a glance down a column; the AI badge and toast use tonal cobalt at low emphasis, because a model\'s contribution is not a status.',
           states:
             'An error toast takes role="alert" and is announced immediately; everything else waits its turn on role="status". Nothing auto-dismisses an error, because the one message worth reading is the one most likely to be missed.',
         },
@@ -295,7 +295,7 @@ export const en = {
           kicker: 'Family · Data',
           title: 'Data display',
           description:
-            'Scores, rankings, quotas. The components that turn a pile of resumes into an ordering somebody will act on — and the reason this library needed an art direction rather than a palette.',
+            'Scores, rankings, quotas. The components that turn a pile of resumes into an ordering somebody will act on, and so the ones where legible figures and thresholds matter most.',
           facts: [
             { label: 'Components', value: '3' },
             { label: 'Score tiers', value: '75 · 50' },
@@ -313,7 +313,7 @@ export const en = {
           ],
           mark: 'This is where the rule earns its name. The tier boundaries are drawn onto the gauge arc and the quota rail as 2px ticks, so a score is always read against the bar it had to clear rather than in a vacuum.',
           states:
-            'An empty table says what to do next rather than announcing that it is empty. A loading table holds the column widths so the page does not jump when the rows land — a table that reflows on arrival makes every scan start over.',
+            'An empty table shows an icon and a message: "No data available" by default, to be replaced through emptyMessage with the next thing to do. A loading table keeps its headers and shows skeleton rows, so the page does not jump when the data lands.',
         },
         surfaces: {
           kicker: 'Family · Surfaces',
@@ -335,7 +335,7 @@ export const en = {
             'Nesting a card inside a card — use a rule and whitespace.',
             'An outline where whitespace would do. Most boxes in most dashboards are unnecessary.',
           ],
-          mark: 'The AI card is a plain sheet with the Flare rule down its leading edge. No gradient, no glow: on a page with almost no outlines, one 2px edge is loud enough to identify the only surface a machine wrote.',
+          mark: 'The AI card has no border and no colour of its own: it sits one elevation step above the default card. What identifies it as machine-written is the badge and the AI action placed inside it, which say so in words.',
           states:
             'An empty pipeline is a card with a sentence and one action, not an illustration and an exclamation mark. A failed parse names the cause and offers the manual route, because the candidate is still waiting either way.',
         },
@@ -358,7 +358,7 @@ export const en = {
             'Copying them wholesale. They are an argument about emphasis, not a layout to inherit.',
             'Adding a second hero. The moment two things are the biggest, neither is.',
           ],
-          mark: 'On both dashboards the score is set at masthead size with its threshold marked underneath, and the section heads sit on the heavy rule. Those two devices carry the whole page; there is almost no other decoration in it.',
+          mark: 'On both dashboards the headline figure is set at display size (on the candidate side, the score with both thresholds marked underneath), and the section heads sit on a 1px rule. The rest of the hierarchy comes from the type scale and spacing, with almost no other decoration.',
           states:
             'Both templates ship their empty and their exhausted states, because a recruiter meets the empty one on day one and the exhausted one on the day it matters most.',
         },

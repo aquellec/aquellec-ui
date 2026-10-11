@@ -45,8 +45,8 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         case 'warning':
           return <AlertTriangle className={cn(iconClass, semanticIconClass.warning)} aria-hidden="true" />;
         /*
-          Inherits its colour: the `ai` toast is an inverted surface, and a
-          tinted icon on it is either invisible or a second accent.
+          Inherits the surface's text colour (`brand-900` on the tonal cobalt
+          fill), so the icon and the copy read as one.
         */
         case 'ai':
           return <Sparkles className={iconClass} aria-hidden="true" />;
@@ -64,11 +64,6 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         className={cn(
           'flex w-full max-w-md items-start rounded-xl p-4 shadow-overlay',
           'transition-colors duration-150 ease-settle motion-reduce:transition-none',
-          /*
-            Composed last: the leading mark it carries is a `border-l-*`, which
-            `tailwind-merge` drops if the `border` shorthand above arrives after
-            it.
-          */
           semanticSurfaceClass[variant],
           className
         )}

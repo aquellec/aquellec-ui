@@ -32,14 +32,12 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       someone who cannot separate the hues at all, because the weight and the
       word carry it too.
 
-      There is no outline and no leading bar. A filled rectangle with a line
-      around it states the same fact twice, and the bar was the accent that made
-      four colours compete on one page.
+      There is no outline and no leading bar: a filled rectangle with a line
+      around it states the same fact twice.
 
       `ai` is tonal cobalt rather than a fourth status colour: a machine's
       contribution is not a verdict, so it is marked at low emphasis in the one
-      brand hue. It was solid black for a pass, which made an advisory tag the
-      heaviest thing on the card it sat in.
+      brand hue.
     */
     const variants = {
       success: 'bg-moss-700 text-white dark:bg-moss-400 dark:text-ink-950',

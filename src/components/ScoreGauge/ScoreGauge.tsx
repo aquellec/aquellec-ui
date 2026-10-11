@@ -45,9 +45,7 @@ export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
  * A percentage on its own tells a candidate nothing — 62% is only meaningful
  * against the line it had to clear. So the two tier boundaries are drawn onto
  * the arc as 2px radial ticks, and the number stops being a verdict handed down
- * and becomes a position you can see yourself in. This is the single most
- * on-thesis detail in the library: precise about the measurement, humane about
- * what the measurement is for.
+ * and becomes a position you can see yourself in.
  *
  * The dash starts at three o'clock and runs clockwise, so a tick for fraction
  * `f` sits at `2πf` from the positive x-axis. The whole SVG is then rotated a
@@ -135,7 +133,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       The arc is drawn from the `-600` step in light and `-400` in dark: both
       clear 3:1 against the track they sit on, which WCAG 1.4.11 requires of a
       graphic that carries meaning. The `-500` step most gauges reach for does
-      not, on the warm track this system uses.
+      not, on the `ink-200` track this system uses.
     */
     const getScoreColor = () => {
       if (isAiTheme) {

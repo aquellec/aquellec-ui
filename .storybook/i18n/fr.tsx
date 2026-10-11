@@ -239,7 +239,7 @@ export const fr: Dictionary = {
             "Plus de quatre segments ; au-delà c'est un select, pas un contrôle.",
             "Un bouton ghost comme seule action d'un écran. Personne ne le trouve.",
           ],
-          mark: "Sur les deux dashboards, le score est composé en corps de titre sur l'unique panneau inversé, et chaque tête de section repose sur le filet pleine largeur. Ces deux dispositifs portent toute la page ; il n'y a presque aucune autre décoration, et exactement une couleur qui n'est pas un statut.",
+          mark: "Sur les deux dashboards, le chiffre principal est composé en corps de titre dans un bandeau clair, et chaque tête de section repose sur un filet de 1px pleine largeur. Le reste de la page tient par l'échelle typographique et l'espace, avec une seule couleur qui n'est pas un statut : le cobalt des actions.",
           states:
             "Une analyse en cours garde son libellé et tourne sur place plutôt que de se transformer en spinner — un bouton qui perd son mot perd la raison pour laquelle on l'a pressé. Un quota épuisé désactive au lieu de masquer : le recruteur doit savoir que l'action existe.",
         },
@@ -287,7 +287,7 @@ export const fr: Dictionary = {
             "Une modale pour afficher de l'information : c'est une page, ou une carte sur celle où il est.",
             "Empiler plus de trois toasts ; au-delà, personne n'en lit aucun.",
           ],
-          mark: "Chaque surface sémantique de cette famille porte le filet dans sa propre teinte sur le bord d'attaque : c'est ce qui rend un badge, un toast et une carte IA lisibles comme une seule famille plutôt que comme trois rectangles teintés.",
+          mark: "Pas de filet dans cette famille. Un statut se reconnaît à son fond, à son icône et à son mot, jamais à la couleur seule. Les badges de statut sont pleins pour se lire d'un coup d'œil dans une colonne ; le badge et le toast IA prennent le cobalt tonal, à faible emphase, parce qu'une contribution de modèle n'est pas un statut.",
           states:
             "Un toast d'erreur prend role=\"alert\" et est annoncé immédiatement ; le reste attend son tour sur role=\"status\". Rien ne masque automatiquement une erreur, parce que le seul message qui mérite d'être lu est celui qu'on risque le plus de manquer.",
         },
@@ -295,7 +295,7 @@ export const fr: Dictionary = {
           kicker: 'Famille · Données',
           title: 'Affichage de données',
           description:
-            "Scores, classements, quotas. Les composants qui transforment une pile de CV en un ordre sur lequel quelqu'un va agir — et la raison pour laquelle cette librairie avait besoin d'une direction artistique plutôt que d'une palette.",
+            "Scores, classements, quotas. Les composants qui transforment une pile de CV en un ordre sur lequel quelqu'un va agir, et donc ceux où la lisibilité des chiffres et des seuils compte le plus.",
           facts: [
             { label: 'Composants', value: '3' },
             { label: 'Paliers de score', value: '75 · 50' },
@@ -313,7 +313,7 @@ export const fr: Dictionary = {
           ],
           mark: "C'est ici que le filet mérite son nom. Les limites de palier sont tracées sur l'arc de la jauge et sur le rail de quota en repères de 2px, pour qu'un score se lise toujours face à la barre qu'il devait franchir, jamais dans le vide.",
           states:
-            "Un tableau vide dit quoi faire ensuite plutôt que d'annoncer qu'il est vide. Un tableau en chargement conserve la largeur de ses colonnes pour que la page ne saute pas à l'arrivée des lignes — un tableau qui se réagence oblige à tout relire.",
+            "Un tableau vide affiche une icône et un message : « No data available » par défaut, à remplacer via emptyMessage par la prochaine action à faire. Un tableau en chargement garde ses en-têtes et affiche des lignes squelettes, pour que la page ne saute pas à l'arrivée des données.",
         },
         surfaces: {
           kicker: 'Famille · Surfaces',
@@ -335,7 +335,7 @@ export const fr: Dictionary = {
             'Imbriquer une carte dans une carte — utilisez un filet et du blanc.',
             "Un contour là où du blanc suffirait. La plupart des boîtes de la plupart des dashboards sont inutiles.",
           ],
-          mark: "La carte IA est une feuille unie avec le filet Flare sur son bord d'attaque. Ni dégradé ni halo : sur une page presque sans contours, un bord de 2px suffit à identifier la seule surface écrite par une machine.",
+          mark: "La carte IA n'a ni bordure ni couleur propre : elle se distingue par un palier d'élévation au-dessus de la carte par défaut. Ce qui l'identifie comme écrite par une machine, c'est le badge et l'action IA qu'on y place, qui le disent en toutes lettres.",
           states:
             "Un pipeline vide est une carte avec une phrase et une action, pas une illustration et un point d'exclamation. Un parsing raté nomme la cause et propose la voie manuelle, parce que le candidat attend de toute façon.",
         },
@@ -358,7 +358,7 @@ export const fr: Dictionary = {
             "Les recopier tels quels. Ce sont des arguments sur l'emphase, pas une mise en page à hériter.",
             "Ajouter un second héros. Dès que deux choses sont les plus grosses, aucune ne l'est.",
           ],
-          mark: "Sur les deux dashboards, le score est composé en corps de titre avec son seuil marqué dessous, et les têtes de section reposent sur le filet lourd. Ces deux dispositifs portent toute la page ; il n'y a presque aucune autre décoration.",
+          mark: "Sur les deux dashboards, le chiffre principal est composé en corps de titre (côté candidat, le score avec ses deux seuils marqués dessous), et les têtes de section reposent sur un filet de 1px. Le reste de la hiérarchie vient de l'échelle typographique et de l'espace, presque sans autre décoration.",
           states:
             "Les deux templates livrent leur état vide et leur état épuisé, parce qu'un recruteur rencontre le premier dès le premier jour et le second le jour où cela compte le plus.",
         },

@@ -123,22 +123,12 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const ariaLabelledBy = labelledBy ?? headerTitleId;
 
     /*
-      Solid borders rather than 80% alpha: on the warm page background of the
-      dashboards, a translucent border almost disappears at 375px, where the
-      card outline is the only thing separating two sections.
-
-      Elevation follows one light source. `default` rests on the page and lifts
-      on hover — one step up the ladder, never two, and never a colour change
-      standing in for a shadow.
-    */
-    /*
       Elevation, not outlines.
 
       `default` is a white sheet on a white page, told apart by a shadow and by
-      the space around it. That is the whole change: a dashboard built from
-      grey-bordered rectangles reads as a form, and this one has to read as a
-      page. `outline` keeps a border because being drawn is its entire job — and
-      it is drawn properly, in two pixels of full ink, not a hairline.
+      the space around it, and lifts one step up the ladder on hover. `outline`
+      keeps a 2px border because being drawn is its entire job. `ghost` sits on
+      the sunken surface, with no shadow.
     */
     const variants = {
       default: cn(raisedSurfaceClass, 'shadow-card hover:shadow-raised'),
@@ -148,10 +138,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       /*
         The AI card is emphasised by elevation, not by an accent. It sits one
         step up the ladder from `default` and nothing else about it is coloured:
-        what identifies it as machine-written is the badge in its header and the
-        black AI action inside it, both of which say so in words. A stray
-        coloured bar down the edge said it in a second brand colour, which is
-        the habit this pass exists to break.
+        what identifies it as machine-written is the content placed in it —
+        typically an `ai` badge and an `ai` action — which says so in words.
       */
       ai: cn(raisedSurfaceClass, 'shadow-raised'),
       ghost: cn(sunkenSurfaceClass),
