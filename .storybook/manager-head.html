@@ -1,0 +1,42 @@
+<!--
+  The same three typefaces, loaded into the manager frame.
+
+  Storybook renders its chrome in a separate document from the preview, so a
+  font loaded in `preview-head.html` never reaches the sidebar, the toolbar or
+  the search field. `theme.ts` sets Inter as `fontBase` for the interface and
+  Archivo for the brand line; without this file both silently fall back and the
+  navigation reads as stock Storybook.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..600&display=swap"
+/>
+
+
+<style>
+  /*
+    The sidebar is the one surface a design system is judged on before anything
+    else is opened, so it gets the same treatment as the components: white
+    ground, full-ink type, and the section roots set in the eyebrow tracking
+    used above every heading in the documentation.
+  */
+  .sidebar-container [data-nodetype='root'] > button,
+  .sidebar-container button[data-nodetype='root'] {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  /*
+    The selected story wears the leading rule — the same 4px that runs down the
+    edge of an AI card and under a selected segment. The navigation is part of
+    the system, not a frame around it.
+  */
+  .sidebar-item[data-selected='true'] {
+    box-shadow: inset 4px 0 0 0 currentColor;
+    border-radius: 0.375rem;
+  }
+</style>

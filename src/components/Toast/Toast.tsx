@@ -44,8 +44,12 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           return <AlertCircle className={cn(iconClass, semanticIconClass.danger)} aria-hidden="true" />;
         case 'warning':
           return <AlertTriangle className={cn(iconClass, semanticIconClass.warning)} aria-hidden="true" />;
+        /*
+          Inherits its colour: the `ai` toast is an inverted surface, and a
+          tinted icon on it is either invisible or a second accent.
+        */
         case 'ai':
-          return <Sparkles className={cn(iconClass, semanticIconClass.ai)} aria-hidden="true" />;
+          return <Sparkles className={iconClass} aria-hidden="true" />;
         default:
           return <Info className={cn(iconClass, semanticIconClass.info)} aria-hidden="true" />;
       }
@@ -58,7 +62,13 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         aria-live={variant === 'error' ? 'assertive' : 'polite'}
         aria-atomic="true"
         className={cn(
-          'flex items-start p-4 rounded-xl border shadow-xs transition-all duration-200 max-w-md w-full',
+          'flex w-full max-w-md items-start rounded-xl p-4 shadow-overlay',
+          'transition-colors duration-150 ease-settle motion-reduce:transition-none',
+          /*
+            Composed last: the leading mark it carries is a `border-l-*`, which
+            `tailwind-merge` drops if the `border` shorthand above arrives after
+            it.
+          */
           semanticSurfaceClass[variant],
           className
         )}
@@ -66,15 +76,15 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
       >
         {renderIcon()}
         <div className="flex-1 mr-2 text-left">
-          <p className="text-xs font-bold leading-tight">{title}</p>
-          {description && <p className="text-xs opacity-90 mt-1 leading-normal">{description}</p>}
+          <p className="text-sm font-semibold leading-tight">{title}</p>
+          {description && <p className="mt-1 text-xs leading-normal opacity-90">{description}</p>}
         </div>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
             className={cn(
-              'p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors',
+              'rounded-md p-1 transition-colors duration-150 ease-settle hover:bg-black/5 motion-reduce:transition-none dark:hover:bg-white/10',
               subtleTextClass,
               focusRingGhost
             )}

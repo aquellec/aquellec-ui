@@ -46,8 +46,8 @@ export const fr: Dictionary = {
       nextPage: 'Page suivante',
       pageStatus: (currentPage, totalPages) => (
         <>
-          Page <strong className="text-slate-800 dark:text-slate-100">{currentPage}</strong> sur{' '}
-          <strong className="text-slate-800 dark:text-slate-100">{totalPages}</strong>
+          Page <strong className="text-ink-800 dark:text-ink-100">{currentPage}</strong> sur{' '}
+          <strong className="text-ink-800 dark:text-ink-100">{totalPages}</strong>
         </>
       ),
       scrollRegion: 'Tableau, défilement horizontal',
@@ -100,16 +100,281 @@ export const fr: Dictionary = {
       tokenUsage: { kicker: 'Consommation', title: 'Utiliser les tokens' },
     },
 
-    introduction: {
-      heroKicker: 'Design System · React 19 · Tailwind CSS',
-      heroDescription:
-        "Librairie de composants React typés pour applications SaaS de recrutement et d'analyse IA : parsing de CV, matching ATS, espaces candidat et recruteur, quotas et visualisation de scores.",
-      chips: {
-        typescript: 'TypeScript strict',
-        wcag: 'WCAG 2.1 AA',
-        preset: 'Preset Tailwind exportable',
-        storybook: 'Storybook 10 + Vitest',
+    overviews: {
+      labels: {
+        guidance: 'Quand y recourir',
+        use: 'À utiliser quand',
+        avoid: 'Choisir autre chose quand',
+        anatomy: 'En composition',
+        states: 'Les états où il vit',
+        mark: 'Le filet ici',
       },
+
+      states: {
+        analysing: 'Analyse de 12 CV',
+        quotaSpent: 'Quota mensuel épuisé',
+        importedTitle: '12 CV importés',
+        importedBody: 'Classés pour Senior Front-End Engineer. Deux ont franchi 75 %.',
+        quotaTitle: 'Il vous reste 3 analyses ce mois-ci',
+        quotaBody: 'Votre forfait se réinitialise le 1er septembre.',
+        noApplicants:
+          "Aucune candidature pour l'instant. Publiez l'offre ou importez des CV pour lancer le classement.",
+        emptyPipelineTitle: 'Pipeline vide',
+        emptyPipelineBody:
+          "Ce poste n'a encore aucune candidature. Importez un lot de CV, ou partagez l'annonce pour commencer à en recevoir.",
+        emptyPipelineAction: 'Importer des CV',
+        parseFailedTitle: 'CV illisible',
+        parseFailedBadge: 'Échec du parsing',
+        parseFailedBody:
+          "Le fichier est une image scannée : il n'y a aucun texte à comparer à l'offre. Demandez un PDF texte au candidat, ou saisissez le profil à la main.",
+        upgrade: 'Changer de forfait',
+      },
+
+      specimens: {
+        actions: {
+          stageLabel: 'Étape du pipeline',
+          screening: 'Présélection',
+          interview: 'Entretien',
+          offer: 'Proposition',
+          runAnalysis: "Lancer l'analyse ATS",
+          advance: "Passer à l'entretien",
+          requestReferences: 'Demander les références',
+          archive: 'Archiver',
+          caption:
+            "Une action principale par vue, et exactement une action IA. Le filet Flare sur le bord gauche du bouton d'analyse est la seule chose de cette rangée qui annonce qu'un modèle va lire quelque chose.",
+        },
+        forms: {
+          roleLabel: 'Poste visé',
+          roleHelper: 'Le score est calculé par rapport à cette annonce.',
+          emailLabel: 'E-mail du candidat',
+          emailError: "Cette adresse est incomplète : il manque un domaine après l'arobase.",
+          jobLabel: "Description de l'offre",
+          jobValue:
+            "Vous porterez le front-end de notre expérience candidat : React, TypeScript, un design system partagé avec deux autres squads, et le travail d'accessibilité qu'exige un produit utilisé par des gens sous pression.",
+          jobHelper: "Plus l'annonce est précise, plus le score est honnête.",
+          caption:
+            "Chaque champ porte le filet sur son bord d'attaque — neutre au repos, cobalt au focus, brique en erreur. Rien ne se déplace au changement d'état, parce que les 2px sont toujours là.",
+        },
+        feedback: {
+          matched: 'Correspond',
+          review: 'À revoir',
+          rejected: 'Sous la barre',
+          parsed: 'Lu par IA',
+          draft: 'Brouillon',
+          toastTitle: 'Analyse terminée',
+          toastBody: 'Salomé Berthier obtient 88 % pour Senior Front-End Engineer.',
+          errorTitle: '1 fichier sur 12 illisible',
+          errorBody: 'theo-vasseur-cv.pdf est une image scannée. Demandez un PDF texte.',
+          caption:
+            "Le statut est porté par le filet et par le mot, jamais par la couleur seule — le même badge lu en niveaux de gris dit encore Correspond, À revoir ou Sous la barre.",
+        },
+        dataDisplay: {
+          quotaLabel: 'Analyses ce mois-ci',
+          quotaHelper: 'Forfait gratuit · réinitialisé le 1er septembre',
+          columns: {
+            candidate: 'Candidat',
+            score: 'Score',
+            status: 'Statut',
+            received: 'Reçu le',
+          },
+          statuses: { matched: 'Correspond', review: 'À revoir', rejected: 'Sous la barre' },
+          caption:
+            "Les repères de seuil sont l'essentiel. 88 franchit la barre des 75, 61 se situe entre les deux, 43 n'en franchit aucune — et cela se voit sans lire un seul chiffre.",
+        },
+        surfaces: {
+          applicationTitle: 'Salomé Berthier',
+          applicationSubtitle: 'Senior Front-End Engineer · candidature du 24 août',
+          matched: 'Correspond',
+          applicationBody:
+            "Huit ans de front-end produit, dont quatre sur un design system. Chaque mot-clé indispensable de l'annonce figure dans le CV, avec des dates qui concordent.",
+          applicationMeta: 'Présélection · suivi par Nadia',
+          openReport: 'Ouvrir le rapport',
+          aiTitle: "Ce que le modèle a relevé",
+          aiSubtitle: "Extrait du CV, pas du formulaire de candidature",
+          aiBadge: 'IA',
+          aiBody:
+            "Le travail d'accessibilité est décrit deux fois mais jamais nommé comme compétence. À creuser en présélection : l'annonce y accorde beaucoup de poids et le score n'en tient pas compte.",
+          aiMeta: 'Généré le 24 août · à relire avant partage',
+          caption:
+            "Deux feuilles, aucun contour. Ce qui les sépare, c'est l'élévation et le filet Flare le long de la seconde — le seul signal indiquant qu'une machine en a écrit le contenu.",
+        },
+        templates: {
+          pages: [
+            {
+              kicker: 'Template',
+              label: 'Dashboard candidat',
+              body: "Import, poste visé, le score en une, quota et historique.",
+              href: './?path=/docs/templates-candidatedashboard--documentation',
+            },
+            {
+              kicker: 'Template',
+              label: 'Dashboard recruteur',
+              body: 'Import en lot, chiffres du pipeline en corps de titre, candidatures classées.',
+              href: './?path=/docs/templates-recruiterdashboard--documentation',
+            },
+          ],
+          caption:
+            "Les templates sont l'endroit où la hiérarchie se démontre au lieu de se décrire : un chiffre domine, tout le reste est du soutien.",
+        },
+      },
+
+      families: {
+        actions: {
+          kicker: 'Famille · Actions',
+          title: 'Actions',
+          description:
+            "Boutons et segments exclusifs. Les contrôles qui engagent un recruteur — faire avancer un candidat, dépenser une analyse, changer le sujet de la page.",
+          facts: [
+            { label: 'Composants', value: '2' },
+            { label: 'Variantes de bouton', value: '5' },
+            { label: 'Cible minimale', value: '44px' },
+          ],
+          use: [
+            "Une action principale par vue, et c'est la raison d'être de la page.",
+            "La variante ai uniquement là où un modèle va lire ou écrire quelque chose.",
+            'SegmentedControl pour deux à quatre vues exclusives des mêmes données.',
+          ],
+          avoid: [
+            "Naviguer ailleurs : c'est un lien, et un lien doit ressembler à un lien.",
+            "Plus de quatre segments ; au-delà c'est un select, pas un contrôle.",
+            "Un bouton ghost comme seule action d'un écran. Personne ne le trouve.",
+          ],
+          mark: "Sur les deux dashboards, le score est composé en corps de titre sur l'unique panneau inversé, et chaque tête de section repose sur le filet pleine largeur. Ces deux dispositifs portent toute la page ; il n'y a presque aucune autre décoration, et exactement une couleur qui n'est pas un statut.",
+          states:
+            "Une analyse en cours garde son libellé et tourne sur place plutôt que de se transformer en spinner — un bouton qui perd son mot perd la raison pour laquelle on l'a pressé. Un quota épuisé désactive au lieu de masquer : le recruteur doit savoir que l'action existe.",
+        },
+        forms: {
+          kicker: 'Famille · Formulaires',
+          title: 'Formulaires',
+          description:
+            "Les champs à partir desquels une décision d'embauche se construit : le poste visé, le texte de l'annonce, et le CV lui-même. Tout ce qu'un candidat confie passe par là.",
+          facts: [
+            { label: 'Composants', value: '3' },
+            { label: 'Erreurs', value: 'ARIA' },
+            { label: 'Limite import', value: '5 Mo' },
+          ],
+          use: [
+            "Toujours avec un label visible. Un placeholder n'est pas un label et disparaît quand on en a le plus besoin.",
+            "Dropzone pour les CV, avec le format et la taille annoncés avant le dépôt, pas après.",
+            "Textarea avec maxLength pour les annonces : le compteur répond avant qu'on pose la question.",
+          ],
+          avoid: [
+            "Valider à chaque frappe. Attendez le blur ; corriger quelqu'un en plein mot est agressif.",
+            "La couleur comme seul signe d'erreur — le filet, l'icône et la phrase doivent concorder.",
+            "Masquer l'aide dès qu'une erreur apparaît. Le lecteur a besoin des deux.",
+          ],
+          mark: "Chaque champ porte le filet sur son bord d'attaque en permanence : neutre au repos, cobalt au focus, brique en erreur. C'est le moyen le moins cher de rendre l'état d'un long formulaire lisible du coin de l'œil.",
+          states:
+            "L'import garde le nom du fichier et affiche la progression dessus. Un parsing raté dit ce qui ne va pas avec le fichier puis quoi faire — les deux choses dont un candidat a besoin, et les deux que la plupart des erreurs d'upload omettent.",
+        },
+        feedback: {
+          kicker: 'Famille · Retours',
+          title: 'Retours',
+          description:
+            "Statuts, notifications et dialogues. Tout ce qui annonce ce qui vient d'arriver à une candidature, ou demande de confirmer ce qui ne pourra pas être défait.",
+          facts: [
+            { label: 'Composants', value: '3' },
+            { label: 'Live regions', value: 'role=status' },
+            { label: 'Erreurs', value: 'role=alert' },
+          ],
+          use: [
+            "Badge pour un statut qui appartient à une ligne : correspond, à revoir, sous la barre.",
+            "Toast pour ce qui s'est terminé pendant que le recruteur regardait ailleurs.",
+            "Modal uniquement quand l'action suivante est destructrice ou réellement bloquante.",
+          ],
+          avoid: [
+            "Un toast pour ce que le lecteur est déjà en train de regarder se produire.",
+            "Une modale pour afficher de l'information : c'est une page, ou une carte sur celle où il est.",
+            "Empiler plus de trois toasts ; au-delà, personne n'en lit aucun.",
+          ],
+          mark: "Chaque surface sémantique de cette famille porte le filet dans sa propre teinte sur le bord d'attaque : c'est ce qui rend un badge, un toast et une carte IA lisibles comme une seule famille plutôt que comme trois rectangles teintés.",
+          states:
+            "Un toast d'erreur prend role=\"alert\" et est annoncé immédiatement ; le reste attend son tour sur role=\"status\". Rien ne masque automatiquement une erreur, parce que le seul message qui mérite d'être lu est celui qu'on risque le plus de manquer.",
+        },
+        dataDisplay: {
+          kicker: 'Famille · Données',
+          title: 'Affichage de données',
+          description:
+            "Scores, classements, quotas. Les composants qui transforment une pile de CV en un ordre sur lequel quelqu'un va agir — et la raison pour laquelle cette librairie avait besoin d'une direction artistique plutôt que d'une palette.",
+          facts: [
+            { label: 'Composants', value: '3' },
+            { label: 'Paliers de score', value: '75 · 50' },
+            { label: 'Chiffres', value: 'Tabulaires' },
+          ],
+          use: [
+            "ScoreGauge quand un score est la réponse de la page. En grand : c'est tout l'enjeu.",
+            "DataTable quand la comparaison entre candidats compte plus que chacun d'eux.",
+            'ProgressBar pour tout ce qui a un plafond : quota, sièges, avancement de lot.',
+          ],
+          avoid: [
+            "Une jauge par ligne. Répétée en petit, c'est de la décoration ; utilisez le chiffre et le badge.",
+            "Un score sans seuil affiché. Un pourcentage seul ne dit rien à un candidat.",
+            "Classer par score sans montrer le score. Un ordre caché n'est pas un classement, c'est un verdict.",
+          ],
+          mark: "C'est ici que le filet mérite son nom. Les limites de palier sont tracées sur l'arc de la jauge et sur le rail de quota en repères de 2px, pour qu'un score se lise toujours face à la barre qu'il devait franchir, jamais dans le vide.",
+          states:
+            "Un tableau vide dit quoi faire ensuite plutôt que d'annoncer qu'il est vide. Un tableau en chargement conserve la largeur de ses colonnes pour que la page ne saute pas à l'arrivée des lignes — un tableau qui se réagence oblige à tout relire.",
+        },
+        surfaces: {
+          kicker: 'Famille · Surfaces',
+          title: 'Surfaces',
+          description:
+            "Cartes et cartes de forfait : les feuilles sur lesquelles tout le reste est posé. Dans ce système, une surface se définit par l'élévation et l'espace, presque jamais par un contour.",
+          facts: [
+            { label: 'Composants', value: '2' },
+            { label: 'Variantes de Card', value: '4' },
+            { label: "Paliers d'élévation", value: '4' },
+          ],
+          use: [
+            'Card pour regrouper ce qui se lit ensemble et se traite ensemble.',
+            "La variante ai uniquement pour du contenu généré par un modèle, et toujours annoncé comme tel.",
+            'Card.Header / Body / Footer, pour que la même anatomie se répète partout.',
+          ],
+          avoid: [
+            'Une carte autour d’un seul chiffre. Grossissez plutôt le chiffre.',
+            'Imbriquer une carte dans une carte — utilisez un filet et du blanc.',
+            "Un contour là où du blanc suffirait. La plupart des boîtes de la plupart des dashboards sont inutiles.",
+          ],
+          mark: "La carte IA est une feuille unie avec le filet Flare sur son bord d'attaque. Ni dégradé ni halo : sur une page presque sans contours, un bord de 2px suffit à identifier la seule surface écrite par une machine.",
+          states:
+            "Un pipeline vide est une carte avec une phrase et une action, pas une illustration et un point d'exclamation. Un parsing raté nomme la cause et propose la voie manuelle, parce que le candidat attend de toute façon.",
+        },
+        templates: {
+          kicker: 'Famille · Templates',
+          title: 'Templates',
+          description:
+            "Deux pages de référence qui assemblent la librairie en contexte produit — et l'endroit où l'argument de hiérarchie se tranche vraiment, parce qu'un design system ne vaut que l'écran le plus chargé qu'il produit.",
+          facts: [
+            { label: 'Templates', value: '2' },
+            { label: 'Points de rupture', value: '4' },
+            { label: 'Taille du héros', value: '116px' },
+          ],
+          use: [
+            "Comme point de départ d'une vraie page, pas comme capture dans une présentation.",
+            "Pour éprouver un changement de token sur un écran chargé avant de le livrer.",
+            "Pour trancher un débat de hiérarchie avec quelque chose de rendu.",
+          ],
+          avoid: [
+            "Les recopier tels quels. Ce sont des arguments sur l'emphase, pas une mise en page à hériter.",
+            "Ajouter un second héros. Dès que deux choses sont les plus grosses, aucune ne l'est.",
+          ],
+          mark: "Sur les deux dashboards, le score est composé en corps de titre avec son seuil marqué dessous, et les têtes de section reposent sur le filet lourd. Ces deux dispositifs portent toute la page ; il n'y a presque aucune autre décoration.",
+          states:
+            "Les deux templates livrent leur état vide et leur état épuisé, parce qu'un recruteur rencontre le premier dès le premier jour et le second le jour où cela compte le plus.",
+        },
+      },
+    },
+
+    introduction: {
+      heroKicker: 'Design system · Dossier',
+      heroDescription:
+        "Une librairie React typée pour les logiciels de recrutement : CV analysés, postes appariés, candidatures classées. Elle suit une direction artistique unique — papier chaud, encre froide, une marque partout où quelque chose a été mesuré — parce qu'un outil qui décide qui obtient un entretien doit avoir l'air de le prendre au sérieux.",
+      facts: [
+        { label: 'Runtime', value: 'React 18 · 19' },
+        { label: 'Styles', value: 'Tailwind 3 · 4' },
+        { label: 'Contraste minimal', value: 'WCAG 2.1 AA' },
+        { label: 'Licence', value: 'MIT' },
+      ],
       pillars: {
         accessibility: {
           title: "L'accessibilité d'abord",
@@ -168,7 +433,13 @@ export const fr: Dictionary = {
       heroKicker: 'Fondations · Preset Tailwind',
       heroTitle: 'Design Tokens',
       heroDescription:
-        "Source unique des fondations : src/lib/design-tokens.ts. Le preset Tailwind livré par le package et cette page sont générés depuis ce fichier, donc les valeurs ci-dessous sont toujours celles réellement compilées.",
+        "Un seul fichier porte les fondations : src/lib/design-tokens.ts. Le preset Tailwind 3, la feuille de styles Tailwind 4 et cette page en sont trois rendus, donc ce que vous lisez ici est ce qui a réellement compilé. Les décomptes ci-dessous sont mesurés sur l'objet de tokens au rendu de la page — ils ne peuvent pas devenir faux.",
+      factLabels: {
+        hues: 'Teintes',
+        colours: 'Tokens de couleur',
+        typeSteps: 'Paliers typographiques',
+        elevations: 'Élévations',
+      },
       brandIntro:
         "Deux échelles complètes de dix paliers, exportées par le preset sous les noms brand et ai. Les paliers 500 / 600 / 700 portent les rôles documentés — accent, action, texte conforme AA sur fond blanc.",
       scaleUsage: {
@@ -528,6 +799,15 @@ export const fr: Dictionary = {
         action: 'Voir le détail',
       },
       score: { label: 'Score ATS', status: 'Profil compatible' },
+      hero: {
+        kicker: 'Score ATS',
+        against: 'pour',
+        verdict:
+          "Franchit la barre des 75 % pour ce poste. Deux des trois compétences indispensables de l'annonce figurent dans votre CV avec des dates qui concordent ; la troisième est décrite mais jamais nommée.",
+        scaleReview: 'À revoir',
+        scaleBar: 'Barre',
+        railLabel: 'Score de correspondance face aux seuils de palier',
+      },
       quota: {
         title: 'Quota mensuel',
         label: 'Analyses du mois',
@@ -557,6 +837,16 @@ export const fr: Dictionary = {
         matchCaption: 'Sur 24 candidatures',
         compatible: 'Profils compatibles',
         toReview: 'À revoir manuellement',
+      },
+      hero: {
+        kicker: 'Pipeline',
+        role: 'Senior Front-End Engineer',
+        applications: 'candidatures',
+        matched: 'ont franchi la barre',
+        review: 'à relire à la main',
+        rejected: 'sous la barre',
+        verdict:
+          "Dix-huit candidatures sur vingt-quatre franchissent 75 %. Six se situent entre les deux barres et demandent une lecture humaine avant d'annoncer quoi que ce soit.",
       },
       upload: {
         title: 'Import massif de CV',

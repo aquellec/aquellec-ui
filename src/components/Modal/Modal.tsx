@@ -4,7 +4,13 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { useFocusTrap } from '../../lib/focus-trap';
 import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
-import { subtleTextClass } from '../../lib/semantic-colors';
+import {
+  bodyTextClass,
+  dividerBorderClass,
+  raisedSurfaceClass,
+  subtleTextClass,
+  sunkenSurfaceClass,
+} from '../../lib/semantic-colors';
 import { focusRingGhost } from '../../lib/focus-ring';
 
 export interface ModalProps {
@@ -70,14 +76,15 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
       <div
         ref={ref}
         className={cn(
-          'flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800',
+          'flex items-center justify-between border-b px-6 py-4',
+          dividerBorderClass,
           className
         )}
         {...props}
       >
         <div className="flex-1 min-w-0">
           {title && (
-            <TitleElement id={titleId} className="text-base font-bold text-slate-800 dark:text-slate-100">
+            <TitleElement id={titleId} className="text-lg font-semibold tracking-tight text-ink-900 dark:text-ink-50">
               {title}
             </TitleElement>
           )}
@@ -91,8 +98,8 @@ export const ModalHeader = React.forwardRef<HTMLDivElement, ModalHeaderProps>(
                by its label, which is language dependent. */
             data-autofocus=""
             className={cn(
-              'p-1 rounded-lg hover:bg-slate-100 transition-colors flex-shrink-0 ml-4',
-              'dark:hover:bg-slate-800',
+              'ml-4 flex-shrink-0 rounded-lg p-1 transition-colors duration-150 ease-settle motion-reduce:transition-none',
+              'hover:bg-ink-100 dark:hover:bg-ink-800',
               subtleTextClass,
               focusRingGhost
             )}
@@ -113,7 +120,7 @@ export const ModalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
     return (
       <div
         ref={ref}
-        className={cn('px-6 py-5 overflow-y-auto text-sm text-slate-600 dark:text-slate-300', className)}
+        className={cn('overflow-y-auto px-6 py-5 text-sm', bodyTextClass, className)}
         {...props}
       >
         {children}
@@ -130,8 +137,9 @@ export const ModalFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes
       <div
         ref={ref}
         className={cn(
-          'flex items-center justify-end gap-3 px-6 py-4 bg-slate-50/80 border-t border-slate-100',
-          'dark:bg-slate-800/50 dark:border-slate-800',
+          'flex items-center justify-end gap-3 border-t px-6 py-4',
+          sunkenSurfaceClass,
+          dividerBorderClass,
           className
         )}
         {...props}
@@ -217,7 +225,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
             already dark page no longer separates the dialog from its
             background.
           */
-          className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/70 backdrop-blur-[4px] transition-opacity"
+          className="fixed inset-0 bg-ink-950/50 backdrop-blur-[4px] transition-opacity dark:bg-ink-950/85"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -230,8 +238,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           aria-label={dialogLabelId ? undefined : ariaLabel}
           aria-describedby={describedBy}
           className={cn(
-            'relative w-full bg-white rounded-2xl shadow-xl border border-slate-100 z-10 overflow-hidden flex flex-col max-h-[90vh]',
-            'dark:bg-slate-900 dark:border-slate-700',
+            'relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl shadow-overlay',
+            raisedSurfaceClass,
             maxWidths[maxWidth],
             className
           )}

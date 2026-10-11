@@ -1,6 +1,11 @@
 import React, { useId } from 'react';
 import { cn } from '../../lib/cn';
-import { errorTextClass, mutedTextClass, placeholderClass } from '../../lib/semantic-colors';
+import {
+  controlBorderClass,
+  errorTextClass,
+  mutedTextClass,
+  placeholderClass,
+} from '../../lib/semantic-colors';
 import { focusRing, focusRingDanger } from '../../lib/focus-ring';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -54,7 +59,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full flex flex-col text-left">
         {label && (
-          <label htmlFor={id} className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+          <label htmlFor={id} className="mb-1.5 text-xs font-semibold text-ink-800 dark:text-ink-100">
             {label}
           </label>
         )}
@@ -69,13 +74,29 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={cn(
-            'w-full p-3 text-xs rounded-xl border transition-all duration-150',
-            'bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100',
+            /*
+              Every field wears the mark from the start.
+
+              The leading edge is 2px at rest, in the same neutral as the rest
+              of the border, and only changes colour — brand on focus, brick on
+              error. Nothing reflows, because nothing resizes: a field that
+              grows a marked edge on focus jogs its own text sideways, and a
+              text field that moves while you type is a defect wearing a design
+              decision's clothes.
+            */
+            'w-full min-w-0 rounded-xl border border-l-2 transition-colors duration-150 ease-settle motion-reduce:transition-none',
+            'bg-white text-ink-900 dark:bg-ink-900 dark:text-ink-50',
             placeholderClass,
+            'p-3 text-sm',
             error
-              ? cn('border-rose-300 dark:border-rose-500/60', focusRingDanger)
+              ? cn(
+                  'border-brick-400 border-l-brick-600 dark:border-brick-500 dark:border-l-brick-400',
+                  focusRingDanger
+                )
               : cn(
-                  'border-slate-300 hover:border-slate-400 dark:border-slate-600 dark:hover:border-slate-500',
+                  controlBorderClass,
+                  'border-l-ink-400 hover:border-ink-500 dark:border-l-ink-500 dark:hover:border-ink-400',
+                  'focus:border-l-brand-600 dark:focus:border-l-brand-400',
                   focusRing
                 ),
             className
@@ -84,18 +105,21 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
         <div className="flex items-center justify-between mt-1 gap-2">
           {error ? (
-            <span id={errorId} className={cn('text-[11px]', errorTextClass)} role="alert">
+            <span id={errorId} className={cn('text-xs', errorTextClass)} role="alert">
               {error}
             </span>
           ) : helperText ? (
-            <span id={helperId} className={cn('text-[11px]', mutedTextClass)}>
+            <span id={helperId} className={cn('text-xs', mutedTextClass)}>
               {helperText}
             </span>
           ) : (
             <span />
           )}
           {maxLength && (
-            <span className={cn('text-[11px] flex-shrink-0', mutedTextClass)} aria-live="polite">
+            <span
+              className={cn('flex-shrink-0 text-xs tabular-nums', mutedTextClass)}
+              aria-live="polite"
+            >
               {length} / {maxLength}
             </span>
           )}

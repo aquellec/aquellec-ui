@@ -6,7 +6,12 @@ import type { Config } from 'tailwindcss';
   `./plugin` and `./plugin.js`, so the suffixed form is valid on both majors.
 */
 import plugin from 'tailwindcss/plugin.js';
-import { aquellecColors, aquellecThemeExtensions } from './lib/design-tokens';
+import {
+  aquellecColors,
+  aquellecMotion,
+  aquellecSurfaceVariables,
+  aquellecThemeExtensions,
+} from './lib/design-tokens';
 
 /**
  * Neutralises animations and transitions when the user asks for reduced motion
@@ -38,10 +43,29 @@ const reducedMotion = plugin(({ addBase }) => {
  */
 const colorScheme = plugin(({ addBase }) => {
   addBase({
-    ':root': { 'color-scheme': 'light' },
-    '.dark': { 'color-scheme': 'dark' },
+    ':root': { 'color-scheme': 'light', ...aquellecSurfaceVariables.light },
+    '.dark': { 'color-scheme': 'dark', ...aquellecSurfaceVariables.dark },
   });
 });
+
+/*
+  `design-tokens.ts` is frozen with `as const` so the token names are literal
+  types the rest of the package can reason about. Tailwind's own `Config` type
+  wants mutable arrays, so the two array-shaped families are copied here rather
+  than loosened at the source: the tokens stay exactly as strict as they should
+  be, and the widening happens once, at the boundary that needs it.
+*/
+const fontFamily: Record<string, string[]> = Object.fromEntries(
+  Object.entries(aquellecThemeExtensions.fontFamily).map(([name, stack]) => [name, [...stack]])
+);
+
+const fontSize: Record<string, [string, { lineHeight: string; letterSpacing: string }]> =
+  Object.fromEntries(
+    Object.entries(aquellecThemeExtensions.fontSize).map(([name, [size, metrics]]) => [
+      name,
+      [size, { ...metrics }],
+    ])
+  );
 
 const aquellecPreset = {
   /*
@@ -52,15 +76,30 @@ const aquellecPreset = {
   */
   darkMode: 'class',
   theme: {
+    /*
+      `extend` rather than a replacement: Tailwind's own scales stay reachable.
+      A consumer keeps `slate` and `violet` if they need them — the package
+      simply makes its own vocabulary the one that reads best.
+
+      `fontSize` and `fontFamily` do override their defaults, and that is the
+      point of applying a design system's preset: the type is part of the
+      identity, not an accessory to it. A host that wants its own face
+      re-extends `fontFamily` after the preset, which is one line.
+    */
     extend: {
       colors: aquellecColors,
+      fontFamily,
+      fontSize,
+      letterSpacing: aquellecThemeExtensions.letterSpacing,
       borderRadius: aquellecThemeExtensions.borderRadius,
       boxShadow: aquellecThemeExtensions.boxShadow,
+      maxWidth: aquellecThemeExtensions.maxWidth,
+      transitionTimingFunction: aquellecMotion.easing,
     },
   },
   plugins: [reducedMotion, colorScheme],
 } satisfies Partial<Config>;
 
 export default aquellecPreset;
-export { aquellecColors, aquellecThemeExtensions };
-export type { AquellecColors } from './lib/design-tokens';
+export { aquellecColors, aquellecMotion, aquellecSurfaceVariables, aquellecThemeExtensions };
+export type { AquellecColors, AquellecMotion } from './lib/design-tokens';

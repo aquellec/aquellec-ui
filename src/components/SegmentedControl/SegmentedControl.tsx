@@ -29,15 +29,26 @@ export interface SegmentedControlProps
   size?: 'sm' | 'md';
 }
 
+/*
+  Heights are fixed rather than derived from padding: the thumb is absolutely
+  positioned inside the track, so the track has to know how tall it is without
+  asking its children.
+*/
 const sizes = {
-  sm: 'px-2.5 py-1 text-xs',
-  md: 'px-3.5 py-1.5 text-xs',
+  sm: 'h-7 px-2.5 text-xs',
+  md: 'h-8 px-3.5 text-xs',
 } as const;
 
 /**
  * Group of exclusive segments, implementing the WAI-ARIA radio group pattern:
  * a single segment sits in the tab order (roving tabindex), arrow keys move the
  * selection, `Home` and `End` jump to either end.
+ *
+ * Visually it is one track with one indicator that slides between positions —
+ * the selection is carried by fill and contrast, not by per-segment borders or
+ * an underline. There is exactly one moving part, which is the point: a control
+ * where every segment restyles itself reads as a row of buttons that happen to
+ * agree.
  */
 export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
   (
@@ -85,19 +96,73 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
       onKeyDown?.(event);
     };
 
+    /*
+      The selected index drives one sliding indicator rather than each segment
+      styling itself. Segments are equal width (`flex-1 basis-0`), which is what
+      lets the thumb be positioned arithmetically — one segment wide, translated
+      by whole multiples of itself — with no measurement, no ResizeObserver and
+      nothing to go stale when a label is translated.
+
+      A negative index (a `value` that matches no option) simply hides the
+      thumb, rather than parking it under the first segment and lying.
+    */
+    const selectedIndex = options.findIndex((option) => option.value === value);
+
     return (
       <div
         ref={ref}
         role="radiogroup"
         aria-label={ariaLabel}
         onKeyDown={handleKeyDown}
+        /*
+          One light track. Not a row of pills: there are no per-segment borders
+          and no per-segment fills anywhere below — the only filled thing in the
+          control is the single indicator that slides.
+        */
         className={cn(
-          'inline-flex rounded-xl border border-slate-200/60 bg-slate-100 p-1',
-          'dark:border-slate-700 dark:bg-slate-800',
+          'relative inline-flex w-full max-w-md rounded-xl bg-ink-100 p-1 dark:bg-ink-800',
           className
         )}
         {...props}
       >
+        {/*
+          The indicator is presentational and nothing else: `aria-hidden`, no
+          role, no name. The radio group's own `aria-checked` is what announces
+          the selection, and it would be announced identically if this element
+          were deleted.
+
+          It slides on the system's one easing curve. Under
+          `prefers-reduced-motion` the transition is dropped and it simply
+          appears in the new place — the position is information, the travel is
+          not.
+        */}
+        {selectedIndex >= 0 && (
+          <span
+            aria-hidden="true"
+            className={cn(
+              /*
+                Dark mode steps the fill up to `-400`, exactly as `Button`
+                primary does: `brand-500` under near-black type measured 3.61:1
+                on the dark replay of the suite, and the same inversion fixes
+                both controls.
+              */
+              'pointer-events-none absolute inset-y-1 left-1 rounded-lg bg-brand-600 shadow-xs dark:bg-brand-400',
+              'transition-transform duration-150 ease-settle motion-reduce:transition-none'
+            )}
+            /*
+              An absolutely positioned box resolves a percentage width against
+              its containing block's *padding* box, so the track's own 0.5rem of
+              padding has to come out before the division. The thumb then
+              measures exactly one segment, and translating it by whole
+              multiples of its own width lands it precisely on each one.
+            */
+            style={{
+              width: `calc((100% - 0.5rem) / ${options.length})`,
+              transform: `translateX(${selectedIndex * 100}%)`,
+            }}
+          />
+        )}
+
         {options.map((option, index) => {
           const isSelected = option.value === value;
 
@@ -114,19 +179,17 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
               onClick={() => onChange(option.value)}
               className={cn(
                 /*
-                  `grow` + `justify-center`: the root is `inline-flex`, so it
-                  shrink-wraps and these have no effect in normal use. But a
-                  flex item is blockified — dropped into a `flex-col` header the
-                  control stretches to the full width, and without this the
-                  segments stay on the left with dead space beside them.
+                  `flex-1 basis-0` makes every segment the same width, which is
+                  what the thumb arithmetic above depends on and what stops the
+                  control reflowing when a locale lengthens one label.
                 */
-                'flex grow items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200',
-                'motion-reduce:transition-none',
+                'relative z-10 flex flex-1 basis-0 items-center justify-center gap-2 rounded-lg font-semibold',
+                'transition-colors duration-150 ease-settle motion-reduce:transition-none',
                 sizes[size],
                 focusRing,
                 isSelected
-                  ? 'bg-white text-slate-800 shadow-xs dark:bg-slate-700 dark:text-slate-50'
-                  : cn(subtleTextClass, 'hover:text-slate-700 dark:hover:text-slate-100')
+                  ? 'text-white dark:text-ink-950'
+                  : cn(subtleTextClass, 'hover:text-ink-900 dark:hover:text-ink-50')
               )}
             >
               {option.icon && (
@@ -134,7 +197,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
                   {option.icon}
                 </span>
               )}
-              <span>{option.label}</span>
+              <span className="truncate">{option.label}</span>
             </button>
           );
         })}

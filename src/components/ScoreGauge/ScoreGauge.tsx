@@ -1,5 +1,8 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
+import { dataFigureClass, thresholdStrokeClass } from '../../lib/mark';
+import { SCORE_TIER_HIGH, SCORE_TIER_MEDIUM } from '../../lib/score-tier';
+import { mutedTextClass, raisedSurfaceClass } from '../../lib/semantic-colors';
 
 /** Status wording shown under the gauge, based on the tier reached. */
 export interface ScoreGaugeStatusLabels {
@@ -32,8 +35,60 @@ export interface ScoreGaugeProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   /** Displays the semantic status badge under the gauge. */
   showStatus?: boolean;
-  /** Applies the purple AI theme regardless of score thresholds. */
+  /** Applies the AI accent regardless of score thresholds. */
   isAiTheme?: boolean;
+}
+
+/**
+ * The threshold form of the mark, on a circular track.
+ *
+ * A percentage on its own tells a candidate nothing — 62% is only meaningful
+ * against the line it had to clear. So the two tier boundaries are drawn onto
+ * the arc as 2px radial ticks, and the number stops being a verdict handed down
+ * and becomes a position you can see yourself in. This is the single most
+ * on-thesis detail in the library: precise about the measurement, humane about
+ * what the measurement is for.
+ *
+ * The dash starts at three o'clock and runs clockwise, so a tick for fraction
+ * `f` sits at `2πf` from the positive x-axis. The whole SVG is then rotated a
+ * quarter turn, which carries the ticks with it — computing them in the rotated
+ * frame would double the rotation.
+ */
+function ThresholdTicks({
+  center,
+  radius,
+  strokeWidth,
+  fractions,
+}: {
+  center: number;
+  radius: number;
+  strokeWidth: number;
+  fractions: number[];
+}) {
+  const inner = radius - strokeWidth / 2;
+  const outer = radius + strokeWidth / 2;
+
+  return (
+    <>
+      {fractions.map((fraction) => {
+        const angle = 2 * Math.PI * fraction;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        return (
+          <line
+            key={fraction}
+            x1={center + inner * cos}
+            y1={center + inner * sin}
+            x2={center + outer * cos}
+            y2={center + outer * sin}
+            strokeWidth={2}
+            className={thresholdStrokeClass}
+          />
+        );
+      })}
+    </>
+  );
 }
 
 export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
@@ -56,10 +111,19 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       ...statusLabelsProp,
     };
 
+    /*
+      The numeral is the point of this component, so it is set in the display
+      face and allowed to get genuinely large. At `lg` it is 52px of Archivo
+      inside a 200px ring — a score somebody can read from the far side of a
+      desk, which is what a recruiter scanning a pipeline is actually doing.
+
+      The ring thickens with the diameter so the arc keeps the same visual
+      weight relative to the number it surrounds.
+    */
     const dimensions = {
-      sm: { width: 100, strokeWidth: 8, fontSize: 'text-xl', labelSize: 'text-[10px]' },
-      md: { width: 140, strokeWidth: 10, fontSize: 'text-3xl', labelSize: 'text-sm' },
-      lg: { width: 180, strokeWidth: 12, fontSize: 'text-4xl', labelSize: 'text-base' },
+      sm: { width: 104, strokeWidth: 10, fontSize: 'text-2xl', labelSize: 'text-[10px]' },
+      md: { width: 152, strokeWidth: 14, fontSize: 'text-4xl', labelSize: 'text-sm' },
+      lg: { width: 200, strokeWidth: 18, fontSize: 'text-5xl', labelSize: 'text-base' },
     };
 
     const { width, strokeWidth, fontSize, labelSize } = dimensions[size];
@@ -67,36 +131,47 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
 
+    /*
+      The arc is drawn from the `-600` step in light and `-400` in dark: both
+      clear 3:1 against the track they sit on, which WCAG 1.4.11 requires of a
+      graphic that carries meaning. The `-500` step most gauges reach for does
+      not, on the warm track this system uses.
+    */
     const getScoreColor = () => {
       if (isAiTheme) {
+        /*
+          The AI reading is not a tier, so it takes the brand hue rather than
+          one of the three status colours. Green here would claim the aggregate
+          had cleared a bar it was never measured against.
+        */
         return {
-          stroke: 'stroke-ai-500 dark:stroke-ai-400',
-          text: 'text-ai-700 dark:text-ai-300',
-          bg: 'bg-ai-50 text-ai-700 border-ai-200 dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
+          stroke: 'stroke-brand-600 dark:stroke-brand-400',
+          text: 'text-brand-700 dark:text-brand-300',
+          tag: 'bg-brand-100 text-brand-900 dark:bg-brand-500/20 dark:text-brand-100',
           statusText: statusLabels.ai,
         };
       }
 
-      if (normalizedScore >= 75) {
+      if (normalizedScore >= SCORE_TIER_HIGH) {
         return {
-          stroke: 'stroke-emerald-500 dark:stroke-emerald-400',
-          text: 'text-emerald-700 dark:text-emerald-300',
-          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
+          stroke: 'stroke-moss-600 dark:stroke-moss-400',
+          text: 'text-moss-700 dark:text-moss-300',
+          tag: 'bg-moss-100 text-moss-900 dark:bg-moss-500/20 dark:text-moss-100',
           statusText: statusLabels.high,
         };
       }
-      if (normalizedScore >= 50) {
+      if (normalizedScore >= SCORE_TIER_MEDIUM) {
         return {
-          stroke: 'stroke-amber-500 dark:stroke-amber-400',
-          text: 'text-amber-700 dark:text-amber-300',
-          bg: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
+          stroke: 'stroke-ochre-600 dark:stroke-ochre-400',
+          text: 'text-ochre-700 dark:text-ochre-300',
+          tag: 'bg-ochre-100 text-ochre-900 dark:bg-ochre-500/20 dark:text-ochre-100',
           statusText: statusLabels.medium,
         };
       }
       return {
-        stroke: 'stroke-rose-500 dark:stroke-rose-400',
-        text: 'text-rose-700 dark:text-rose-300',
-        bg: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
+        stroke: 'stroke-brick-600 dark:stroke-brick-400',
+        text: 'text-brick-700 dark:text-brick-300',
+        tag: 'bg-brick-100 text-brick-900 dark:bg-brick-500/20 dark:text-brick-100',
         statusText: statusLabels.low,
       };
     };
@@ -112,8 +187,8 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
       <div
         ref={ref}
         className={cn(
-          'flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 shadow-xs',
-          'dark:bg-slate-900 dark:border-slate-700',
+          'flex flex-col items-center justify-center rounded-2xl p-5 shadow-card',
+          raisedSurfaceClass,
           className
         )}
         {...props}
@@ -122,7 +197,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           <svg
             width={width}
             height={width}
-            className="transform -rotate-90"
+            className="-rotate-90 transform"
             role="meter"
             aria-valuenow={normalizedScore}
             aria-valuemin={0}
@@ -134,7 +209,7 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               cx={width / 2}
               cy={width / 2}
               r={radius}
-              className="stroke-slate-100 dark:stroke-slate-800"
+              className="stroke-ink-200 dark:stroke-ink-800"
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -142,26 +217,51 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
               cx={width / 2}
               cy={width / 2}
               r={radius}
-              className={cn('transition-all duration-1000 ease-out', colors.stroke)}
+              className={cn(
+                'transition-all duration-700 ease-settle motion-reduce:transition-none',
+                colors.stroke
+              )}
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               fill="transparent"
             />
+            {/*
+              Drawn last so the ticks stay legible where the arc has already
+              passed them — the mark has to remain readable at 100%, which is
+              exactly the reading where it matters least and would be missed most.
+              Suppressed under the AI accent, which has no tiers to clear.
+            */}
+            {!isAiTheme && (
+              <ThresholdTicks
+                center={width / 2}
+                radius={radius}
+                strokeWidth={strokeWidth}
+                fractions={[SCORE_TIER_MEDIUM / 100, SCORE_TIER_HIGH / 100]}
+              />
+            )}
           </svg>
 
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center p-2 pointer-events-none"
+            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center p-2 text-center"
             aria-hidden="true"
           >
-            <span className={cn('font-bold leading-tight tracking-tight', fontSize, colors.text)}>
+            <span
+              className={cn(
+                'aq-display font-display font-bold leading-none tracking-masthead',
+                dataFigureClass,
+                fontSize,
+                colors.text
+              )}
+            >
               {normalizedScore}%
             </span>
             {label && (
               <span
                 className={cn(
-                  'font-medium text-slate-500 dark:text-slate-400 leading-none mt-0.5 max-w-[80%] line-clamp-2',
+                  'mt-0.5 line-clamp-2 max-w-[80%] font-medium leading-none',
+                  mutedTextClass,
                   labelSize
                 )}
               >
@@ -171,8 +271,18 @@ export const ScoreGauge = React.forwardRef<HTMLDivElement, ScoreGaugeProps>(
           </div>
         </div>
 
+        {/*
+          A marked tag rather than a pill. The tier is a boundary the score fell
+          on one side of, so it is labelled with the same 2px edge the system
+          uses for every other boundary.
+        */}
         {showStatus && (
-          <div className={cn('mt-3 px-3 py-1 rounded-full text-xs font-semibold border', colors.bg)}>
+          <div
+            className={cn(
+              'mt-4 inline-flex h-6 items-center rounded-md px-2.5 text-xs font-semibold uppercase tracking-wide',
+              colors.tag
+            )}
+          >
             {colors.statusText}
           </div>
         )}

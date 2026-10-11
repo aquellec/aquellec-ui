@@ -7,18 +7,24 @@
   written out.
 
   `ring-offset-*` paints the gap between the control and the ring with a solid
-  color, white by default. Left unset it draws a white halo around every focused
+  colour, white by default. Left unset it draws a white halo around every focused
   control in dark mode, so each ring pins the offset to the surface it sits on.
+
+  THE PERSONALITY
+  A solid cobalt ring held two pixels off the control, following its corner
+  radius exactly. No blur, no glow, no colour bleed — a ring that fades outward
+  is a ring you have to look for, and keyboard users are looking for it many
+  times a minute. The ring is a boundary, and this system draws boundaries hard.
 */
 
 /** Default accessible focus ring for interactive controls. */
 export const focusRing =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ring-offset-white dark:focus-visible:ring-brand-400 dark:ring-offset-slate-900';
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 ring-offset-white dark:focus-visible:ring-brand-400 dark:ring-offset-ink-900';
 
 /** Focus ring for destructive or error states. */
 export const focusRingDanger =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 ring-offset-white dark:ring-offset-slate-900';
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-brick-600 focus-visible:ring-offset-2 ring-offset-white dark:focus-visible:ring-brick-400 dark:ring-offset-ink-900';
 
 /** Subtle focus ring for ghost/text buttons. */
 export const focusRingGhost =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 ring-offset-white dark:focus-visible:ring-slate-500 dark:ring-offset-slate-900';
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-ink-500 focus-visible:ring-offset-2 ring-offset-white dark:focus-visible:ring-ink-400 dark:ring-offset-ink-900';

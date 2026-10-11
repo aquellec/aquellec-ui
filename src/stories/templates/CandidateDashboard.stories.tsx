@@ -12,7 +12,20 @@ import { ProgressBar } from '../../components/ProgressBar';
 import { Textarea } from '../../components/Textarea';
 import { Input } from '../../components/Input';
 import { DataTable } from '../../components/DataTable';
-import { getScoreTextClass } from '../../lib/score-tier';
+import { getScoreTextClass, SCORE_TIER_HIGH, SCORE_TIER_MEDIUM } from '../../lib/score-tier';
+import {
+  dataFigureClass,
+  mastheadRuleClass,
+  ruleMarkClass,
+  thresholdMarkClass,
+} from '../../lib/mark';
+import {
+  bodyTextClass,
+  mutedTextClass,
+  pageSurfaceClass,
+  strongTextClass,
+  subtleTextClass,
+} from '../../lib/semantic-colors';
 import { cn } from '../../lib/cn';
 
 interface CandidateAnalysis {
@@ -56,6 +69,175 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+
+/**
+ * The lead story.
+ *
+ * A candidate opens this page for exactly one number. An early version buried
+ * it in a 280px side card; the correction over-swung and put it on a full-bleed
+ * black band, which reads brutal rather than premium. Both were the same
+ * mistake in opposite directions: treating the *background* as the way to make
+ * something important.
+ *
+ * It is the type that carries it. A 116px numeral in near-black on a barely
+ * tinted surface is unmissable and calm at the same time, and it leaves the
+ * only saturated colours on the block to the things that actually encode
+ * something — the status tag and the rail fill.
+ */
+function ScoreHeadline({
+  score,
+  role,
+  company,
+}: {
+  score: number;
+  role: string;
+  company: string;
+}) {
+  const t = useI18n().dashboard.candidate;
+  const cleared = score >= SCORE_TIER_HIGH;
+
+  return (
+    <section className="bg-ink-50 dark:bg-ink-900">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16 lg:py-20">
+        <div>
+          <p
+            className={cn(
+              'flex items-center gap-2.5 text-xs font-semibold uppercase tracking-eyebrow',
+              'text-brand-700 dark:text-brand-300'
+            )}
+          >
+            <span className={ruleMarkClass} aria-hidden="true" />
+            {t.hero.kicker}
+          </p>
+
+          {/*
+            The percent sign is set at a third of the numeral and in a quieter
+            ink. At matching size it competes with the digits for a glyph that
+            carries none of the meaning.
+          */}
+          <p className="mt-5 flex items-baseline gap-2">
+            <span
+              className={cn(
+                'aq-display font-display text-8xl font-bold leading-none tracking-masthead',
+                dataFigureClass,
+                strongTextClass
+              )}
+            >
+              {score}
+            </span>
+            <span
+              className={cn(
+                'aq-display font-display text-4xl font-bold leading-none',
+                mutedTextClass
+              )}
+            >
+              %
+            </span>
+          </p>
+
+          <p className={cn('mt-5 text-lg', subtleTextClass)}>
+            {t.hero.against}{' '}
+            <span className={cn('font-semibold', strongTextClass)}>{role}</span>
+            <span className={mutedTextClass}> · {company}</span>
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          {/*
+            The threshold form of the rule, at hero scale. Both tier boundaries
+            are drawn and both are labelled, so the number beside it is never
+            read in a vacuum. The fill is the only place a status colour appears
+            on this block, which is exactly what a status colour is for.
+          */}
+          <div>
+            <div
+              className="relative h-3 w-full overflow-hidden rounded-full bg-ink-200 dark:bg-ink-800"
+              role="img"
+              aria-label={t.hero.railLabel}
+            >
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all duration-700 ease-settle motion-reduce:transition-none',
+                  cleared ? 'bg-moss-600 dark:bg-moss-400' : 'bg-ochre-600 dark:bg-ochre-400'
+                )}
+                style={{ width: `${score}%` }}
+              />
+              <span
+                aria-hidden="true"
+                className={thresholdMarkClass}
+                style={{ left: `${SCORE_TIER_MEDIUM}%` }}
+              />
+              <span
+                aria-hidden="true"
+                className={thresholdMarkClass}
+                style={{ left: `${SCORE_TIER_HIGH}%` }}
+              />
+            </div>
+
+            <div className="relative mt-2 h-4" aria-hidden="true">
+              <span
+                className={cn(
+                  '-translate-x-1/2 absolute text-xs font-semibold uppercase tracking-eyebrow',
+                  dataFigureClass,
+                  mutedTextClass
+                )}
+                style={{ left: `${SCORE_TIER_MEDIUM}%` }}
+              >
+                {t.hero.scaleReview}
+              </span>
+              <span
+                className={cn(
+                  '-translate-x-1/2 absolute text-xs font-semibold uppercase tracking-eyebrow',
+                  dataFigureClass,
+                  subtleTextClass
+                )}
+                style={{ left: `${SCORE_TIER_HIGH}%` }}
+              >
+                {t.hero.scaleBar}
+              </span>
+            </div>
+          </div>
+
+          <p className={cn('max-w-measure text-base leading-relaxed', subtleTextClass)}>
+            {t.hero.verdict}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Section head plus its hairline. Weight comes from the type, not the rule. */
+function SectionHead({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <header className="mb-6">
+      <div className="flex flex-wrap items-end justify-between gap-3 pb-3">
+        <div>
+          <h2
+            className={cn(
+              'aq-display font-display text-2xl font-bold tracking-tight sm:text-3xl',
+              strongTextClass
+            )}
+          >
+            {title}
+          </h2>
+          {subtitle && <p className={cn('mt-1 text-sm', mutedTextClass)}>{subtitle}</p>}
+        </div>
+        {action}
+      </div>
+      <span className={mastheadRuleClass} aria-hidden="true" />
+    </header>
+  );
+}
+
 function CandidateDashboardPage() {
   const t = useI18n();
   const [workspace, setWorkspace] = useState('candidate');
@@ -64,24 +246,36 @@ function CandidateDashboardPage() {
     {
       value: 'candidate',
       label: t.segmented.workspace.candidate,
-      icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
+      icon: <User className="h-3.5 w-3.5" />,
     },
     {
       value: 'recruiter',
       label: t.segmented.workspace.recruiter,
-      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
+      icon: <Briefcase className="h-3.5 w-3.5" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6 dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className={cn('min-h-screen', pageSurfaceClass)}>
+      {/*
+        The masthead. Brand line, page title set in the display face, and the
+        workspace switch — held on a heavy rule rather than boxed in a bar with
+        a grey bottom border.
+      */}
+      <header className="mx-auto max-w-6xl px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
+        <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+            <p className="text-xs font-semibold uppercase tracking-eyebrow text-brand-700 dark:text-brand-300">
               {t.dashboard.candidate.brand}
             </p>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t.dashboard.candidate.title}</h1>
+            <h1
+              className={cn(
+                'aq-display mt-1 font-display text-4xl font-bold tracking-tight sm:text-5xl',
+                strongTextClass
+              )}
+            >
+              {t.dashboard.candidate.title}
+            </h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -90,20 +284,27 @@ function CandidateDashboardPage() {
             ariaLabel={t.dashboard.workspaceLabel}
           />
         </div>
+        <span className={mastheadRuleClass} aria-hidden="true" />
       </header>
 
-      <main className="mx-auto w-full max-w-5xl space-y-4 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-8">
-        <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_280px]">
-          <section className="space-y-4 sm:space-y-6">
-            <Card>
-              <Card.Header
-                title={t.dashboard.candidate.analysis.title}
-                subtitle={t.dashboard.candidate.analysis.subtitle}
-              />
-              <Card.Body className="overflow-visible">
-                <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
+      <ScoreHeadline
+        score={88}
+        role={t.dashboard.candidate.analysis.job.value}
+        company={t.dashboard.candidate.analysis.company.value}
+      />
+
+      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+        <div className="grid gap-10 lg:grid-cols-[1fr_300px] lg:gap-14">
+          <section>
+            <SectionHead
+              title={t.dashboard.candidate.analysis.title}
+              subtitle={t.dashboard.candidate.analysis.subtitle}
+            />
+            <div>
+              <div className="overflow-visible">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   <div className="flex flex-col">
-                    <p className="mb-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                    <p className="mb-3 text-xs font-semibold text-ink-700 dark:text-ink-200">
                       {t.dashboard.candidate.analysis.resumeLabel}
                     </p>
                     <Dropzone
@@ -147,32 +348,34 @@ function CandidateDashboardPage() {
                       />
                     </div>
 
-                    <Button variant="ai" className="mt-4 w-full">
+                    <Button variant="ai" size="lg" className="mt-5 w-full">
                       <Sparkles className="mr-2 h-4 w-4" aria-hidden="true" />
                       {t.dashboard.candidate.analysis.cta}
                     </Button>
                   </div>
                 </div>
-              </Card.Body>
-            </Card>
+              </div>
+            </div>
 
-            <Card variant="ai">
+            <Card variant="ai" className="mt-10">
               <Card.Header
-                title={
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-ai-600 dark:text-ai-300" aria-hidden="true" />
-                    <span>{t.dashboard.candidate.advice.title}</span>
-                  </div>
-                }
+                title={t.dashboard.candidate.advice.title}
                 subtitle={t.dashboard.candidate.advice.subtitle}
+                /*
+                  The card is machine-written, so it says so in a word on an
+                  inverted badge rather than in a colour. The amber badge that
+                  used to sit here read as a warning about the advice.
+                */
                 action={
-                  <Badge variant="warning" icon="warning">
+                  <Badge variant="ai" size="sm">
                     {t.dashboard.candidate.advice.badge}
                   </Badge>
                 }
               />
               <Card.Body className="space-y-3">
-                <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.candidate.advice.body}</p>
+                <p className={cn('text-sm leading-relaxed', bodyTextClass)}>
+                  {t.dashboard.candidate.advice.body}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="success" icon="check">
                     React / Next.js
@@ -186,7 +389,7 @@ function CandidateDashboardPage() {
                 </div>
               </Card.Body>
               <Card.Footer>
-                <span className="text-xs text-slate-500 dark:text-slate-400">{t.dashboard.candidate.advice.meta}</span>
+                <span className="text-xs text-ink-500 dark:text-ink-300">{t.dashboard.candidate.advice.meta}</span>
                 <Button variant="ghost" size="sm">
                   {t.dashboard.candidate.advice.action}
                   <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
@@ -195,24 +398,29 @@ function CandidateDashboardPage() {
             </Card>
           </section>
 
-          <aside className="space-y-4 sm:space-y-6">
-            <Card className="text-center">
-              <Card.Body className="flex flex-col items-center gap-2 py-6 sm:py-8">
-                <ScoreGauge
-                  score={88}
-                  size="lg"
-                  label={t.dashboard.candidate.score.label}
-                  statusLabels={t.components.gaugeStatus}
-                />
-                <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                  {t.dashboard.candidate.score.status}
-                </p>
-              </Card.Body>
-            </Card>
+          {/*
+            The aside carries no cards at all. The gauge is its own surface and
+            the quota bar is its own surface; wrapping either one in a second
+            rectangle would be a box around a box, which is the habit this
+            direction was written to break.
+          */}
+          <aside className="flex flex-col gap-10">
+            <div className="flex flex-col items-center gap-3">
+              <ScoreGauge
+                score={88}
+                size="md"
+                label={t.dashboard.candidate.score.label}
+                statusLabels={t.components.gaugeStatus}
+                className="w-full"
+              />
+              <p className={cn('text-center text-sm', subtleTextClass)}>
+                {t.dashboard.candidate.score.status}
+              </p>
+            </div>
 
-            <Card>
-              <Card.Header title={t.dashboard.candidate.quota.title} />
-              <Card.Body>
+            <div>
+              <SectionHead title={t.dashboard.candidate.quota.title} />
+              <div>
                 <ProgressBar
                   value={3}
                   max={10}
@@ -228,18 +436,17 @@ function CandidateDashboardPage() {
                     </Button>
                   }
                 />
-              </Card.Body>
-            </Card>
+              </div>
+            </div>
           </aside>
         </div>
 
-        <Card>
-          <Card.Header
+        <section className="mt-14">
+          <SectionHead
             title={t.dashboard.candidate.history.title}
             subtitle={t.dashboard.candidate.history.subtitle}
           />
-          <Card.Body className="p-0">
-            <DataTable
+          <DataTable
               data={recentAnalyses}
               keyExtractor={(item) => item.id}
               labels={t.components.dataTable}
@@ -253,7 +460,7 @@ function CandidateDashboardPage() {
                   header: t.dashboard.candidate.history.columns.position,
                   className: 'whitespace-normal min-w-[9rem]',
                   cell: (item) => (
-                    <div className="flex items-start space-x-2 font-medium text-slate-900 dark:text-slate-100">
+                    <div className="flex items-start space-x-2 font-medium text-ink-900 dark:text-ink-100">
                       <Briefcase
                         className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600 dark:text-brand-300"
                         aria-hidden="true"
@@ -267,7 +474,13 @@ function CandidateDashboardPage() {
                 {
                   header: t.dashboard.candidate.history.columns.score,
                   cell: (item) => (
-                    <span className={cn('font-bold', getScoreTextClass(item.score))}>
+                    <span
+                      className={cn(
+                        'text-base font-bold',
+                        dataFigureClass,
+                        getScoreTextClass(item.score)
+                      )}
+                    >
                       {item.score}%
                     </span>
                   ),
@@ -295,11 +508,9 @@ function CandidateDashboardPage() {
                   ),
                 },
               ]}
-              className="border-0 shadow-none"
-              pagination={{ currentPage: 1, totalPages: 2, onPageChange: () => undefined }}
-            />
-          </Card.Body>
-        </Card>
+            pagination={{ currentPage: 1, totalPages: 2, onPageChange: () => undefined }}
+          />
+        </section>
       </main>
     </div>
   );

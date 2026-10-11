@@ -1,7 +1,6 @@
 import React from 'react';
 import { Check, X, AlertTriangle, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/cn';
-import { semanticIconClass } from '../../lib/semantic-colors';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Color scheme reflecting ATS semantic meaning. */
@@ -26,39 +25,59 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     ref
   ) => {
     /*
-      Dark variants are a wash of the hue over the surface — `500/15` on the
-      background, `500/30` on the border — rather than the `50` tint, which
-      turns into a near-white block on a dark card.
+      Status has to be readable in one pass down a column of forty rows, so the
+      three semantic variants are solid rather than tinted. A `-700` fill under
+      white type sits between 7:1 and 9:1 in light mode and inverts to a `-400`
+      fill under near-black in dark — decisive at a glance, and legible to
+      someone who cannot separate the hues at all, because the weight and the
+      word carry it too.
+
+      There is no outline and no leading bar. A filled rectangle with a line
+      around it states the same fact twice, and the bar was the accent that made
+      four colours compete on one page.
+
+      `ai` is tonal cobalt rather than a fourth status colour: a machine's
+      contribution is not a verdict, so it is marked at low emphasis in the one
+      brand hue. It was solid black for a pass, which made an advisory tag the
+      heaviest thing on the card it sat in.
     */
     const variants = {
-      success:
-        'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
-      danger:
-        'bg-rose-50 text-rose-700 border border-rose-200/60 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
-      warning:
-        'bg-amber-50 text-amber-700 border border-amber-200/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
-      neutral:
-        'bg-slate-100 text-slate-700 border border-slate-200/60 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700',
-      ai: 'bg-ai-50 text-ai-700 border border-ai-200/60 shadow-xs dark:bg-ai-500/15 dark:text-ai-300 dark:border-ai-500/30',
+      success: 'bg-moss-700 text-white dark:bg-moss-400 dark:text-ink-950',
+      danger: 'bg-brick-700 text-white dark:bg-brick-400 dark:text-ink-950',
+      warning: 'bg-ochre-700 text-white dark:bg-ochre-400 dark:text-ink-950',
+      neutral: 'bg-ink-100 text-ink-800 dark:bg-ink-800 dark:text-ink-100',
+      ai: 'bg-brand-100 text-brand-900 dark:bg-brand-500/20 dark:text-brand-100',
     };
 
+    /*
+      Fixed heights rather than vertical padding: a badge sits inside a table
+      cell next to other badges, and a row whose chips are two pixels apart in
+      height reads as sloppy from across the room. The horizontal padding is
+      optical — a hair tighter when an icon is present, because the icon already
+      carries its own visual gap.
+    */
     const sizes = {
-      sm: 'text-xs px-2 py-0.5 gap-1',
-      md: 'text-xs px-2.5 py-1 gap-1.5',
+      sm: 'h-5 text-xs px-2 gap-1',
+      md: 'h-6 text-xs px-2.5 gap-1.5',
     };
 
     const iconSizes = size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5';
 
+    /*
+      The icon takes the badge's own foreground. On a solid fill a separately
+      coloured icon is either invisible or a second accent, and this system has
+      exactly one.
+    */
     const renderIcon = () => {
       switch (icon) {
         case 'check':
-          return <Check className={cn(iconSizes, semanticIconClass.success)} aria-hidden="true" />;
+          return <Check className={iconSizes} aria-hidden="true" />;
         case 'cross':
-          return <X className={cn(iconSizes, semanticIconClass.danger)} aria-hidden="true" />;
+          return <X className={iconSizes} aria-hidden="true" />;
         case 'warning':
-          return <AlertTriangle className={cn(iconSizes, semanticIconClass.warning)} aria-hidden="true" />;
+          return <AlertTriangle className={iconSizes} aria-hidden="true" />;
         case 'ai':
-          return <Sparkles className={cn(iconSizes, semanticIconClass.ai)} aria-hidden="true" />;
+          return <Sparkles className={iconSizes} aria-hidden="true" />;
         default:
           return null;
       }
@@ -72,7 +91,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
             `whitespace-nowrap`: a status badge is a label, never a paragraph.
             In a narrow table cell it would otherwise wrap and get clipped.
           */
-          'inline-flex items-center font-medium rounded-full transition-colors whitespace-nowrap',
+          'inline-flex items-center whitespace-nowrap rounded-md font-semibold uppercase tracking-wide',
+          'transition-colors duration-150 ease-settle motion-reduce:transition-none',
           variants[variant],
           sizes[size],
           className

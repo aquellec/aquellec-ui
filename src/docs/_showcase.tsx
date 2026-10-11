@@ -10,15 +10,24 @@ import {
   LayoutDashboard,
   LayoutGrid,
   MousePointerClick,
-  Palette,
   ShieldCheck,
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 import { useI18n, type Dictionary } from '../../.storybook/i18n';
 import { cn } from '../lib/cn';
+import { aquellecColors } from '../lib/design-tokens';
 import { focusRing } from '../lib/focus-ring';
-import { mutedTextClass, subtleTextClass } from '../lib/semantic-colors';
+import { ruleMarkClass } from '../lib/mark';
+import {
+  bodyTextClass,
+  dividerBorderClass,
+  mutedTextClass,
+  raisedSurfaceClass,
+  strongTextClass,
+  subtleTextClass,
+  surfaceBorderClass,
+} from '../lib/semantic-colors';
 
 /*
   Visual blocks of the Docs/Introduction page, also reused by Docs/Tokens
@@ -66,12 +75,13 @@ interface Accent {
 export const accentTileClass: Record<AccentName, string> = {
   brand:
     'bg-brand-50 text-brand-700 ring-1 ring-brand-500/20 dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-400/30',
-  ai: 'bg-ai-50 text-ai-700 ring-1 ring-ai-500/20 dark:bg-ai-500/15 dark:text-ai-300 dark:ring-ai-400/30',
-  info: 'bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-400/30',
+  /* Neutral, not an accent: the `ai` family is ink in this system. */
+  ai: 'bg-ink-100 text-ink-900 ring-1 ring-ink-900/15 dark:bg-ink-800 dark:text-ink-50 dark:ring-ink-100/20',
+  info: 'bg-semantic-info-bg text-semantic-info-fg ring-1 ring-semantic-info-border dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-400/30',
   success:
-    'bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-400/30',
+    'bg-semantic-success-bg text-semantic-success-fg ring-1 ring-semantic-success-border dark:bg-moss-500/15 dark:text-moss-300 dark:ring-moss-400/30',
   warning:
-    'bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/30',
+    'bg-semantic-warning-bg text-semantic-warning-fg ring-1 ring-semantic-warning-border dark:bg-ochre-500/15 dark:text-ochre-300 dark:ring-ochre-400/30',
 };
 
 const accents: Record<AccentName, Accent> = {
@@ -82,31 +92,50 @@ const accents: Record<AccentName, Accent> = {
   },
   ai: {
     tile: accentTileClass.ai,
-    bar: 'bg-ai-500',
-    hover: 'hover:border-ai-500/40 dark:hover:border-ai-400/40',
+    bar: 'bg-ink-300 dark:bg-ink-600',
+    hover: 'hover:border-ink-400/60 dark:hover:border-ink-500/60',
   },
   info: {
     tile: accentTileClass.info,
     bar: 'bg-semantic-info-fg',
-    hover: 'hover:border-semantic-info-fg/40 dark:hover:border-blue-400/40',
+    hover: 'hover:border-semantic-info-fg/40 dark:hover:border-brand-400/40',
   },
   success: {
     tile: accentTileClass.success,
     bar: 'bg-semantic-success-fg',
-    hover: 'hover:border-semantic-success-fg/40 dark:hover:border-emerald-400/40',
+    hover: 'hover:border-semantic-success-fg/40 dark:hover:border-moss-400/40',
   },
   warning: {
     tile: accentTileClass.warning,
     bar: 'bg-semantic-warning-fg',
-    hover: 'hover:border-semantic-warning-fg/40 dark:hover:border-amber-400/40',
+    hover: 'hover:border-semantic-warning-fg/40 dark:hover:border-ochre-400/40',
   },
 };
 
 /** Shared card surface: consistent radius and elevation. */
-export const cardSurface = 'rounded-xl border border-slate-200 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900';
+export const cardSurface = cn(
+  'rounded-xl border shadow-card',
+  raisedSurfaceClass,
+  surfaceBorderClass
+);
+
+/**
+ * The display treatment, used by every heading that opens a page or a section.
+ *
+ * Fraunces with both decorative axes pinned off (`aq-display`, set in
+ * `preview-head.html`) and tracking pulled in, because a serif at 48px with
+ * default spacing reads as a word processor. This is the one place the system
+ * allows itself a second typeface, and it is the reason the documentation does
+ * not look like every other Storybook.
+ */
+export const displayClass = 'aq-display font-display font-semibold tracking-tight';
+
+/** Wide-tracked uppercase kicker. The same treatment the DataTable gives a column head. */
+export const eyebrowClass = 'text-xs font-semibold uppercase tracking-eyebrow';
 
 /** Transitions neutralised when the user asks for reduced motion. */
-export const softTransition = 'transition-colors duration-200 motion-reduce:transition-none';
+export const softTransition =
+  'transition-colors duration-150 ease-settle motion-reduce:transition-none';
 
 const linkClass = cn(
   'rounded-[0.125rem] text-brand-700 underline decoration-brand-500/40 underline-offset-2 dark:text-brand-300',
@@ -129,12 +158,21 @@ export function SectionHeader({
   const { kicker, title } = useI18n().docs.sections[section];
 
   return (
-    <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2">
-      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-700 dark:text-brand-300">
-        <span className="h-px w-6 bg-brand-500/40" aria-hidden="true" />
+    <header className="sb-unstyled mb-6 mt-14 flex flex-col gap-2.5">
+      {/* The rule form of the mark: 2px of brand, then the kicker. */}
+      <p
+        className={cn(
+          'flex items-center gap-2.5 text-brand-700 dark:text-brand-300',
+          eyebrowClass
+        )}
+      >
+        <span className={ruleMarkClass} aria-hidden="true" />
         {kicker}
       </p>
-      <h2 id={id} className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 md:text-3xl">
+      <h2
+        id={id}
+        className={cn('text-3xl md:text-4xl', displayClass, strongTextClass)}
+      >
         {title}
       </h2>
     </header>
@@ -142,81 +180,117 @@ export function SectionHeader({
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Hero                                                                       */
+/*  Page cover                                                                 */
 /* -------------------------------------------------------------------------- */
 
-type ChipKey = keyof Dictionary['docs']['introduction']['chips'];
+/** One line of the colophon: a label and the fact it names. */
+export interface CoverFact {
+  label: string;
+  value: string;
+}
 
-const heroChips: Array<{ key: ChipKey; icon: LucideIcon; className: string }> = [
-  {
-    key: 'typescript',
-    icon: FileCode2,
-    className:
-      'border-semantic-info-border bg-semantic-info-bg text-semantic-info-fg dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300',
-  },
-  {
-    key: 'wcag',
-    icon: Accessibility,
-    className:
-      'border-semantic-success-border bg-semantic-success-bg text-semantic-success-fg dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-300',
-  },
-  {
-    key: 'preset',
-    icon: Palette,
-    className:
-      'border-brand-500/30 bg-brand-50 text-brand-700 dark:border-brand-400/30 dark:bg-brand-500/15 dark:text-brand-300',
-  },
-  {
-    key: 'storybook',
-    icon: FlaskConical,
-    className:
-      'border-ai-500/30 bg-ai-50 text-ai-700 dark:border-ai-400/30 dark:bg-ai-500/15 dark:text-ai-300',
-  },
-];
+/**
+ * The cover every documentation page opens on.
+ *
+ * Not a hero. A hero is a gradient with a slogan in it; this is a specimen
+ * page — the thing a foundry prints to show what a face does. The left column
+ * carries the name at display size, the right column a colophon of hard facts
+ * set in mono, and the whole sheet wears the leading mark and is signed off by
+ * the brand ramp printed as a continuous band along the foot.
+ *
+ * The asymmetry is the point. A centred cover has nothing to say about where
+ * reading starts; this one puts the rule, the title and the mark on one left
+ * edge and lets the facts hang off the right, where the eye finishes.
+ */
+export function PageCover({
+  kicker,
+  title,
+  description,
+  facts,
+  ramp = 'brand',
+}: {
+  kicker: string;
+  title: React.ReactNode;
+  description: string;
+  facts: readonly CoverFact[];
+  ramp?: 'brand' | 'ai';
+}) {
+  const scale = Object.entries(aquellecColors[ramp]);
+
+  return (
+    <header
+      className={cn(
+        'sb-unstyled mb-14 overflow-hidden rounded-2xl border bg-ink-50 dark:bg-ink-900',
+        surfaceBorderClass
+      )}
+    >
+      <div className="grid gap-10 p-8 md:grid-cols-[minmax(0,1fr)_auto] md:p-10">
+        <div className="flex flex-col items-start gap-4">
+          <p
+            className={cn(
+              'flex items-center gap-2.5 text-brand-700 dark:text-brand-300',
+              eyebrowClass
+            )}
+          >
+            <span className={ruleMarkClass} aria-hidden="true" />
+            {kicker}
+          </p>
+
+          <h1 className={cn('text-4xl md:text-6xl', displayClass, strongTextClass)}>{title}</h1>
+
+          <p className={cn('max-w-measure text-base leading-relaxed', bodyTextClass)}>
+            {description}
+          </p>
+        </div>
+
+        {/*
+          The colophon. `div` rather than `dl`: Storybook's documentation styles
+          italicise `dt` and indent `dd`, which turns a ruled technical block
+          into a quotation.
+        */}
+        <div className="flex min-w-[13rem] flex-col justify-end">
+          <div className={cn('divide-y border-t', dividerBorderClass)}>
+            {facts.map(({ label, value }) => (
+              <div key={label} className="flex items-baseline justify-between gap-6 py-2">
+                <span className={cn('text-xs', mutedTextClass)}>{label}</span>
+                <span className={cn('font-mono text-xs font-semibold tabular-nums', strongTextClass)}>
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/*
+        The ramp, printed edge to edge as one continuous band — eleven steps
+        with no gaps, so it reads as a single measured run of ink rather than
+        eleven chips. Every cover in the documentation is signed by the palette
+        it is written in.
+      */}
+      <div className="flex h-2" aria-hidden="true">
+        {scale.map(([shade, hex]) => (
+          <span key={shade} className="flex-1" style={{ backgroundColor: hex }} />
+        ))}
+      </div>
+    </header>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Introduction cover                                                         */
+/* -------------------------------------------------------------------------- */
 
 export function Hero() {
   const t = useI18n().docs.introduction;
 
   return (
-    <div
-      className={cn(
-        'sb-unstyled mb-14 overflow-hidden rounded-2xl border border-brand-500/20 dark:border-brand-400/20',
-        'bg-gradient-to-br from-brand-100 via-brand-50 to-ai-50 p-8 shadow-card md:p-10',
-        'dark:from-brand-500/20 dark:via-slate-900 dark:to-ai-500/20'
-      )}
-    >
-      <div>
-        <div className="flex flex-col items-start gap-4">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:border-brand-400/30 dark:bg-slate-900/70 dark:text-brand-300">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            {t.heroKicker}
-          </p>
-
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 md:text-5xl">
-            @aquellec/ui
-          </h1>
-
-          <p className={cn('max-w-2xl text-base leading-relaxed md:text-lg', subtleTextClass)}>
-            {t.heroDescription}
-          </p>
-
-          <ul className="flex list-none flex-wrap gap-2 pt-3">
-            {heroChips.map(({ key, icon: Icon, className }) => (
-              <li
-                key={key}
-                className={cn(
-                  'inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium',
-                  className
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                {t.chips[key]}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
+    <PageCover
+      kicker={t.heroKicker}
+      title="aquellec/ui"
+      description={t.heroDescription}
+      facts={t.facts}
+    />
   );
 }
 
@@ -256,7 +330,7 @@ export function Pillars() {
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t[key].title}</p>
+              <p className="text-sm font-semibold text-ink-900 dark:text-ink-100">{t[key].title}</p>
             </div>
             <p className={cn('text-sm leading-relaxed', subtleTextClass)}>{t[key].body}</p>
           </div>
@@ -388,7 +462,7 @@ export function Families() {
             {links.map(({ label, href }, index) => (
               <React.Fragment key={label}>
                 {index > 0 && (
-                  <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
+                  <span className="text-ink-300 dark:text-ink-600" aria-hidden="true">
                     ·
                   </span>
                 )}
@@ -446,20 +520,20 @@ export function Governance() {
   return (
     <div className={cn('sb-unstyled my-4 overflow-x-auto', cardSurface)}>
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+        <thead className="border-b border-ink-200 bg-ink-50 dark:border-ink-700 dark:bg-ink-800/60">
           <tr>
-            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
+            <th scope="col" className="p-3 font-semibold text-ink-900 dark:text-ink-100">
               {t.axis}
             </th>
-            <th scope="col" className="p-3 font-semibold text-slate-900 dark:text-slate-100">
+            <th scope="col" className="p-3 font-semibold text-ink-900 dark:text-ink-100">
               {t.practice}
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+        <tbody className="divide-y divide-ink-100 dark:divide-ink-800">
           {governance.map(({ axis, icon: Icon, accent, practice }) => (
             <tr key={axis}>
-              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-slate-900 dark:text-slate-100">
+              <th scope="row" className="whitespace-nowrap p-3 text-left font-medium text-ink-900 dark:text-ink-100">
                 <span className="flex items-center gap-2">
                   <span
                     className={cn(
@@ -518,7 +592,7 @@ export function IntroHeading({ id }: { id: IntroHeadingKey }) {
   return (
     <h3
       id={anchorSlug(id)}
-      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50"
+      className="sb-unstyled mb-2 mt-8 text-lg font-bold tracking-tight text-ink-900 dark:text-ink-50"
     >
       {text}
     </h3>

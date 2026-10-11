@@ -13,9 +13,25 @@ export * from './components/Textarea';
 export * from './components/Input';
 
 export { cn } from './lib/cn';
-export { aquellecColors, aquellecThemeExtensions, type AquellecColors } from './lib/design-tokens';
+export {
+  aquellecColors,
+  aquellecMotion,
+  aquellecSurfaceVariables,
+  aquellecThemeExtensions,
+  type AquellecColors,
+  type AquellecMotion,
+} from './lib/design-tokens';
 export { focusRing, focusRingDanger, focusRingGhost } from './lib/focus-ring';
-export { getScoreTextClass } from './lib/score-tier';
+export {
+  dataFigureClass,
+  leadingMarkClass,
+  mastheadRuleClass,
+  ruleMarkClass,
+  thresholdMarkClass,
+  thresholdStrokeClass,
+  type MarkAccent,
+} from './lib/mark';
+export { getScoreTextClass, SCORE_TIER_HIGH, SCORE_TIER_MEDIUM } from './lib/score-tier';
 export { resolveSectionHeading, type SectionHeadingElement } from './lib/heading';
 export {
   aiAccentClass,
@@ -24,6 +40,7 @@ export {
   controlBorderClass,
   dividerBorderClass,
   errorTextClass,
+  invertedSurfaceClass,
   mutedTextClass,
   pageSurfaceClass,
   placeholderClass,

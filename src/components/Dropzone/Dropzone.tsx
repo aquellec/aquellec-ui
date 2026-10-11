@@ -1,7 +1,11 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { UploadCloud, FileText, X, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/cn';
-import { errorTextClass, subtleTextClass } from '../../lib/semantic-colors';
+import {
+  mutedTextClass,
+  raisedSurfaceClass,
+  subtleTextClass,
+} from '../../lib/semantic-colors';
 import { focusRing, focusRingGhost } from '../../lib/focus-ring';
 
 /**
@@ -247,16 +251,26 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     const dropzoneLabel = labels.inputLabel(multiple);
     const removeLabel = labels.remove(multiple);
 
+    /*
+      The empty state is the state this component spends most of its life in, so
+      it is designed rather than defaulted: a dashed boundary at the weight every
+      other control in the system uses, a light recess behind it, and the
+      accepted format stated before the drop rather than after it. Dragging a
+      file over does not bounce or glow — the dashes turn cobalt and the recess
+      tints, which is the whole animation a drop target needs.
+    */
     const dropzoneSurfaceClassName = cn(
-      'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ease-in-out',
+      'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8',
+      'transition-colors duration-150 ease-settle motion-reduce:transition-none',
       focusRing,
       isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
       isDragActive
-        ? 'border-brand-500 bg-brand-50/50 scale-[0.99] dark:border-brand-400 dark:bg-brand-500/10'
-        : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 dark:border-slate-600 dark:hover:border-slate-500 dark:bg-slate-800/40 dark:hover:bg-slate-800/70',
-      error && 'border-red-400 bg-red-50/30',
-      isLoading && 'border-brand-500 bg-brand-50/50 cursor-wait dark:border-brand-400 dark:bg-brand-500/10',
-      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent border-slate-200 dark:border-slate-700'
+        ? 'border-brand-600 bg-brand-50 dark:border-brand-400 dark:bg-brand-500/15'
+        : 'border-ink-400 bg-ink-50 hover:border-ink-500 hover:bg-ink-100 dark:border-ink-500 dark:bg-ink-800/60 dark:hover:border-ink-400 dark:hover:bg-ink-800',
+      error && 'border-brick-500 bg-brick-50 dark:border-brick-400 dark:bg-brick-500/10',
+      isLoading &&
+        'cursor-wait border-brand-600 bg-brand-50 dark:border-brand-400 dark:bg-brand-500/10',
+      isDisabled && !isLoading && 'opacity-60 hover:bg-transparent'
     );
 
     return (
@@ -277,25 +291,33 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
 
         {hasSelection ? (
           <div
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs dark:border-slate-700 dark:bg-slate-900"
+            /*
+              A selected file leaves the dashed target and becomes a raised
+              sheet. The change of state is carried by elevation and by the file
+              name appearing, which is all it ever needed.
+            */
+            className={cn(
+              'flex w-full items-center justify-between rounded-xl p-3.5 shadow-card',
+              raisedSurfaceClass
+            )}
             aria-describedby={error ? errorId : undefined}
           >
             <div className="flex min-w-0 items-center space-x-3 truncate">
-              <div className="rounded-lg bg-brand-50 p-2 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+              <div className="rounded-lg bg-brand-50 p-2 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                 <FileText className="h-6 w-6" aria-hidden="true" />
               </div>
               <div className="truncate text-left">
                 {multiple ? (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                    <p className="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">
                       {labels.selection(displayedFiles.length)}
                     </p>
                     <p
                       className={cn(
                         'text-xs',
                         isLoading
-                          ? 'text-brand-600 dark:text-brand-300'
-                          : 'text-slate-500 dark:text-slate-400'
+                          ? 'text-brand-700 dark:text-brand-300'
+                          : mutedTextClass
                       )}
                     >
                       {isLoading ? labels.uploading : labels.totalSize(formatFileSize(totalSize))}
@@ -303,15 +325,15 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                   </>
                 ) : (
                   <>
-                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                    <p className="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">
                       {displayedFile!.name}
                     </p>
                     <p
                       className={cn(
                         'text-xs',
                         isLoading
-                          ? 'text-brand-600 dark:text-brand-300'
-                          : 'text-slate-500 dark:text-slate-400'
+                          ? 'text-brand-700 dark:text-brand-300'
+                          : mutedTextClass
                       )}
                     >
                       {isLoading ? labels.uploading : formatFileSize(displayedFile!.size)}
@@ -322,7 +344,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
             </div>
             {isLoading ? (
               <Loader2
-                className="h-5 w-5 flex-shrink-0 animate-spin text-brand-600 dark:text-brand-300"
+                className="h-5 w-5 flex-shrink-0 animate-spin text-brand-700 dark:text-brand-300"
                 aria-label={labels.uploadingStatus}
               />
             ) : (
@@ -331,7 +353,8 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                 onClick={clearSelection}
                 disabled={isDisabled}
                 className={cn(
-                  'rounded-md p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800',
+                  'rounded-md p-1 transition-colors duration-150 ease-settle motion-reduce:transition-none',
+                  'hover:bg-ink-100 dark:hover:bg-ink-800',
                   subtleTextClass,
                   focusRingGhost
                 )}
@@ -352,15 +375,13 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
           >
             {isLoading ? (
               <div className="flex flex-col items-center text-center" role="status" aria-live="polite">
-                <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                <div className="mb-3 rounded-full bg-brand-100 p-3 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                   <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                <p className="mb-1 text-sm font-semibold text-ink-900 dark:text-ink-50">
                   {labels.loadingTitle}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {labels.loadingHint(multiple)}
-                </p>
+                <p className={cn('text-xs', mutedTextClass)}>{labels.loadingHint(multiple)}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center text-center">
@@ -368,19 +389,19 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
                   className={cn(
                     'mb-3 rounded-full p-3 transition-colors',
                     isDragActive
-                      ? 'bg-brand-100 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300'
-                      : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                      ? 'bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-300'
+                      : 'bg-ink-200 text-ink-600 dark:bg-ink-800 dark:text-ink-300'
                   )}
                 >
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
-                  <span className="text-brand-600 dark:text-brand-300 underline underline-offset-2">
+                <p className="mb-1 text-sm font-medium text-ink-800 dark:text-ink-100">
+                  <span className="text-brand-700 underline decoration-brand-600/40 underline-offset-4 dark:text-brand-300 dark:decoration-brand-400/40">
                     {labels.browse}
                   </span>{' '}
                   {labels.dropHint(multiple)}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className={cn('text-xs', mutedTextClass)}>
                   {labels.constraint(maxSizeMB, multiple)}
                 </p>
               </div>
@@ -389,8 +410,21 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
         )}
 
         {error && (
-          <div id={errorId} role="alert" className={cn('mt-2 flex items-center space-x-1.5 text-xs', errorTextClass)}>
-            <AlertCircle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+          /*
+            The error is a marked strip rather than a line of red text under the
+            box. A parsing failure is the moment a candidate most needs to be
+            told what to do next, and a designed error state is what makes the
+            difference between "something broke" and "this file is not a PDF".
+          */
+          <div
+            id={errorId}
+            role="alert"
+            className={cn(
+              'mt-2 flex items-start gap-2 rounded-md bg-brick-100 px-3 py-2.5 text-xs font-medium',
+              'text-brick-900 dark:bg-brick-500/20 dark:text-brick-100'
+            )}
+          >
+            <AlertCircle className="mt-px h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span>{error}</span>
           </div>
         )}
