@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useEffect, useId, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { resolveSectionHeading, type SectionHeadingElement } from '../../lib/heading';
+import { mastheadRuleClass } from '../../lib/mark';
+import {
+  dividerBorderClass,
+  mutedTextClass,
+  raisedSurfaceClass,
+  strongTextClass,
+  sunkenSurfaceClass,
+} from '../../lib/semantic-colors';
 
 const CardTitleContext = createContext<{
   setTitleId: (id: string | undefined) => void;
@@ -45,23 +53,26 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          'flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800',
-          className
-        )}
+        className={cn('relative flex items-center justify-between pb-4', className)}
         {...props}
       >
-        <div className="flex-1 min-w-0">
+        {/*
+          A hairline under the header, and nothing heavier. The card has no
+          outline of its own; what separates the header from the body is this
+          line plus the space either side of it.
+        */}
+        <span className={cn('absolute inset-x-0 bottom-0', mastheadRuleClass)} aria-hidden="true" />
+        <div className="min-w-0 flex-1">
           {title && (
             <TitleElement
               id={resolvedTitleId}
-              className="text-base font-semibold text-slate-800 dark:text-slate-100"
+              className={cn('text-lg font-semibold tracking-tight', strongTextClass)}
             >
               {title}
             </TitleElement>
           )}
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{subtitle}</p>
+            <p className={cn('mt-0.5 text-xs', mutedTextClass)}>{subtitle}</p>
           )}
           {children}
         </div>
@@ -91,8 +102,9 @@ export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
       <div
         ref={ref}
         className={cn(
-          'pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500',
-          'dark:border-slate-800 dark:text-slate-400',
+          'flex items-center justify-between border-t pt-4 text-xs',
+          dividerBorderClass,
+          mutedTextClass,
           className
         )}
         {...props}
@@ -110,22 +122,39 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const [headerTitleId, setHeaderTitleId] = useState<string>();
     const ariaLabelledBy = labelledBy ?? headerTitleId;
 
+    /*
+      Solid borders rather than 80% alpha: on the warm page background of the
+      dashboards, a translucent border almost disappears at 375px, where the
+      card outline is the only thing separating two sections.
+
+      Elevation follows one light source. `default` rests on the page and lifts
+      on hover — one step up the ladder, never two, and never a colour change
+      standing in for a shadow.
+    */
+    /*
+      Elevation, not outlines.
+
+      `default` is a white sheet on a white page, told apart by a shadow and by
+      the space around it. That is the whole change: a dashboard built from
+      grey-bordered rectangles reads as a form, and this one has to read as a
+      page. `outline` keeps a border because being drawn is its entire job — and
+      it is drawn properly, in two pixels of full ink, not a hairline.
+    */
     const variants = {
+      default: cn(raisedSurfaceClass, 'shadow-card hover:shadow-raised'),
+      outline: cn(
+        'border-2 bg-transparent border-ink-900 dark:border-ink-100'
+      ),
       /*
-        Solid border rather than 80% alpha: on the `slate-50` page background of
-        the dashboards, a translucent border almost disappears at 375px, where
-        the card outline is the only thing separating two sections.
+        The AI card is emphasised by elevation, not by an accent. It sits one
+        step up the ladder from `default` and nothing else about it is coloured:
+        what identifies it as machine-written is the badge in its header and the
+        black AI action inside it, both of which say so in words. A stray
+        coloured bar down the edge said it in a second brand colour, which is
+        the habit this pass exists to break.
       */
-      default:
-        'bg-white border border-slate-200 shadow-card hover:shadow-md dark:bg-slate-900 dark:border-slate-700',
-      outline: 'bg-transparent border border-slate-300 dark:border-slate-600',
-      /*
-        The `ai` gradient keeps its diagonal wash in dark mode, at a much lower
-        opacity: the tint has to read as a hint of colour on the surface, not
-        repaint the card.
-      */
-      ai: 'bg-gradient-to-br from-ai-50/50 via-white to-brand-50/30 border border-ai-200/70 shadow-card dark:from-ai-500/10 dark:via-slate-900 dark:to-brand-500/10 dark:border-ai-500/25',
-      ghost: 'bg-slate-50/80 border border-transparent dark:bg-slate-800/50',
+      ai: cn(raisedSurfaceClass, 'shadow-raised'),
+      ghost: cn(sunkenSurfaceClass),
     };
 
     return (
@@ -138,7 +167,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
             the screen. Desktop spacing is unchanged.
           */
           className={cn(
-            'rounded-2xl p-4 sm:p-5 transition-all duration-200',
+            'rounded-2xl p-5 transition-all duration-150 ease-settle motion-reduce:transition-none sm:p-6',
             variants[variant],
             className
           )}

@@ -26,6 +26,11 @@ import { join, resolve } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
 const dist = join(root, 'dist');
 
+/** Escapes a value for literal use inside a regular expression. */
+function literal(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 for (const file of ['tailwind-preset.mjs', 'theme.css', 'index.mjs']) {
   if (!existsSync(join(dist, file))) {
     console.error(`dist/${file} is missing — run \`pnpm build\` first.`);
@@ -33,14 +38,86 @@ for (const file of ['tailwind-preset.mjs', 'theme.css', 'index.mjs']) {
   }
 }
 
-/* Properties a consumer actually depends on, whichever path they took. */
+/*
+  Expectations are derived, not transcribed.
+
+  Three of these checks used to pin literal hex values and a literal `slate`
+  class name. They were guarding the right behaviour — that the tokens reach a
+  consumer, and that `dark:` binds to the class strategy rather than to a media
+  query — but they asserted it against a snapshot of the palette, so the first
+  redesign that moved a token failed CI while telling the reader nothing about
+  what had actually broken.
+
+  The values now come out of `dist/theme.css`, which the generator writes from
+  `src/lib/design-tokens.ts`. That makes the colour checks stronger rather than
+  weaker: the `@config` path compiles through the JavaScript preset and inlines
+  its own literal, so asserting it against the stylesheet's declared value is a
+  direct test that the package's two renderings of one token file still agree.
+
+  Read from the built stylesheet rather than imported from the TypeScript source
+  because this script runs on plain `node`, with no type stripping.
+*/
+const themeCss = readFileSync(join(dist, 'theme.css'), 'utf8');
+
+function themeToken(name) {
+  const match = themeCss.match(new RegExp(`--${literal(name)}:\\s*([^;]+);`));
+  if (!match) {
+    console.error(`dist/theme.css declares no --${name}. The generator and this check disagree.`);
+    process.exit(1);
+  }
+  return match[1].trim();
+}
+
+const brandAction = themeToken('color-brand-600');
+const semanticMuted = themeToken('color-semantic-muted');
+
+/*
+  A dark-mode class the library actually emits. Asserting on one the components
+  no longer use would only prove that the fixture below still mentions it, so
+  its presence in the bundle is checked first: if the surface constants are
+  renamed, this fails with an instruction rather than a mystery.
+*/
+const DARK_SURFACE_CLASS = 'dark:bg-ink-900';
+
+if (!readFileSync(join(dist, 'index.mjs'), 'utf8').includes(DARK_SURFACE_CLASS)) {
+  console.error(
+    `dist/index.mjs no longer emits \`${DARK_SURFACE_CLASS}\`. Point DARK_SURFACE_CLASS at a ` +
+      'dark-mode class the components do emit — the class-strategy check is only ' +
+      'meaningful against one the library actually ships.'
+  );
+  process.exit(1);
+}
+
+/*
+  Properties a consumer actually depends on, whichever path they took.
+
+  Each colour check accepts either the compiled literal (the `@config` path, where
+  Tailwind 4 inlines the value) or the custom property (the `theme.css` path,
+  where it emits a `var()`), because the two paths legitimately differ in how they
+  reach the same value.
+*/
 const shared = [
-  ['brand scale', /\.bg-brand-600\s*\{[^}]*(#0052cc|--color-brand-600)/],
-  ['semantic scale', /\.text-semantic-muted\s*\{[^}]*(#64748b|--color-semantic-muted)/],
+  [
+    'brand scale',
+    new RegExp(
+      `\\.bg-brand-600\\s*\\{[^}]*(${literal(brandAction)}|--color-brand-600)`,
+      'i'
+    ),
+  ],
+  [
+    'semantic scale',
+    new RegExp(
+      `\\.text-semantic-muted\\s*\\{[^}]*(${literal(semanticMuted)}|--color-semantic-muted)`,
+      'i'
+    ),
+  ],
   ['custom shadow', /\.shadow-card\s*\{[^}]*15 23 42/],
   // The load-bearing one: a media-query fallback breaks every application
   // driving the theme from a toggle.
-  ['dark uses the class strategy', /\.dark\\:bg-slate-900:(is|where)\(\s*\.dark/],
+  [
+    'dark uses the class strategy',
+    new RegExp(`\\.${literal(DARK_SURFACE_CLASS).replace(':', '\\\\:')}:(is|where)\\(\\s*\\.dark`),
+  ],
   ['dark does not fall back to the media query', /^(?!.*prefers-color-scheme: dark).*$/s],
   // These assert the declarations the preset emits, not merely the at-rule:
   // Tailwind 4 ships its own reduced-motion block and color-scheme utilities.
@@ -88,7 +165,7 @@ function viaConfig(work) {
   );
   writeFileSync(
     join(work, 'content.html'),
-    '<div class="bg-brand-600 text-semantic-muted shadow-card dark:bg-slate-900"></div>\n'
+    `<div class="bg-brand-600 text-semantic-muted shadow-card ${DARK_SURFACE_CLASS}"></div>\n`
   );
   writeFileSync(join(work, 'input.css'), '@import "tailwindcss";\n@config "./tailwind.config.js";\n');
   return compile(work);

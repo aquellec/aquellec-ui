@@ -2,7 +2,8 @@ import React from 'react';
 import { Check, Sparkles } from 'lucide-react';
 import { Button } from '../Button';
 import { cn } from '../../lib/cn';
-import { mutedTextClass } from '../../lib/semantic-colors';
+import { dataFigureClass } from '../../lib/mark';
+import { mutedTextClass, raisedSurfaceClass, strongTextClass } from '../../lib/semantic-colors';
 
 export interface PricingFeature {
   /** Feature label displayed in the pricing list. */
@@ -68,35 +69,54 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
       <div
         ref={ref}
         className={cn(
-          'relative flex flex-col p-6 rounded-2xl transition-all duration-200 bg-white border',
-          'dark:bg-slate-900',
-          isPopular
-            ? 'border-ai-500 shadow-md ring-1 ring-ai-500 dark:border-ai-400 dark:ring-ai-400'
-            : 'border-slate-200 hover:border-slate-300 shadow-xs dark:border-slate-700 dark:hover:border-slate-600',
+          'relative flex flex-col rounded-2xl p-6',
+          'transition-all duration-150 ease-settle motion-reduce:transition-none',
+          raisedSurfaceClass,
+          /*
+            The recommended plan is one step up the elevation ladder and wears
+            the AI mark — not a second, brighter card in a different visual
+            language. Everything else on the row stays put.
+          */
+          /*
+            The recommended plan is one step up the elevation ladder and wears
+            the brand tag. Emphasis is elevation plus the one brand hue — never
+            a second accent invented for the occasion.
+          */
+          isPopular ? 'shadow-raised' : 'shadow-card hover:shadow-raised',
           className
         )}
         {...props}
       >
         {isPopular && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-ai-600 to-brand-600 text-white text-[11px] font-semibold rounded-full shadow-xs flex items-center space-x-1">
-            <Sparkles className="w-3 h-3" aria-hidden="true" />
+          /*
+            A solid tag, squared like every other label in the system, sitting on
+            the card's top edge rather than a gradient pill floating above it.
+          */
+          <div className="absolute -top-3 left-6 flex items-center gap-1.5 rounded-md bg-brand-600 px-2.5 py-1 text-xs font-semibold uppercase tracking-eyebrow text-white shadow-xs dark:bg-brand-500">
+            <Sparkles className="h-3 w-3" aria-hidden="true" />
             <span>{badgeText}</span>
           </div>
         )}
 
         <div className="mb-5">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 min-h-[32px]">{description}</p>
+          <h3 className={cn('text-xl font-semibold tracking-tight', strongTextClass)}>{title}</h3>
+          <p className={cn('mt-1 min-h-[32px] text-xs', mutedTextClass)}>{description}</p>
         </div>
 
         <div className="flex items-baseline mb-6">
-          <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
+          <span
+            className={cn(
+              'aq-display font-display text-6xl font-bold tracking-masthead',
+              dataFigureClass,
+              strongTextClass
+            )}
+          >
             {price}
           </span>
           {/* Rendered only when a period is provided: no magic value to compare
               the price against, which would tie the component to one language. */}
           {period && (
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">{period}</span>
+            <span className={cn('ml-1.5 text-xs font-medium', mutedTextClass)}>{period}</span>
           )}
         </div>
 
@@ -108,8 +128,8 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
                 className={cn(
                   'p-0.5 rounded-full mr-2.5 mt-0.5 flex-shrink-0',
                   feature.included
-                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300'
-                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                    ? 'bg-moss-100 text-moss-800 dark:bg-moss-500/15 dark:text-moss-300'
+                    : 'bg-ink-200 text-ink-600 dark:bg-ink-800 dark:text-ink-300'
                 )}
                 aria-hidden="true"
               >
@@ -118,7 +138,7 @@ export const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
               <span
                 className={
                   feature.included
-                    ? 'text-slate-700 dark:text-slate-200'
+                    ? 'text-ink-800 dark:text-ink-100'
                     : cn(mutedTextClass, 'line-through')
                 }
               >

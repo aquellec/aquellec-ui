@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/cn';
-import { mutedTextClass } from '../../lib/semantic-colors';
+import { dataFigureClass, thresholdMarkClass } from '../../lib/mark';
+import { dividerBorderClass, mutedTextClass, sunkenSurfaceClass } from '../../lib/semantic-colors';
 
 export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Current value, expressed in the same unit as `max`. */
@@ -54,29 +55,41 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
     const percentage =
       max > 0 ? Math.min(Math.max(Math.round((value / max) * 100), 0), 100) : 0;
 
+    /*
+      The `-600` step in light rather than the customary `-500`: measured
+      against the `ink-200` rail, only `-600` clears the 3:1 WCAG 1.4.11 asks of
+      a graphic that carries meaning. Ochre is the one that exposed it — at
+      `-500` it sat at 2.83:1 and looked fine to anyone who did not measure.
+    */
     const progressColor =
       percentage >= thresholds.danger
-        ? 'bg-rose-500 dark:bg-rose-400'
+        ? 'bg-brick-600 dark:bg-brick-400'
         : percentage >= thresholds.warning
-          ? 'bg-amber-500 dark:bg-amber-400'
+          ? 'bg-ochre-600 dark:bg-ochre-400'
           : 'bg-brand-600 dark:bg-brand-400';
+
+    /*
+      The threshold form of the mark, on a straight rail: the two points where
+      this bar changes what it means. A quota bar that turns amber with no
+      indication of where amber began asks the reader to guess; these say it.
+      Only thresholds that fall inside the rail are drawn.
+    */
+    const markedThresholds = [thresholds.warning, thresholds.danger].filter(
+      (threshold) => threshold > 0 && threshold < 100
+    );
 
     const counter = formatValue ? (
       formatValue(value, max)
     ) : (
       <>
-        <strong className="font-bold text-slate-800 dark:text-slate-100">{value}</strong> / {max}
+        <strong className="font-semibold text-ink-900 dark:text-ink-50">{value}</strong> / {max}
       </>
     );
 
     return (
       <div
         ref={ref}
-        className={cn(
-          'rounded-xl border border-slate-200/80 bg-slate-50 p-4',
-          'dark:border-slate-700 dark:bg-slate-800/50',
-          className
-        )}
+        className={cn('rounded-xl p-4', sunkenSurfaceClass, className)}
         {...props}
       >
         {(label || icon || formatValue) && (
@@ -88,12 +101,14 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
                 </span>
               )}
               {label && (
-                <span className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <span className="truncate text-xs font-semibold uppercase tracking-eyebrow text-ink-800 dark:text-ink-100">
                   {label}
                 </span>
               )}
             </div>
-            <span className={cn('shrink-0 text-xs font-medium', mutedTextClass)}>{counter}</span>
+            <span className={cn('shrink-0 text-xs font-medium', dataFigureClass, mutedTextClass)}>
+              {counter}
+            </span>
           </div>
         )}
 
@@ -104,19 +119,32 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           aria-valuenow={value}
           aria-valuetext={`${percentage}%`}
           aria-label={ariaLabel ?? label}
-          className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+          className="relative h-3 w-full overflow-hidden rounded-full bg-ink-200 dark:bg-ink-800"
         >
           <div
             className={cn(
-              'h-full rounded-full transition-all duration-500 ease-out motion-reduce:transition-none',
+              'h-full rounded-full transition-all duration-700 ease-settle motion-reduce:transition-none',
               progressColor
             )}
             style={{ width: `${percentage}%` }}
           />
+          {markedThresholds.map((threshold) => (
+            <span
+              key={threshold}
+              aria-hidden="true"
+              className={thresholdMarkClass}
+              style={{ left: `${threshold}%` }}
+            />
+          ))}
         </div>
 
         {(helperText || action) && (
-          <div className="mt-3 flex items-center justify-between gap-3 border-t border-slate-200/60 dark:border-slate-700/60 pt-2">
+          <div
+            className={cn(
+              'mt-3 flex items-center justify-between gap-3 border-t pt-2.5',
+              dividerBorderClass
+            )}
+          >
             {helperText ? (
               <span className={cn('text-xs', mutedTextClass)}>{helperText}</span>
             ) : (

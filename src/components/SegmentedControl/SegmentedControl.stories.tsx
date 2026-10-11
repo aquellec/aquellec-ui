@@ -45,12 +45,12 @@ const workspaceOptions = (t: Dictionary): SegmentedControlOption[] => [
   {
     value: 'candidate',
     label: t.segmented.workspace.candidate,
-    icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
+    icon: <User className="h-3.5 w-3.5" />,
   },
   {
     value: 'recruiter',
     label: t.segmented.workspace.recruiter,
-    icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
+    icon: <Briefcase className="h-3.5 w-3.5" />,
   },
 ];
 
@@ -99,9 +99,9 @@ export const RoleSwitcherDemo: Story = {
           onChange={setWorkspace}
           ariaLabel={t.segmented.workspace.label}
         />
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-ink-500 dark:text-ink-300">
           {t.segmented.workspace.active}{' '}
-          <strong className="text-slate-800 dark:text-slate-100">{workspace}</strong>
+          <strong className="text-ink-800 dark:text-ink-100">{workspace}</strong>
         </p>
       </div>
     );

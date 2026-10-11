@@ -1,0 +1,51 @@
+<!--
+  The typefaces of the system, loaded for the canvas and the documentation
+  pages.
+
+  `theme.ts` has always *named* Inter and JetBrains Mono without ever fetching
+  them, so the chrome quietly rendered in system-ui and the type in the
+  screenshots was never the type in the tokens. This is the file that makes the
+  names true, and that brings in Archivo — the masthead face the whole hierarchy
+  argument depends on.
+
+  `display=swap` and a complete fallback stack in `design-tokens.ts` mean a
+  build with no network — CI, an air-gapped review, a slow first paint —
+  renders a coherent page in Helvetica / system-ui rather than a broken one.
+  Nothing in the library depends on these files arriving.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..600&display=swap"
+/>
+
+
+<style>
+  /*
+    Inter's default figures are proportional, which is right for prose and wrong
+    for the tables, gauges and quota counters this library exists to render.
+    Components opt into `tabular-nums` where digits have to stack; here we only
+    ask for the contextual alternates and the disambiguated glyphs, so a
+    lowercase l is not an uppercase I in a candidate's name.
+  */
+  :root {
+    font-feature-settings:
+      'cv05' 1,
+      'cv08' 1;
+  }
+
+  /*
+    Archivo carries a width axis, and the whole masthead voice of this system
+    lives on it. Pushed to 112 the face widens into something that reads as a
+    headline rather than as a heading — the difference between a page that has
+    a lead story and a page that has a list of sections.
+
+    Applied through a class rather than baked into the font stack because the
+    same family is used at label size elsewhere, where widening it would only
+    make it harder to read.
+  */
+  .aq-display {
+    font-variation-settings: 'wdth' 112;
+  }
+</style>

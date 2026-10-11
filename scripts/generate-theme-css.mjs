@@ -23,9 +23,10 @@ import { resolve } from 'node:path';
   generator depends on nothing but the source of truth. Hence the `--
   experimental-strip-types` flag on the `build` script.
 */
-const { aquellecColors, aquellecThemeExtensions } = await import(
-  resolve(import.meta.dirname, '..', 'src', 'lib', 'design-tokens.ts')
-);
+const { aquellecColors, aquellecMotion, aquellecSurfaceVariables, aquellecThemeExtensions } =
+  await import(
+    resolve(import.meta.dirname, '..', 'src', 'lib', 'design-tokens.ts')
+  );
 
 /** `semantic.success.fg` -> `semantic-success-fg`, leaving flat entries alone. */
 function flatten(value, path = []) {
@@ -33,17 +34,76 @@ function flatten(value, path = []) {
   return Object.entries(value).flatMap(([key, child]) => flatten(child, [...path, key]));
 }
 
-const colors = flatten(aquellecColors)
-  .map(([name, hex]) => `  --color-${name}: ${hex};`)
+/** Emits one `--<namespace>-<name>: <value>;` line per entry, in declaration order. */
+function block(namespace, entries) {
+  return entries.map(([name, value]) => `  --${namespace}-${name}: ${value};`).join('\n');
+}
+
+const colors = block(
+  'color',
+  flatten(aquellecColors)
+);
+
+/*
+  A family name containing a space has to survive the round trip into CSS, so it
+  is quoted here rather than in the token file — where it is data, not syntax.
+*/
+const fonts = block(
+  'font',
+  Object.entries(aquellecThemeExtensions.fontFamily).map(([name, stack]) => [
+    name,
+    stack.map((family) => (family.includes(' ') ? `"${family}"` : family)).join(', '),
+  ])
+);
+
+/*
+  Tailwind 4 attaches a size's leading and tracking to the size itself, through
+  the `--text-<name>--line-height` and `--text-<name>--letter-spacing` suffixes.
+  That is the whole reason the scale is stored as `[size, { lineHeight,
+  letterSpacing }]` upstream: one shape renders to both majors, and a size can
+  never arrive somewhere without the two values that make it a decision.
+*/
+const typeScale = Object.entries(aquellecThemeExtensions.fontSize)
+  .flatMap(([name, [size, { lineHeight, letterSpacing }]]) => [
+    `  --text-${name}: ${size};`,
+    `  --text-${name}--line-height: ${lineHeight};`,
+    `  --text-${name}--letter-spacing: ${letterSpacing};`,
+  ])
   .join('\n');
 
-const radii = Object.entries(aquellecThemeExtensions.borderRadius)
-  .map(([name, value]) => `  --radius-${name}: ${value};`)
-  .join('\n');
+const tracking = block('tracking', Object.entries(aquellecThemeExtensions.letterSpacing));
 
-const shadows = Object.entries(aquellecThemeExtensions.boxShadow)
-  .map(([name, value]) => `  --shadow-${name}: ${value};`)
-  .join('\n');
+const radii = block('radius', Object.entries(aquellecThemeExtensions.borderRadius));
+
+const shadows = block('shadow', Object.entries(aquellecThemeExtensions.boxShadow));
+
+/* `max-w-*` reads the container scale under Tailwind 4, `maxWidth` under 3. */
+const measures = block('container', Object.entries(aquellecThemeExtensions.maxWidth));
+
+const easings = block('ease', Object.entries(aquellecMotion.easing));
+
+/*
+  Durations have no theme namespace in Tailwind 4 — `duration-150` is read as a
+  literal number, not as a scale lookup. They are emitted as plain custom
+  properties so the values stay available to a consumer writing their own CSS,
+  and components spell durations with the numeric utilities, which mean the same
+  milliseconds under both majors.
+*/
+const durations = block('duration', Object.entries(aquellecMotion.duration));
+
+/*
+  Surface variables, emitted into the base layer rather than `@theme`: they are
+  plain custom properties read by a component's inline style, not a scale
+  Tailwind should generate utilities from.
+*/
+function surfaceBlock(values) {
+  return Object.entries(values)
+    .map(([name, value]) => `    ${name}: ${value};`)
+    .join('\n');
+}
+
+const lightSurfaces = surfaceBlock(aquellecSurfaceVariables.light);
+const darkSurfaces = surfaceBlock(aquellecSurfaceVariables.dark);
 
 const css = `/*
   Generated from src/lib/design-tokens.ts by scripts/generate-theme-css.mjs.
@@ -68,9 +128,21 @@ const css = `/*
 @theme {
 ${colors}
 
+${fonts}
+
+${typeScale}
+
+${tracking}
+
 ${radii}
 
 ${shadows}
+
+${measures}
+
+${easings}
+
+${durations}
 }
 
 /*
@@ -87,10 +159,12 @@ ${shadows}
   */
   :root {
     color-scheme: light;
+${lightSurfaces}
   }
 
   .dark {
     color-scheme: dark;
+${darkSurfaces}
   }
 
   /* Neutralises animations when the user asks for reduced motion (WCAG 2.3.3). */
@@ -109,4 +183,7 @@ ${shadows}
 
 const out = resolve(import.meta.dirname, '..', 'dist', 'theme.css');
 writeFileSync(out, css);
-console.log(`theme.css written (${flatten(aquellecColors).length} colour tokens)`);
+console.log(
+  `theme.css written (${flatten(aquellecColors).length} colour tokens, ` +
+    `${Object.keys(aquellecThemeExtensions.fontSize).length} type steps)`
+);

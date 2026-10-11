@@ -175,7 +175,7 @@ export const DragAndDropInteraction: Story = {
     const dropzone = getDropzoneLabel(canvasElement, d.inputLabel(false));
 
     fireEvent.dragOver(dropzone);
-    await expect(dropzone).toHaveClass('border-brand-500');
+    await expect(dropzone).toHaveClass('border-brand-600');
 
     fireEvent.dragLeave(dropzone);
     uploadFiles(canvasElement, [pdfFile('cv-drag.pdf', 512 * 1024)]);
@@ -297,7 +297,7 @@ export const DisabledInteraction: Story = {
     await expect(fileInput).toBeDisabled();
 
     fireEvent.dragOver(dropzone);
-    await expect(dropzone).not.toHaveClass('border-brand-500');
+    await expect(dropzone).not.toHaveClass('border-brand-600');
 
     dropOnDropzone(dropzone, [pdfFile('cv-disabled.pdf')]);
 

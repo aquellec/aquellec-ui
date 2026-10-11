@@ -101,16 +101,280 @@ export const en = {
       tokenUsage: { kicker: 'Consumption', title: 'Using the tokens' },
     },
 
-    introduction: {
-      heroKicker: 'Design System · React 19 · Tailwind CSS',
-      heroDescription:
-        'Typed React component library for recruitment and AI analysis SaaS products: resume parsing, ATS matching, candidate and recruiter workspaces, quotas and score visualisation.',
-      chips: {
-        typescript: 'TypeScript strict',
-        wcag: 'WCAG 2.1 AA',
-        preset: 'Exportable Tailwind preset',
-        storybook: 'Storybook 10 + Vitest',
+    overviews: {
+      labels: {
+        guidance: 'When to reach for it',
+        use: 'Use it when',
+        avoid: 'Use something else when',
+        anatomy: 'In composition',
+        states: 'The states it lives in',
+        mark: 'The rule here',
       },
+
+      states: {
+        analysing: 'Analysing 12 resumes',
+        quotaSpent: 'Monthly quota spent',
+        importedTitle: '12 resumes imported',
+        importedBody: 'Ranked against Senior Front-End Engineer. Two cleared 75%.',
+        quotaTitle: '3 analyses left this month',
+        quotaBody: 'Your plan resets on 1 September.',
+        noApplicants: 'No applications yet. Publish the role or import resumes to start ranking.',
+        emptyPipelineTitle: 'Nothing in the pipeline',
+        emptyPipelineBody:
+          'This role has no applications yet. Import a batch of resumes, or share the posting to start collecting them.',
+        emptyPipelineAction: 'Import resumes',
+        parseFailedTitle: 'Could not read this resume',
+        parseFailedBadge: 'Parsing failed',
+        parseFailedBody:
+          'The file is a scanned image, so there is no text to match against the role. Ask the candidate for a text PDF, or enter the profile by hand.',
+        upgrade: 'Upgrade plan',
+      },
+
+      specimens: {
+        actions: {
+          stageLabel: 'Pipeline stage',
+          screening: 'Screening',
+          interview: 'Interview',
+          offer: 'Offer',
+          runAnalysis: 'Run ATS analysis',
+          advance: 'Advance to interview',
+          requestReferences: 'Request references',
+          archive: 'Archive',
+          caption:
+            'One primary action per view, and exactly one AI action. The Flare rule on the left edge of the analysis button is the only thing on this row that says a model is about to read something.',
+        },
+        forms: {
+          roleLabel: 'Target role',
+          roleHelper: 'The score is computed against this posting.',
+          emailLabel: 'Candidate email',
+          emailError: 'This address is incomplete. It needs a domain after the @.',
+          jobLabel: 'Job description',
+          jobValue:
+            'You will own the front-end of our candidate experience: React, TypeScript, a design system shared with two other squads, and the accessibility work that goes with a product used by people under pressure.',
+          jobHelper: 'The more specific the posting, the more honest the score.',
+          caption:
+            'Every field carries the rule on its leading edge — neutral at rest, cobalt on focus, brick on error. Nothing reflows when the state changes, because the 2px is always there.',
+        },
+        feedback: {
+          matched: 'Match',
+          review: 'Review by hand',
+          rejected: 'Below bar',
+          parsed: 'AI parsed',
+          draft: 'Draft',
+          toastTitle: 'Analysis complete',
+          toastBody: 'Salomé Berthier scored 88% against Senior Front-End Engineer.',
+          errorTitle: 'Could not read 1 of 12 files',
+          errorBody: 'theo-vasseur-cv.pdf is a scanned image. Ask for a text PDF.',
+          caption:
+            'Status is carried by the rule and the word, never by colour alone — the same badge read in greyscale still says Match, Review by hand or Below bar.',
+        },
+        dataDisplay: {
+          quotaLabel: 'Analyses this month',
+          quotaHelper: 'Free plan · resets 1 September',
+          columns: {
+            candidate: 'Candidate',
+            score: 'Match',
+            status: 'Status',
+            received: 'Received',
+          },
+          statuses: { matched: 'Match', review: 'Review', rejected: 'Below bar' },
+          caption:
+            'The threshold ticks are the point. 88 clears the 75 bar, 61 sits between the two, 43 clears neither — and you can see all three without reading a number.',
+        },
+        surfaces: {
+          applicationTitle: 'Salomé Berthier',
+          applicationSubtitle: 'Senior Front-End Engineer · applied 24 August',
+          matched: 'Match',
+          applicationBody:
+            'Eight years in product front-end, four of them on a design system. Every must-have keyword in the posting appears in the resume, with dates that line up.',
+          applicationMeta: 'Screening · owner Nadia',
+          openReport: 'Open report',
+          aiTitle: 'What the model found',
+          aiSubtitle: 'Extracted from the resume, not from the application form',
+          aiBadge: 'AI',
+          aiBody:
+            'Accessibility work is described twice but never named as a skill. Worth asking about in screening — the posting weights it heavily and the match score does not credit it.',
+          aiMeta: 'Generated 24 August · review before sharing',
+          caption:
+            'Two sheets, no outlines. What separates them is elevation and the Flare rule down the second one, which is the only signal that a machine wrote its contents.',
+        },
+        templates: {
+          pages: [
+            {
+              kicker: 'Template',
+              label: 'Candidate dashboard',
+              body: 'Upload, target role, the score as the lead story, quota and history.',
+              href: './?path=/docs/templates-candidatedashboard--documentation',
+            },
+            {
+              kicker: 'Template',
+              label: 'Recruiter dashboard',
+              body: 'Bulk import, pipeline numbers set at masthead size, ranked applications.',
+              href: './?path=/docs/templates-recruiterdashboard--documentation',
+            },
+          ],
+          caption:
+            'The templates are where the hierarchy is argued rather than described: one number dominates, everything else is support.',
+        },
+      },
+
+      families: {
+        actions: {
+          kicker: 'Family · Actions',
+          title: 'Actions',
+          description:
+            'Buttons and exclusive segments. The controls that commit a recruiter to something — advancing a candidate, spending an analysis, changing what the page is about.',
+          facts: [
+            { label: 'Components', value: '2' },
+            { label: 'Button variants', value: '5' },
+            { label: 'Min target', value: '44px' },
+          ],
+          use: [
+            'One primary action per view, and it is the thing the page exists for.',
+            'The ai variant only where a model is about to read or write something.',
+            'SegmentedControl for two to four exclusive views of the same data.',
+          ],
+          avoid: [
+            'Navigating somewhere — that is a link, and a link should look like one.',
+            'More than four segments; past that it is a select, not a control.',
+            'A ghost button as the only action on a screen. Nobody finds it.',
+          ],
+          mark: "On both dashboards the score is set at masthead size on the one inverted panel, and every section head sits on the rule at full width. Those two devices carry the entire page; there is almost no other decoration in it, and exactly one colour that is not a status.",
+          states:
+            'A pending analysis holds its label and spins in place rather than swapping to a spinner — a button that loses its word loses the reason it was pressed. A spent quota disables rather than hides, because the recruiter needs to know the action exists.',
+        },
+        forms: {
+          kicker: 'Family · Forms',
+          title: 'Forms',
+          description:
+            'The fields a hiring decision is assembled from: the target role, the posting text, and the resume itself. Everything a candidate hands over passes through here.',
+          facts: [
+            { label: 'Components', value: '3' },
+            { label: 'Error wiring', value: 'ARIA' },
+            { label: 'Upload limit', value: '5 MB' },
+          ],
+          use: [
+            'Always with a visible label. A placeholder is not a label and disappears when it is needed most.',
+            'Dropzone for resumes, with the accepted format and size stated before the drop, not after.',
+            'Textarea with maxLength for postings, so the counter answers the question before it is asked.',
+          ],
+          avoid: [
+            'Validating on every keystroke. Wait for blur; correcting someone mid-word is hostile.',
+            'Colour as the only sign of an error — the rule, the icon and the sentence all have to agree.',
+            'Hiding the helper text once an error appears. The reader needs both.',
+          ],
+          mark: 'Every field carries the rule on its leading edge at all times: neutral at rest, cobalt on focus, brick on error. It is the cheapest way to make the state of a long form scannable from the side of the screen.',
+          states:
+            'Uploading holds the file name and shows progress against it. A failed parse says what is wrong with the file and what to do about it, in that order — the two things a candidate needs and the two things most upload errors omit.',
+        },
+        feedback: {
+          kicker: 'Family · Feedback',
+          title: 'Feedback',
+          description:
+            'Statuses, notifications and dialogs. Everything that tells someone what just happened to an application, or asks them to confirm something they cannot undo.',
+          facts: [
+            { label: 'Components', value: '3' },
+            { label: 'Live regions', value: 'role=status' },
+            { label: 'Errors', value: 'role=alert' },
+          ],
+          use: [
+            'Badge for a status that belongs to a row: matched, under review, below bar.',
+            'Toast for something that completed while the recruiter was looking elsewhere.',
+            'Modal only when the next action is destructive or genuinely blocking.',
+          ],
+          avoid: [
+            'A toast for something the reader is already watching happen.',
+            'A modal to show information — that is a page, or a card on the one they are on.',
+            'Stacking more than three toasts; past that nobody reads any of them.',
+          ],
+          mark: 'Every semantic surface in this family wears the rule in its own hue on the leading edge, which is what makes a badge, a toast and an AI card legible as one family rather than three tinted rectangles.',
+          states:
+            'An error toast takes role="alert" and is announced immediately; everything else waits its turn on role="status". Nothing auto-dismisses an error, because the one message worth reading is the one most likely to be missed.',
+        },
+        dataDisplay: {
+          kicker: 'Family · Data',
+          title: 'Data display',
+          description:
+            'Scores, rankings, quotas. The components that turn a pile of resumes into an ordering somebody will act on — and the reason this library needed an art direction rather than a palette.',
+          facts: [
+            { label: 'Components', value: '3' },
+            { label: 'Score tiers', value: '75 · 50' },
+            { label: 'Figures', value: 'Tabular' },
+          ],
+          use: [
+            'ScoreGauge when one score is the answer to the page. Set it large; that is the whole point.',
+            'DataTable when the comparison between candidates matters more than any single one.',
+            'ProgressBar for anything with a ceiling: quota, seats, batch progress.',
+          ],
+          avoid: [
+            'A gauge per row. Repeated at small sizes it is decoration; use the number and the badge.',
+            'A score with no threshold marked. A percentage alone tells a candidate nothing.',
+            'Ranking by score without showing the score. Hidden ordering is not a ranking, it is a verdict.',
+          ],
+          mark: 'This is where the rule earns its name. The tier boundaries are drawn onto the gauge arc and the quota rail as 2px ticks, so a score is always read against the bar it had to clear rather than in a vacuum.',
+          states:
+            'An empty table says what to do next rather than announcing that it is empty. A loading table holds the column widths so the page does not jump when the rows land — a table that reflows on arrival makes every scan start over.',
+        },
+        surfaces: {
+          kicker: 'Family · Surfaces',
+          title: 'Surfaces',
+          description:
+            'Cards and plan cards: the sheets everything else is laid on. In this system a surface is defined by elevation and space, almost never by an outline.',
+          facts: [
+            { label: 'Components', value: '2' },
+            { label: 'Card variants', value: '4' },
+            { label: 'Elevation steps', value: '4' },
+          ],
+          use: [
+            'Card to group things that are read together and acted on together.',
+            'The ai variant only for content a model generated, and always labelled as such.',
+            'Card.Header / Body / Footer, so the same anatomy repeats everywhere.',
+          ],
+          avoid: [
+            'A card around a single number. Set the number bigger instead.',
+            'Nesting a card inside a card — use a rule and whitespace.',
+            'An outline where whitespace would do. Most boxes in most dashboards are unnecessary.',
+          ],
+          mark: 'The AI card is a plain sheet with the Flare rule down its leading edge. No gradient, no glow: on a page with almost no outlines, one 2px edge is loud enough to identify the only surface a machine wrote.',
+          states:
+            'An empty pipeline is a card with a sentence and one action, not an illustration and an exclamation mark. A failed parse names the cause and offers the manual route, because the candidate is still waiting either way.',
+        },
+        templates: {
+          kicker: 'Family · Templates',
+          title: 'Templates',
+          description:
+            'Two reference pages that assemble the library in product context — and the place the hierarchy argument is actually settled, because a design system is only as good as the busiest screen it produces.',
+          facts: [
+            { label: 'Templates', value: '2' },
+            { label: 'Breakpoints', value: '4' },
+            { label: 'Hero size', value: '116px' },
+          ],
+          use: [
+            'As the starting point for a real page, not as a screenshot in a deck.',
+            'To check a token change against a busy screen before shipping it.',
+            'To settle an argument about hierarchy with something rendered.',
+          ],
+          avoid: [
+            'Copying them wholesale. They are an argument about emphasis, not a layout to inherit.',
+            'Adding a second hero. The moment two things are the biggest, neither is.',
+          ],
+          mark: 'On both dashboards the score is set at masthead size with its threshold marked underneath, and the section heads sit on the heavy rule. Those two devices carry the whole page; there is almost no other decoration in it.',
+          states:
+            'Both templates ship their empty and their exhausted states, because a recruiter meets the empty one on day one and the exhausted one on the day it matters most.',
+        },
+      },
+    },
+
+    introduction: {
+      heroKicker: 'Design system · Dossier',
+      heroDescription:
+        'A typed React library for hiring software: resumes parsed, roles matched, candidates ranked. It is built to one art direction — warm paper, cool ink, a mark wherever something was measured — because a tool that decides who gets an interview should look like it takes that seriously.',
+      facts: [
+        { label: 'Runtime', value: 'React 18 · 19' },
+        { label: 'Styling', value: 'Tailwind 3 · 4' },
+        { label: 'Contrast floor', value: 'WCAG 2.1 AA' },
+        { label: 'Licence', value: 'MIT' },
+      ],
       pillars: {
         accessibility: {
           title: 'Accessibility first',
@@ -169,7 +433,13 @@ export const en = {
       heroKicker: 'Foundations · Tailwind preset',
       heroTitle: 'Design Tokens',
       heroDescription:
-        'Single source for the foundations: src/lib/design-tokens.ts. The Tailwind preset shipped by the package and this page are both generated from that file, so the values below are always the ones actually compiled.',
+        'One file holds the foundations: src/lib/design-tokens.ts. The Tailwind 3 preset, the Tailwind 4 stylesheet and this page are three renderings of it, so what you read here is what actually compiled. The counts below are measured off the token object as this page renders — they cannot go stale.',
+      factLabels: {
+        hues: 'Hues',
+        colours: 'Colour tokens',
+        typeSteps: 'Type steps',
+        elevations: 'Elevations',
+      },
       brandIntro:
         'Two complete ten-step scales, exported by the preset as brand and ai. Steps 500 / 600 / 700 carry the documented roles — accent, action, AA-compliant text on white.',
       scaleUsage: {
@@ -529,6 +799,15 @@ export const en = {
         action: 'View details',
       },
       score: { label: 'ATS score', status: 'Profile is a match' },
+      hero: {
+        kicker: 'ATS match',
+        against: 'against',
+        verdict:
+          'Clears the 75% bar for this role. Two of the three must-have skills in the posting appear in your resume with dates that line up; the third is described but never named.',
+        scaleReview: 'Review',
+        scaleBar: 'Bar',
+        railLabel: 'Match score against the tier thresholds',
+      },
       quota: {
         title: 'Monthly quota',
         label: 'Analyses this month',
@@ -558,6 +837,16 @@ export const en = {
         matchCaption: 'Across 24 applications',
         compatible: 'Matching profiles',
         toReview: 'To review manually',
+      },
+      hero: {
+        kicker: 'Pipeline',
+        role: 'Senior Front-End Engineer',
+        applications: 'applications',
+        matched: 'cleared the bar',
+        review: 'to review by hand',
+        rejected: 'below the bar',
+        verdict:
+          'Eighteen of twenty-four applications clear 75%. Six sit between the two bars and need a human read before anyone is told anything.',
       },
       upload: {
         title: 'Bulk resume import',

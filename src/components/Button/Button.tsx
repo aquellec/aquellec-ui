@@ -33,40 +33,55 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       page's call to action and have to stay the brightest thing on it. Only
       the neutral variants flip, since they are defined by the surface they
       sit on.
+
+      Every variant carries a 1px transparent border so the box is identical
+      across the set, whether or not the variant draws on it. A variant that
+      changes its own height when you swap it is a variant nobody trusts.
     */
     const variants = {
       primary: cn(
         'bg-brand-600 text-white hover:bg-brand-700',
         /*
-          `brand-400` with near-black copy, measured at 6.33:1. `brand-500`
-          under the same copy only reaches 4.17:1 and fails AA — the dark
-          replay of the suite caught it.
+          `brand-400` with near-black copy, measured at 5.73:1. The saturated
+          `-600` fill that works on white drops white copy below AA once the
+          page behind it is dark, so the pair inverts rather than dims.
         */
-        'dark:bg-brand-400 dark:hover:bg-brand-300 dark:text-slate-950',
+        'dark:bg-brand-400 dark:text-ink-950 dark:hover:bg-brand-300',
         focusRing
       ),
       secondary: cn(
-        'bg-slate-100 text-slate-900 hover:bg-slate-200',
-        'dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
+        'bg-ink-100 text-ink-900 hover:bg-ink-200',
+        'dark:bg-ink-800 dark:text-ink-50 dark:hover:bg-ink-700',
         focusRing
       ),
+      /*
+        Drawn rather than filled, at `ink-400` — the lightest step that still
+        clears the 3:1 WCAG asks of a control boundary. It ran at two pixels of
+        full ink for one pass and turned every secondary action into a hard
+        black frame, which is the register this refinement exists to leave.
+      */
       outline: cn(
-        'border border-slate-300 bg-transparent hover:bg-slate-50 text-slate-700',
-        'dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800',
+        'border-ink-400 bg-transparent text-ink-800 hover:border-ink-500 hover:bg-ink-50',
+        'dark:border-ink-500 dark:text-ink-100 dark:hover:border-ink-400 dark:hover:bg-ink-800',
         focusRing
       ),
       ghost: cn(
-        'bg-transparent hover:bg-slate-100 text-slate-700',
-        'dark:text-slate-200 dark:hover:bg-slate-800',
+        'bg-transparent text-ink-800 hover:bg-ink-100',
+        'dark:text-ink-100 dark:hover:bg-ink-800',
         focusRingGhost
       ),
       /*
-        The gradient keeps its light-mode stops: brightening it to the `500`
-        steps drops white copy to 4.23:1 over `ai-500`. It already reads as the
-        brightest element on a dark page.
+        Tonal cobalt: the brand hue at low emphasis.
+
+        `primary` is the solid fill and `ai` is the same colour held back — a
+        machine-assisted action is worth marking, and worth marking *quietly*,
+        because it is offered rather than urged. It was a solid black button for
+        one pass, which made the loudest control on the page the one nobody had
+        asked for.
       */
       ai: cn(
-        'bg-gradient-to-r from-ai-600 to-brand-600 text-white hover:opacity-95 shadow-xs',
+        'bg-brand-50 text-brand-700 hover:bg-brand-100',
+        'dark:bg-brand-500/20 dark:text-brand-100 dark:hover:bg-brand-500/30',
         focusRing
       ),
     };
@@ -80,7 +95,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const sizes = {
       sm: 'h-11 px-3 text-xs sm:h-8',
       md: 'h-11 px-4 text-sm sm:h-10',
-      lg: 'h-12 px-6 text-base',
+      lg: 'h-12 px-7 text-base',
     };
 
     return (
@@ -90,7 +105,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         aria-busy={isLoading || undefined}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none',
+          'inline-flex items-center justify-center rounded-xl border border-transparent font-semibold',
+          'transition-colors duration-150 ease-settle motion-reduce:transition-none',
+          'disabled:opacity-50 disabled:pointer-events-none',
           variants[variant],
           sizes[size],
           className

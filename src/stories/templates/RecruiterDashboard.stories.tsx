@@ -5,11 +5,17 @@ import { useI18n, type Dictionary } from '../../../.storybook/i18n';
 import { Dropzone } from '../../components/Dropzone';
 import { SegmentedControl } from '../../components/SegmentedControl';
 import { DataTable } from '../../components/DataTable';
-import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { ScoreGauge } from '../../components/ScoreGauge';
 import { getScoreTextClass } from '../../lib/score-tier';
+import { dataFigureClass, mastheadRuleClass, ruleMarkClass } from '../../lib/mark';
+import {
+  mutedTextClass,
+  pageSurfaceClass,
+  strongTextClass,
+  subtleTextClass,
+} from '../../lib/semantic-colors';
 import { cn } from '../../lib/cn';
 
 interface AnalysisHistory {
@@ -50,6 +56,118 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+
+/**
+ * One number, three supporting ones.
+ *
+ * A recruiter's question on opening this page is not "how many applications do
+ * I have" but "how many are worth my morning". So the count that cleared the
+ * bar is set at masthead size and everything else is arranged around it as
+ * support — the row of three equal KPI cards this replaced gave the same weight
+ * to a number nobody acts on.
+ *
+ * The block sits on a barely tinted surface rather than a black band: the size
+ * of the numeral is what makes it the lead, and a dark slab behind it only made
+ * the page heavier without making the number any bigger.
+ */
+function PipelineHeadline() {
+  const t = useI18n().dashboard.recruiter;
+
+  const support = [
+    { value: '24', label: t.hero.applications, tone: strongTextClass },
+    { value: '6', label: t.hero.review, tone: 'text-ochre-700 dark:text-ochre-300' },
+    { value: '0', label: t.hero.rejected, tone: mutedTextClass },
+  ];
+
+  return (
+    <section className="bg-ink-50 dark:bg-ink-900">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16 lg:py-20">
+        <div>
+          <p
+            className={cn(
+              'flex items-center gap-2.5 text-xs font-semibold uppercase tracking-eyebrow',
+              'text-brand-700 dark:text-brand-300'
+            )}
+          >
+            <span className={ruleMarkClass} aria-hidden="true" />
+            {t.hero.kicker} · {t.hero.role}
+          </p>
+
+          <p className="mt-5 flex items-baseline gap-4">
+            <span
+              className={cn(
+                'aq-display font-display text-8xl font-bold leading-none tracking-masthead',
+                dataFigureClass,
+                strongTextClass
+              )}
+            >
+              18
+            </span>
+            <span className={cn('max-w-[10ch] text-lg font-semibold leading-tight', subtleTextClass)}>
+              {t.hero.matched}
+            </span>
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          {/*
+            Support figures, separated by space and one hairline rather than by
+            three boxes. They read as a sentence about a single pipeline, not as
+            three independent metrics that happen to be adjacent.
+          */}
+          <span className={mastheadRuleClass} aria-hidden="true" />
+          <div className="flex flex-wrap gap-x-12 gap-y-6">
+            {support.map((item) => (
+              <div key={item.label}>
+                <p
+                  className={cn(
+                    'aq-display font-display text-4xl font-bold leading-none',
+                    dataFigureClass,
+                    item.tone
+                  )}
+                >
+                  {item.value}
+                </p>
+                <p
+                  className={cn(
+                    'mt-2 text-xs font-semibold uppercase tracking-eyebrow',
+                    mutedTextClass
+                  )}
+                >
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className={cn('max-w-measure text-base leading-relaxed', subtleTextClass)}>
+            {t.hero.verdict}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Section head plus its hairline. Weight comes from the type, not the rule. */
+function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <header className="mb-6">
+      <div className="pb-3">
+        <h2
+          className={cn(
+            'aq-display font-display text-2xl font-bold tracking-tight sm:text-3xl',
+            strongTextClass
+          )}
+        >
+          {title}
+        </h2>
+        {subtitle && <p className={cn('mt-1 text-sm', mutedTextClass)}>{subtitle}</p>}
+      </div>
+      <span className={mastheadRuleClass} aria-hidden="true" />
+    </header>
+  );
+}
+
 function RecruiterDashboardPage() {
   const t = useI18n();
   const [workspace, setWorkspace] = useState('recruiter');
@@ -58,24 +176,31 @@ function RecruiterDashboardPage() {
     {
       value: 'candidate',
       label: t.segmented.workspace.candidate,
-      icon: <User className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />,
+      icon: <User className="h-3.5 w-3.5" />,
     },
     {
       value: 'recruiter',
       label: t.segmented.workspace.recruiter,
-      icon: <Briefcase className="h-3.5 w-3.5 text-ai-600 dark:text-ai-300" />,
+      icon: <Briefcase className="h-3.5 w-3.5" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <header className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6 dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className={cn('min-h-screen', pageSurfaceClass)}>
+      <header className="mx-auto max-w-6xl px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
+        <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ai-600 dark:text-ai-300">
+            <p className="text-xs font-semibold uppercase tracking-eyebrow text-brand-700 dark:text-brand-300">
               {t.dashboard.recruiter.brand}
             </p>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t.dashboard.recruiter.title}</h1>
+            <h1
+              className={cn(
+                'aq-display mt-1 font-display text-4xl font-bold tracking-tight sm:text-5xl',
+                strongTextClass
+              )}
+            >
+              {t.dashboard.recruiter.title}
+            </h1>
           </div>
           <SegmentedControl
             options={workspaceOptions}
@@ -84,60 +209,42 @@ function RecruiterDashboardPage() {
             ariaLabel={t.dashboard.workspaceLabel}
           />
         </div>
+        <span className={mastheadRuleClass} aria-hidden="true" />
       </header>
 
-      <main className="mx-auto w-full max-w-6xl space-y-4 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-8">
-        {/*
-          Two KPI columns from the smallest screen: stacked, the three cards
-          pushed the rest of the page below the fold for a single number each.
-          The gauge keeps a full row, it is the one that needs the width.
-        */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
-          <Card className="col-span-2 md:col-span-1">
-            <Card.Body className="flex items-center gap-4 py-4 sm:py-6">
-              <ScoreGauge
-                score={72}
-                size="sm"
-                label={t.dashboard.recruiter.kpi.matchLabel}
-                statusLabels={t.components.gaugeStatus}
-                isAiTheme
-                showStatus={false}
-                className="border-0 bg-transparent p-0 shadow-none"
-              />
-              <p className="text-xs text-slate-500 dark:text-slate-400">{t.dashboard.recruiter.kpi.matchCaption}</p>
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">18</p>
-              <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.recruiter.kpi.compatible}</p>
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Body className="py-4 sm:py-6">
-              <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">6</p>
-              <p className="text-sm text-slate-600 dark:text-slate-300">{t.dashboard.recruiter.kpi.toReview}</p>
-            </Card.Body>
-          </Card>
+      <PipelineHeadline />
+
+      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+        <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:gap-14">
+          <section>
+            <SectionHead
+              title={t.dashboard.recruiter.upload.title}
+              subtitle={t.dashboard.recruiter.upload.subtitle}
+            />
+            <Dropzone multiple labels={t.components.dropzone} maxSizeMB={5} accept=".pdf" />
+          </section>
+
+          <aside className="flex flex-col items-center gap-3">
+            <ScoreGauge
+              score={72}
+              size="md"
+              label={t.dashboard.recruiter.kpi.matchLabel}
+              statusLabels={t.components.gaugeStatus}
+              isAiTheme
+              className="w-full"
+            />
+            <p className={cn('text-center text-sm', subtleTextClass)}>
+              {t.dashboard.recruiter.kpi.matchCaption}
+            </p>
+          </aside>
         </div>
 
-        <Card>
-          <Card.Header
-            title={t.dashboard.recruiter.upload.title}
-            subtitle={t.dashboard.recruiter.upload.subtitle}
-          />
-          <Card.Body>
-            <Dropzone multiple labels={t.components.dropzone} maxSizeMB={5} accept=".pdf" />
-          </Card.Body>
-        </Card>
-
-        <Card>
-          <Card.Header
+        <section className="mt-14">
+          <SectionHead
             title={t.dashboard.recruiter.history.title}
             subtitle={t.dashboard.recruiter.history.subtitle}
           />
-          <Card.Body className="p-0">
-            <DataTable
+          <DataTable
               data={mockData}
               keyExtractor={(item) => item.id}
               labels={t.components.dataTable}
@@ -150,7 +257,7 @@ function RecruiterDashboardPage() {
                 {
                   header: t.dashboard.recruiter.history.columns.candidate,
                   cell: (item) => (
-                    <div className="flex items-center space-x-2 font-medium text-slate-900 dark:text-slate-100">
+                    <div className="flex items-center space-x-2 font-medium text-ink-900 dark:text-ink-100">
                       <FileText className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                       <span>{item.candidateName}</span>
                     </div>
@@ -164,7 +271,13 @@ function RecruiterDashboardPage() {
                 {
                   header: t.dashboard.recruiter.history.columns.score,
                   cell: (item) => (
-                    <span className={cn('font-bold', getScoreTextClass(item.score))}>
+                    <span
+                      className={cn(
+                        'text-base font-bold',
+                        dataFigureClass,
+                        getScoreTextClass(item.score)
+                      )}
+                    >
                       {item.score}%
                     </span>
                   ),
@@ -192,11 +305,9 @@ function RecruiterDashboardPage() {
                   ),
                 },
               ]}
-              className="border-0 shadow-none"
-              pagination={{ currentPage: 1, totalPages: 3, onPageChange: () => undefined }}
-            />
-          </Card.Body>
-        </Card>
+            pagination={{ currentPage: 1, totalPages: 3, onPageChange: () => undefined }}
+          />
+        </section>
       </main>
     </div>
   );
