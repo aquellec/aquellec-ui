@@ -6,7 +6,19 @@ import {
   raisedSurfaceClass,
   subtleTextClass,
 } from '../../lib/semantic-colors';
-import { focusRing, focusRingGhost } from '../../lib/focus-ring';
+import { focusRingGhost } from '../../lib/focus-ring';
+
+/*
+  `focusRing`, keyed on the file input rather than on the element itself.
+
+  The input is the only focusable part of the zone and it is visually hidden,
+  so a `focus-visible:` ring on the label never shows: keyboard focus would land
+  on something invisible. The input is marked `peer` and the visible surfaces
+  that follow it draw the ring when it has focus. Spelled out in full so the
+  Tailwind scanner sees every class.
+*/
+const peerFocusRing =
+  'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-transparent peer-focus-visible:outline-offset-2 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-600 peer-focus-visible:ring-offset-2 ring-offset-white dark:peer-focus-visible:ring-brand-400 dark:ring-offset-ink-900';
 
 /**
  * Every user-facing string of the component, including the ones only exposed to
@@ -262,7 +274,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
     const dropzoneSurfaceClassName = cn(
       'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8',
       'transition-colors duration-150 ease-settle motion-reduce:transition-none',
-      focusRing,
+      peerFocusRing,
       isInteractive ? 'cursor-pointer' : 'cursor-not-allowed',
       isDragActive
         ? 'border-brand-600 bg-brand-50 dark:border-brand-400 dark:bg-brand-500/15'
@@ -286,7 +298,7 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
           aria-label={dropzoneLabel}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className="sr-only"
+          className="peer sr-only"
         />
 
         {hasSelection ? (
@@ -298,7 +310,8 @@ export const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>((props, 
             */
             className={cn(
               'flex w-full items-center justify-between rounded-xl p-3.5 shadow-card',
-              raisedSurfaceClass
+              raisedSurfaceClass,
+              peerFocusRing
             )}
             aria-describedby={error ? errorId : undefined}
           >
